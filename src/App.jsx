@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 
 const TOP_25_VERBS = [
   { verb: "ser", meaning: "to be (permanent)", conj: ["sou","és","é","somos","sois","são"] },
@@ -27,6 +27,8 @@ const TOP_25_VERBS = [
   { verb: "beber", meaning: "to drink", conj: ["bebo","bebes","bebe","bebemos","bebeis","bebem"] },
   { verb: "conhecer", meaning: "to know (people)", conj: ["conheço","conheces","conhece","conhecemos","conheceis","conhecem"] },
 ];
+
+const PRONOUNS = ["eu","tu","ele/ela","nós","vós","eles/elas"];
 
 const CONJUGATION_PATTERNS = {
   "Presente": { ar: ["-o","-as","-a","-amos","-ais","-am"], er: ["-o","-es","-e","-emos","-eis","-em"], ir: ["-o","-es","-e","-imos","-is","-em"], example_ar: "falar → falo, falas, fala, falamos, falais, falam", example_er: "comer → como, comes, come, comemos, comeis, comem", example_ir: "partir → parto, partes, parte, partimos, partis, partem" },
@@ -92,6 +94,50 @@ const VOCABULARY = {
   "Compras": [["a loja","shop"],["o preço","price"],["euro","euro"],["a carta","letter"],["os selos","stamps"],["o troco","change (money)"],["barato","cheap"],["caro","expensive"],["o desconto","discount"],["a oferta","offer/special"],["as compras","shopping/groceries"],["o supermercado","supermarket"],["o mercado","market"],["pagar","to pay"],["vender","to sell"],["comprar","to buy"],["gastar","to spend"]],
   "Descrição": [["perto","near"],["longe","far"],["dentro","inside"],["fora","outside"],["em cima","on top"],["em baixo","below"],["ao lado","beside"],["entre","between"],["certo","right/correct"],["errado","wrong"],["importante","important"],["interessante","interesting"],["necessário","necessary"],["possível","possible"],["provável","probable"],["feliz","happy"],["triste","sad"],["contente","content"],["nervoso","nervous"],["cansado","tired"],["doente","ill/sick"]],
 };
+
+const ALL_VERBS = [
+["abandonar","to abandon","-ar"],["abastecer","to supply","-er"],["abdicar","to abdicate","-ar"],["abolir","to abolish","-ir"],["aborrecer","to annoy/bore","-er"],["abraçar","to hug","-ar"],["abrandar","to slow down","-ar"],["abreviar","to abbreviate","-ar"],["abrigar","to shelter","-ar"],["abrir","to open","-ir"],["absorver","to absorb","-er"],["abster-se","to abstain","-er"],["abusar","to abuse","-ar"],["acabar","to finish","-ar"],["acalmar","to calm","-ar"],["acampar","to camp","-ar"],["acariciar","to caress","-ar"],["aceitar","to accept","-ar"],["acender","to light/turn on","-er"],["acentuar","to accentuate","-ar"],["acertar","to get right","-ar"],["achar","to find/think","-ar"],["acidentar","to have an accident","-ar"],["aclamar","to acclaim","-ar"],["acolher","to welcome","-er"],["acomodar","to accommodate","-ar"],["acompanhar","to accompany","-ar"],["aconselhar","to advise","-ar"],["acontecer","to happen","-er"],["acordar","to wake up/agree","-ar"],["acostumar","to get used to","-ar"],["acreditar","to believe","-ar"],["acrescentar","to add","-ar"],["acudir","to rush to help","-ir"],["acumular","to accumulate","-ar"],["acusar","to accuse","-ar"],["adaptar","to adapt","-ar"],["adicionar","to add","-ar"],["adiar","to postpone","-ar"],["adivinhar","to guess","-ar"],["administrar","to manage","-ar"],["admirar","to admire","-ar"],["admitir","to admit","-ir"],["adoecer","to fall ill","-er"],["adorar","to adore","-ar"],["adormecer","to fall asleep","-er"],["adotar","to adopt","-ar"],["adquirir","to acquire","-ir"],["advertir","to warn","-ir"],["afastar","to move away","-ar"],["afetar","to affect","-ar"],["afirmar","to affirm","-ar"],["afligir","to afflict","-ir"],["afogar","to drown","-ar"],["agarrar","to grab","-ar"],["agir","to act","-ir"],["agitar","to shake/agitate","-ar"],["agradar","to please","-ar"],["agradecer","to thank","-er"],["agravar","to worsen","-ar"],["agredir","to assault","-ir"],["agrupar","to group","-ar"],["aguentar","to endure","-ar"],["ajudar","to help","-ar"],["ajustar","to adjust","-ar"],["alargar","to widen","-ar"],["alcançar","to reach/achieve","-ar"],["alegrar","to cheer up","-ar"],["alertar","to alert","-ar"],["alimentar","to feed","-ar"],["alinhar","to align","-ar"],["aliviar","to relieve","-ar"],["almoçar","to have lunch","-ar"],["alugar","to rent","-ar"],["amar","to love","-ar"],["ameaçar","to threaten","-ar"],["amolecer","to soften","-er"],["ampliar","to expand","-ar"],["analisar","to analyse","-ar"],["andar","to walk/go","-ar"],["animar","to encourage","-ar"],["aniquilar","to annihilate","-ar"],["anotar","to note down","-ar"],["antecipar","to anticipate","-ar"],["anular","to cancel/annul","-ar"],["anunciar","to announce","-ar"],["apagar","to erase/turn off","-ar"],["apanhar","to catch/pick up","-ar"],["aparecer","to appear","-er"],["aparentar","to seem","-ar"],["apassivar","to make passive","-ar"],["apelar","to appeal","-ar"],["apertar","to tighten","-ar"],["aplicar","to apply","-ar"],["apoiar","to support","-ar"],["apontar","to point","-ar"],["apreciar","to appreciate","-ar"],["aprender","to learn","-er"],["apresentar","to present","-ar"],["apressar","to hurry","-ar"],["aprovar","to approve","-ar"],["aproveitar","to take advantage","-ar"],["aproximar","to bring closer","-ar"],["arrancar","to pull out/start","-ar"],["arranjar","to arrange/fix","-ar"],["arrastar","to drag","-ar"],["arrecadar","to collect","-ar"],["arrepender-se","to regret","-er"],["arriscar","to risk","-ar"],["arruinar","to ruin","-ar"],["arrumar","to tidy up","-ar"],["aspirar","to aspire/vacuum","-ar"],["assaltar","to assault/rob","-ar"],["assassinar","to murder","-ar"],["assegurar","to ensure","-ar"],["assinalar","to mark/signal","-ar"],["assinar","to sign","-ar"],["assistir","to watch/attend","-ir"],["associar","to associate","-ar"],["assustar","to scare","-ar"],["assumir","to assume","-ir"],["atacar","to attack","-ar"],["atar","to tie","-ar"],["atingir","to reach/hit","-ir"],["atrair","to attract","irr"],["atrasar","to delay","-ar"],["atravessar","to cross","-ar"],["atrever-se","to dare","-er"],["atribuir","to attribute","-ir"],["atualizar","to update","-ar"],["atuar","to act/perform","-ar"],["aumentar","to increase","-ar"],["autorizar","to authorize","-ar"],["avaliar","to evaluate","-ar"],["avançar","to advance","-ar"],["avisar","to warn/notify","-ar"],["baixar","to lower/download","-ar"],["balançar","to swing/balance","-ar"],["banhar","to bathe","-ar"],["baralhar","to shuffle/confuse","-ar"],["basear","to base","-ar"],["bater","to hit/knock","-er"],["batizar","to baptize","-ar"],["beber","to drink","-er"],["beneficiar","to benefit","-ar"],["bloquear","to block","-ar"],["borbulhar","to bubble","-ar"],["bordar","to embroider","-ar"],["brilhar","to shine","-ar"],["brincar","to play (children)","-ar"],["bronzear","to tan","-ar"],["buscar","to look for/fetch","-ar"],["caber","to fit","irr"],["caçar","to hunt","-ar"],["cair","to fall","irr"],["calar","to silence/shut up","-ar"],["calcular","to calculate","-ar"],["calhar","to happen to","-ar"],["caminhar","to walk/hike","-ar"],["cancelar","to cancel","-ar"],["cansar","to tire","-ar"],["cantar","to sing","-ar"],["capturar","to capture","-ar"],["caracterizar","to characterize","-ar"],["carregar","to carry/charge","-ar"],["casar","to marry","-ar"],["castigar","to punish","-ar"],["causar","to cause","-ar"],["cavar","to dig","-ar"],["cear","to have supper","-ar"],["ceder","to yield/give in","-er"],["celebrar","to celebrate","-ar"],["censurar","to censor","-ar"],["certificar","to certify","-ar"],["chatear","to annoy/bore","-ar"],["chegar","to arrive","-ar"],["cheirar","to smell","-ar"],["chocar","to shock/crash","-ar"],["chorar","to cry","-ar"],["chover","to rain","-er"],["chutar","to kick","-ar"],["circular","to circulate","-ar"],["citar","to quote","-ar"],["clarificar","to clarify","-ar"],["classificar","to classify","-ar"],["cobrar","to charge (money)","-ar"],["cobrir","to cover","-ir"],["coçar","to scratch","-ar"],["coincidir","to coincide","-ir"],["colaborar","to collaborate","-ar"],["colar","to glue/stick","-ar"],["colecionar","to collect","-ar"],["colocar","to place/put","-ar"],["colorir","to colour","-ir"],["combater","to combat","-er"],["combinar","to combine/arrange","-ar"],["começar","to start","-ar"],["comentar","to comment","-ar"],["comer","to eat","-er"],["comercializar","to commercialize","-ar"],["cometer","to commit","-er"],["comparar","to compare","-ar"],["comparecer","to attend/appear","-er"],["compartilhar","to share","-ar"],["compensar","to compensate","-ar"],["competir","to compete","-ir"],["complementar","to complement","-ar"],["completar","to complete","-ar"],["complicar","to complicate","-ar"],["compor","to compose","irr"],["comportar-se","to behave","-ar"],["comprar","to buy","-ar"],["compreender","to understand","-er"],["comprometer","to compromise","-er"],["comprovar","to prove","-ar"],["comunicar","to communicate","-ar"],["conceber","to conceive","-er"],["conceder","to grant","-er"],["concentrar","to concentrate","-ar"],["concluir","to conclude","-ir"],["concordar","to agree","-ar"],["concorrer","to compete","-er"],["condenar","to condemn","-ar"],["conduzir","to drive/lead","-ir"],["conferir","to check/verify","-ir"],["confessar","to confess","-ar"],["confiar","to trust","-ar"],["confirmar","to confirm","-ar"],["confundir","to confuse","-ir"],["conhecer","to know (people)","-er"],["conjugar","to conjugate","-ar"],["conquistar","to conquer","-ar"],["conseguir","to manage/achieve","-ir"],["consentir","to consent","-ir"],["conservar","to preserve","-ar"],["considerar","to consider","-ar"],["consistir","to consist","-ir"],["consolar","to console","-ar"],["consolidar","to consolidate","-ar"],["constar","to record/consist of","-ar"],["constatar","to verify","-ar"],["constituir","to constitute","-ir"],["construir","to build","-ir"],["consultar","to consult","-ar"],["consumir","to consume","-ir"],["contactar","to contact","-ar"],["contagiar","to infect","-ar"],["contaminar","to contaminate","-ar"],["contar","to tell/count","-ar"],["contemplar","to contemplate","-ar"],["conter","to contain","irr"],["contestar","to contest","-ar"],["continuar","to continue","-ar"],["contradizer","to contradict","irr"],["contrair","to contract","irr"],["contratar","to hire","-ar"],["contribuir","to contribute","-ir"],["controlar","to control","-ar"],["convencer","to convince","-er"],["convergir","to converge","-ir"],["conversar","to chat/converse","-ar"],["converter","to convert","-er"],["convidar","to invite","-ar"],["conviver","to coexist","-er"],["convocar","to summon","-ar"],["cooperar","to cooperate","-ar"],["coordenar","to coordinate","-ar"],["copiar","to copy","-ar"],["correr","to run","-er"],["corresponder","to match/correspond","-er"],["corrigir","to correct","-ir"],["corromper","to corrupt","-er"],["cortar","to cut","-ar"],["costumar","to usually do","-ar"],["costurar","to sew","-ar"],["cozer","to boil/cook","-er"],["cozinhar","to cook","-ar"],["crescer","to grow","-er"],["criar","to create/raise","-ar"],["criticar","to criticize","-ar"],["cruzar","to cross","-ar"],["cuidar","to care for","-ar"],["culminar","to culminate","-ar"],["cultivar","to cultivate","-ar"],["cumprir","to fulfil","-ir"],["curar","to cure","-ar"],["cursar","to study (a course)","-ar"],["curvar","to curve/bend","-ar"],["cuspir","to spit","-ir"],["custar","to cost","-ar"],["dançar","to dance","-ar"],["dar","to give","irr"],["debater","to debate","-er"],["decidir","to decide","-ir"],["declarar","to declare","-ar"],["declinar","to decline","-ar"],["decorar","to decorate/memorize","-ar"],["decorrer","to take place","-er"],["dedicar","to dedicate","-ar"],["deduzir","to deduce","-ir"],["defender","to defend","-er"],["definir","to define","-ir"],["deitar","to lay down/throw away","-ar"],["deixar","to leave/let","-ar"],["delegar","to delegate","-ar"],["demorar","to take long","-ar"],["demonstrar","to demonstrate","-ar"],["denunciar","to denounce","-ar"],["depender","to depend","-er"],["depositar","to deposit","-ar"],["deprimir","to depress","-ir"],["derivar","to derive","-ar"],["derramar","to spill","-ar"],["derrotar","to defeat","-ar"],["desabafar","to vent","-ar"],["desafiar","to challenge","-ar"],["desagradar","to displease","-ar"],["desaparecer","to disappear","-er"],["desarmar","to disarm","-ar"],["descansar","to rest","-ar"],["descarregar","to unload/download","-ar"],["descer","to go down/descend","-er"],["descobrir","to discover","-ir"],["desconfiar","to suspect","-ar"],["descrever","to describe","-er"],["desculpar","to excuse","-ar"],["desejar","to wish/desire","-ar"],["desempenhar","to perform/play a role","-ar"],["desenhar","to draw","-ar"],["desenvolver","to develop","-er"],["desertar","to desert","-ar"],["desesperar","to despair","-ar"],["desistir","to give up","-ir"],["desligar","to turn off/disconnect","-ar"],["deslocar","to move/displace","-ar"],["desmontar","to dismantle","-ar"],["desobedecer","to disobey","-er"],["despedir","to fire/say goodbye","-ir"],["desperdiçar","to waste","-ar"],["despertar","to awaken","-ar"],["despir","to undress","-ir"],["destacar","to highlight","-ar"],["destinar","to destine","-ar"],["destruir","to destroy","-ir"],["desviar","to divert/deviate","-ar"],["detestar","to detest","-ar"],["determinar","to determine","-ar"],["dever","should/must/owe","-er"],["devolver","to return (give back)","-er"],["diagnosticar","to diagnose","-ar"],["ditar","to dictate","-ar"],["diferenciar","to differentiate","-ar"],["dificultar","to hinder","-ar"],["difundir","to spread","-ir"],["digerir","to digest","-ir"],["diminuir","to decrease","-ir"],["dirigir","to direct/drive","-ir"],["disciplinar","to discipline","-ar"],["discordar","to disagree","-ar"],["discriminar","to discriminate","-ar"],["discursar","to give a speech","-ar"],["discutir","to discuss/argue","-ir"],["disfarçar","to disguise","-ar"],["dispensar","to dispense/excuse","-ar"],["disponibilizar","to make available","-ar"],["dispor","to arrange/dispose","irr"],["disputar","to dispute","-ar"],["dissolver","to dissolve","-er"],["distinguir","to distinguish","-ir"],["distribuir","to distribute","-ir"],["divertir","to amuse","-ir"],["dividir","to divide","-ir"],["divorciar","to divorce","-ar"],["divulgar","to disclose/publicize","-ar"],["dizer","to say","irr"],["doar","to donate","-ar"],["dobrar","to fold/double","-ar"],["documentar","to document","-ar"],["doer","to hurt/ache","-er"],["dominar","to dominate","-ar"],["dormir","to sleep","-ir"],["dourar","to gild/brown","-ar"],["duvidar","to doubt","-ar"],["durar","to last","-ar"],["economizar","to save (money)","-ar"],["edificar","to build/edify","-ar"],["editar","to edit","-ar"],["educar","to educate","-ar"],["efetuar","to carry out","-ar"],["elaborar","to elaborate","-ar"],["eleger","to elect","-er"],["elevar","to elevate","-ar"],["eliminar","to eliminate","-ar"],["embarcar","to board/embark","-ar"],["emitir","to emit/broadcast","-ir"],["emocionar","to move (emotionally)","-ar"],["empacotar","to pack","-ar"],["empenhar-se","to commit/strive","-ar"],["empolgar","to excite/grip","-ar"],["empreender","to undertake","-er"],["empregar","to employ","-ar"],["empurrar","to push","-ar"],["encantar","to enchant","-ar"],["encerrar","to close/end","-ar"],["encher","to fill","-er"],["encomendar","to order (goods)","-ar"],["encontrar","to find/meet","-ar"],["encorajar","to encourage","-ar"],["endurecer","to harden","-er"],["enfraquecer","to weaken","-er"],["enfrentar","to face/confront","-ar"],["enganar","to deceive","-ar"],["engolir","to swallow","-ir"],["engordar","to gain weight","-ar"],["enlouquecer","to go crazy","-er"],["enriquecer","to enrich","-er"],["ensaiar","to rehearse","-ar"],["ensinar","to teach","-ar"],["entender","to understand","-er"],["enterrar","to bury","-ar"],["entrar","to enter","-ar"],["entregar","to deliver/hand over","-ar"],["entrevistar","to interview","-ar"],["entristecer","to sadden","-er"],["envelhecer","to age","-er"],["envergonhar","to embarrass","-ar"],["enviar","to send","-ar"],["envolver","to involve","-er"],["equilibrar","to balance","-ar"],["equipar","to equip","-ar"],["erguer","to raise/lift","-er"],["errar","to err/make a mistake","-ar"],["escapar","to escape","-ar"],["esclarecer","to clarify","-er"],["escolher","to choose","-er"],["esconder","to hide","-er"],["escrever","to write","-er"],["escutar","to listen","-ar"],["esfolar","to skin/scrape","-ar"],["esforçar-se","to make an effort","-ar"],["esgotar","to exhaust/run out","-ar"],["esmagar","to crush","-ar"],["espantar","to amaze/scare","-ar"],["esperar","to wait/hope","-ar"],["espirrar","to sneeze","-ar"],["esquecer","to forget","-er"],["estabelecer","to establish","-er"],["estacionar","to park","-ar"],["estar","to be (temporary)","irr"],["estender","to extend/stretch","-er"],["estimular","to stimulate","-ar"],["estipular","to stipulate","-ar"],["esticar","to stretch","-ar"],["estimar","to estimate/esteem","-ar"],["estragar","to damage/spoil","-ar"],["estranhar","to find strange","-ar"],["estrear","to debut/premiere","-ar"],["estudar","to study","-ar"],["evacuar","to evacuate","-ar"],["evitar","to avoid","-ar"],["evocar","to evoke","-ar"],["evoluir","to evolve","-ir"],["exagerar","to exaggerate","-ar"],["examinar","to examine","-ar"],["exceder","to exceed","-er"],["exclamar","to exclaim","-ar"],["excluir","to exclude","-ir"],["executar","to execute","-ar"],["exercer","to exercise/practise","-er"],["exercitar","to exercise","-ar"],["exibir","to exhibit","-ir"],["exigir","to demand","-ir"],["existir","to exist","-ir"],["expandir","to expand","-ir"],["experimentar","to try/experiment","-ar"],["explicar","to explain","-ar"],["explorar","to explore","-ar"],["exportar","to export","-ar"],["expor","to expose","irr"],["expressar","to express","-ar"],["expulsar","to expel","-ar"],["extrair","to extract","irr"],["fabricar","to manufacture","-ar"],["facilitar","to facilitate","-ar"],["falhar","to fail","-ar"],["falar","to speak","-ar"],["falsificar","to falsify","-ar"],["faltar","to be missing/lack","-ar"],["fascinar","to fascinate","-ar"],["favorecer","to favour","-er"],["fazer","to do/make","irr"],["fechar","to close","-ar"],["felicitar","to congratulate","-ar"],["ferir","to wound","-ir"],["ferver","to boil","-er"],["festejar","to celebrate/party","-ar"],["ficar","to stay/become","-ar"],["filmar","to film","-ar"],["filtrar","to filter","-ar"],["financiar","to finance","-ar"],["fingir","to pretend","-ir"],["fixar","to fix/set","-ar"],["florescer","to flourish","-er"],["fluir","to flow","-ir"],["focar","to focus","-ar"],["folhear","to leaf through","-ar"],["forçar","to force","-ar"],["formar","to form/train","-ar"],["formular","to formulate","-ar"],["fornecer","to supply/provide","-er"],["fortalecer","to strengthen","-er"],["fotografar","to photograph","-ar"],["frear","to brake","-ar"],["frequentar","to attend/frequent","-ar"],["fritar","to fry","-ar"],["frustrar","to frustrate","-ar"],["fugir","to flee","-ir"],["fumar","to smoke","-ar"],["funcionar","to function/work","-ar"],["fundar","to found","-ar"],["fundir","to melt/merge","-ir"],["furar","to pierce/drill","-ar"],["furtar","to steal","-ar"],["gabar-se","to boast","-ar"],["ganhar","to win/earn","-ar"],["garantir","to guarantee","-ir"],["gastar","to spend (money)","-ar"],["gemer","to groan","-er"],["generalizar","to generalize","-ar"],["gerar","to generate","-ar"],["gerir","to manage","-ir"],["glorificar","to glorify","-ar"],["gostar","to like","-ar"],["governar","to govern","-ar"],["gravar","to record/engrave","-ar"],["gritar","to shout","-ar"],["guardar","to keep/store","-ar"],["guiar","to guide","-ar"],["habitar","to inhabit","-ar"],["habituar","to accustom","-ar"],["harmonizar","to harmonize","-ar"],["herdar","to inherit","-ar"],["hesitar","to hesitate","-ar"],["hidratar","to hydrate","-ar"],["homenagear","to honour/pay tribute","-ar"],["honrar","to honour","-ar"],["hospedar","to host","-ar"],["humilhar","to humiliate","-ar"],["identificar","to identify","-ar"],["ignorar","to ignore","-ar"],["iluminar","to illuminate","-ar"],["ilustrar","to illustrate","-ar"],["imaginar","to imagine","-ar"],["imigrar","to immigrate","-ar"],["imitar","to imitate","-ar"],["impedir","to prevent","-ir"],["implicar","to imply/involve","-ar"],["impor","to impose","irr"],["importar","to import/matter","-ar"],["impressionar","to impress","-ar"],["imprimir","to print","-ir"],["improvisar","to improvise","-ar"],["inaugurar","to inaugurate","-ar"],["inchar","to swell","-ar"],["incluir","to include","-ir"],["incorporar","to incorporate","-ar"],["indicar","to indicate","-ar"],["indignar","to outrage","-ar"],["induzir","to induce","-ir"],["infectar","to infect","-ar"],["influenciar","to influence","-ar"],["informar","to inform","-ar"],["iniciar","to initiate/start","-ar"],["injetar","to inject","-ar"],["inovar","to innovate","-ar"],["inscrever","to enrol/register","-er"],["inserir","to insert","-ir"],["insinuar","to insinuate","-ar"],["insistir","to insist","-ir"],["inspecionar","to inspect","-ar"],["inspirar","to inspire","-ar"],["instalar","to install","-ar"],["instruir","to instruct","-ir"],["insultar","to insult","-ar"],["integrar","to integrate","-ar"],["interessar","to interest","-ar"],["interligar","to interconnect","-ar"],["interpretar","to interpret","-ar"],["interrogar","to interrogate","-ar"],["interromper","to interrupt","-er"],["intervir","to intervene","irr"],["intimidar","to intimidate","-ar"],["introduzir","to introduce","-ir"],["invadir","to invade","-ir"],["inventar","to invent","-ar"],["investigar","to investigate","-ar"],["investir","to invest","-ir"],["ir","to go","irr"],["irritar","to irritate","-ar"],["isolar","to isolate","-ar"],["jantar","to have dinner","-ar"],["jogar","to play (game/sport)","-ar"],["julgar","to judge","-ar"],["juntar","to join/gather","-ar"],["jurar","to swear","-ar"],["justificar","to justify","-ar"],["lamentar","to regret/lament","-ar"],["lançar","to launch/throw","-ar"],["largar","to let go/drop","-ar"],["lavar","to wash","-ar"],["legalizar","to legalize","-ar"],["legislar","to legislate","-ar"],["legitimar","to legitimize","-ar"],["ler","to read","irr"],["levantar","to raise/get up","-ar"],["levar","to take/carry","-ar"],["libertar","to liberate","-ar"],["lidar","to deal with","-ar"],["liderar","to lead","-ar"],["ligar","to turn on/connect/call","-ar"],["limitar","to limit","-ar"],["limpar","to clean","-ar"],["localizar","to locate","-ar"],["lutar","to fight/struggle","-ar"],["machucar","to hurt/bruise","-ar"],["maldizer","to curse/badmouth","irr"],["maltratar","to mistreat","-ar"],["manchar","to stain","-ar"],["mandar","to send/order","-ar"],["manifestar","to manifest","-ar"],["manipular","to manipulate","-ar"],["manter","to maintain","irr"],["marcar","to mark/book","-ar"],["marchar","to march","-ar"],["mastigar","to chew","-ar"],["matar","to kill","-ar"],["matricular","to enrol","-ar"],["mediar","to mediate","-ar"],["medicar","to medicate","-ar"],["medir","to measure","-ir"],["melhorar","to improve","-ar"],["mencionar","to mention","-ar"],["mentir","to lie","-ir"],["merecer","to deserve","-er"],["mergulhar","to dive","-ar"],["meter","to put/insert","-er"],["mexer","to move/stir","-er"],["migrar","to migrate","-ar"],["misturar","to mix","-ar"],["mobilizar","to mobilize","-ar"],["modelar","to model","-ar"],["moderar","to moderate","-ar"],["modernizar","to modernize","-ar"],["modificar","to modify","-ar"],["moer","to grind","irr"],["molestar","to bother/molest","-ar"],["molhar","to wet","-ar"],["montar","to assemble/ride","-ar"],["morar","to live/reside","-ar"],["morder","to bite","-er"],["morrer","to die","-er"],["mostrar","to show","-ar"],["motivar","to motivate","-ar"],["mover","to move","-er"],["mudar","to change/move","-ar"],["multiplicar","to multiply","-ar"],["murmurar","to murmur","-ar"],["nadar","to swim","-ar"],["namorar","to date/court","-ar"],["narrar","to narrate","-ar"],["nascer","to be born","-er"],["navegar","to navigate/sail","-ar"],["necessitar","to need","-ar"],["negar","to deny","-ar"],["negociar","to negotiate","-ar"],["nevar","to snow","-ar"],["nomear","to nominate/name","-ar"],["normalizar","to normalize","-ar"],["notar","to notice","-ar"],["notificar","to notify","-ar"],["numerar","to number","-ar"],["nutrir","to nourish","-ir"],["obedecer","to obey","-er"],["objetivar","to objectify","-ar"],["obrigar","to force/oblige","-ar"],["observar","to observe","-ar"],["obter","to obtain","irr"],["ocupar","to occupy","-ar"],["odiar","to hate","-ar"],["ofender","to offend","-er"],["oferecer","to offer","-er"],["olhar","to look","-ar"],["omitir","to omit","-ir"],["operar","to operate","-ar"],["opor","to oppose","irr"],["oprimir","to oppress","-ir"],["optar","to opt","-ar"],["orar","to pray","-ar"],["ordenar","to order/sort","-ar"],["organizar","to organize","-ar"],["orientar","to guide/orient","-ar"],["originar","to originate","-ar"],["ousar","to dare","-ar"],["ouvir","to hear","irr"],["pagar","to pay","-ar"],["parar","to stop","-ar"],["parecer","to seem","-er"],["participar","to participate","-ar"],["partir","to leave/break","-ir"],["passar","to pass/spend","-ar"],["passear","to stroll/walk","-ar"],["patrocinar","to sponsor","-ar"],["pausar","to pause","-ar"],["pedir","to ask for","-ir"],["pegar","to grab/catch","-ar"],["penalizar","to penalize","-ar"],["pendurar","to hang","-ar"],["penetrar","to penetrate","-ar"],["pensar","to think","-ar"],["perceber","to understand/realize","-er"],["percorrer","to travel through","-er"],["perder","to lose","-er"],["perdoar","to forgive","-ar"],["perfurar","to perforate","-ar"],["perguntar","to ask (a question)","-ar"],["permitir","to allow","-ir"],["perseguir","to pursue/persecute","-ir"],["persistir","to persist","-ir"],["personalizar","to personalize","-ar"],["pertencer","to belong","-er"],["perturbar","to disturb","-ar"],["pescar","to fish","-ar"],["pesquisar","to research","-ar"],["picar","to sting/chop","-ar"],["pilotar","to pilot","-ar"],["pintar","to paint","-ar"],["pisar","to step on","-ar"],["planear","to plan (EP)","-ar"],["plantar","to plant","-ar"],["poder","to be able to","irr"],["polir","to polish","-ir"],["poluir","to pollute","-ir"],["ponderar","to ponder","-ar"],["pontuar","to punctuate","-ar"],["popularizar","to popularize","-ar"],["pôr","to put","irr"],["portar-se","to behave","-ar"],["posar","to pose","-ar"],["posicionar","to position","-ar"],["possibilitar","to make possible","-ar"],["possuir","to possess","-ir"],["poupar","to save/spare","-ar"],["pousar","to land/put down","-ar"],["praticar","to practise","-ar"],["precisar","to need","-ar"],["predizer","to predict","irr"],["preferir","to prefer","-ir"],["prejudicar","to harm/damage","-ar"],["premiar","to award","-ar"],["prender","to arrest/attach","-er"],["preocupar","to worry","-ar"],["preparar","to prepare","-ar"],["prescrever","to prescribe","-er"],["preservar","to preserve","-ar"],["presidir","to preside","-ir"],["pressionar","to pressure","-ar"],["prestar","to provide/render","-ar"],["presumir","to presume","-ir"],["pretender","to intend","-er"],["prevenir","to prevent","-ir"],["prever","to foresee","irr"],["priorizar","to prioritize","-ar"],["privar","to deprive","-ar"],["privilegiar","to privilege","-ar"],["processar","to process/sue","-ar"],["proclamar","to proclaim","-ar"],["procurar","to look for","-ar"],["produzir","to produce","-ir"],["progredir","to progress","-ir"],["proibir","to prohibit","-ir"],["prolongar","to prolong","-ar"],["prometer","to promise","-er"],["promover","to promote","-er"],["pronunciar","to pronounce","-ar"],["propagar","to propagate","-ar"],["propor","to propose","irr"],["proporcionar","to provide","-ar"],["prosperar","to prosper","-ar"],["proteger","to protect","-er"],["protestar","to protest","-ar"],["provar","to prove/taste","-ar"],["provocar","to provoke","-ar"],["publicar","to publish","-ar"],["pular","to jump","-ar"],["punir","to punish","-ir"],["puxar","to pull","-ar"],["qualificar","to qualify","-ar"],["quebrar","to break","-ar"],["queimar","to burn","-ar"],["queixar-se","to complain","-ar"],["querer","to want","irr"],["questionar","to question","-ar"],["raciocinar","to reason","-ar"],["rasgar","to tear","-ar"],["rastejar","to crawl","-ar"],["reagir","to react","-ir"],["realizar","to carry out/realize","-ar"],["reaparecer","to reappear","-er"],["recear","to fear","-ar"],["receber","to receive","-er"],["reciclar","to recycle","-ar"],["reclamar","to complain/claim","-ar"],["recomendar","to recommend","-ar"],["recompensar","to reward","-ar"],["reconciliar","to reconcile","-ar"],["reconhecer","to recognize","-er"],["recordar","to remember/recall","-ar"],["recorrer","to resort to","-er"],["recuperar","to recover","-ar"],["recusar","to refuse","-ar"],["redescobrir","to rediscover","-ir"],["redigir","to draft/write","-ir"],["reduzir","to reduce","-ir"],["referir","to refer","-ir"],["refletir","to reflect","-ir"],["reformar","to reform","-ar"],["reforçar","to reinforce","-ar"],["refugiar-se","to take refuge","-ar"],["regar","to water (plants)","-ar"],["regatear","to haggle","-ar"],["registar","to register (EP)","-ar"],["regressar","to return","-ar"],["regular","to regulate","-ar"],["reinar","to reign","-ar"],["reinventar","to reinvent","-ar"],["reivindicar","to claim/demand","-ar"],["rejeitar","to reject","-ar"],["relacionar","to relate","-ar"],["relaxar","to relax","-ar"],["relembrar","to remind/recall","-ar"],["reluzir","to glitter","-ir"],["remarcar","to reschedule","-ar"],["remediar","to remedy","-ar"],["remeter","to send/remit","-er"],["remover","to remove","-er"],["render","to yield/surrender","-er"],["renovar","to renew","-ar"],["renunciar","to renounce","-ar"],["reparar","to repair/notice","-ar"],["repartir","to distribute","-ir"],["repetir","to repeat","-ir"],["repor","to replace/restore","irr"],["representar","to represent","-ar"],["reprimir","to repress","-ir"],["reproduzir","to reproduce","-ir"],["reputar","to repute","-ar"],["requerer","to require","irr"],["reservar","to reserve","-ar"],["residir","to reside","-ir"],["resistir","to resist","-ir"],["resolver","to solve/resolve","-er"],["respeitar","to respect","-ar"],["respirar","to breathe","-ar"],["responder","to respond","-er"],["responsabilizar","to hold responsible","-ar"],["ressaltar","to stand out/emphasize","-ar"],["restaurar","to restore","-ar"],["restringir","to restrict","-ir"],["resultar","to result","-ar"],["resumir","to summarize","-ir"],["reter","to retain","irr"],["retirar","to remove/withdraw","-ar"],["retomar","to resume","-ar"],["retornar","to return","-ar"],["retratar","to portray","-ar"],["reunir","to gather/meet","-ir"],["revelar","to reveal","-ar"],["rever","to review","irr"],["revisar","to revise","-ar"],["revoltar","to revolt","-ar"],["rezar","to pray","-ar"],["rir","to laugh","irr"],["rivalizar","to rival","-ar"],["roubar","to steal/rob","-ar"],["rodar","to rotate","-ar"],["rodear","to surround","-ar"],["romper","to break/rupture","-er"],["roncar","to snore","-ar"],["rugir","to roar","-ir"],["saber","to know (facts)","irr"],["sacrificar","to sacrifice","-ar"],["sacudir","to shake","-ir"],["sair","to leave/go out","irr"],["saltar","to jump","-ar"],["salvar","to save","-ar"],["sarar","to heal","-ar"],["satisfazer","to satisfy","irr"],["saudar","to greet","-ar"],["secar","to dry","-ar"],["seduzir","to seduce","-ir"],["seguir","to follow","-ir"],["segurar","to hold/secure","-ar"],["selecionar","to select","-ar"],["semear","to sow","-ar"],["sentar","to sit","-ar"],["sentir","to feel","-ir"],["separar","to separate","-ar"],["ser","to be (permanent)","irr"],["servir","to serve","-ir"],["significar","to mean","-ar"],["silenciar","to silence","-ar"],["simbolizar","to symbolize","-ar"],["simpatizar","to sympathize","-ar"],["simplificar","to simplify","-ar"],["simular","to simulate","-ar"],["sinalizar","to signal","-ar"],["situar","to situate","-ar"],["soar","to sound","-ar"],["sobrar","to be left over","-ar"],["sobrecarregar","to overload","-ar"],["sobressair","to stand out","irr"],["sobreviver","to survive","-er"],["socializar","to socialize","-ar"],["socorrer","to help/rescue","-er"],["sofrer","to suffer","-er"],["soltar","to release/let go","-ar"],["solucionar","to solve","-ar"],["sonhar","to dream","-ar"],["soprar","to blow","-ar"],["sorrir","to smile","irr"],["soterrar","to bury","-ar"],["subir","to go up/climb","-ir"],["sublinhar","to underline","-ar"],["submeter","to submit","-er"],["substituir","to substitute","-ir"],["subtrair","to subtract","irr"],["suceder","to happen/succeed","-er"],["sufocar","to suffocate","-ar"],["sugerir","to suggest","-ir"],["sujar","to dirty","-ar"],["suportar","to endure/support","-ar"],["supor","to suppose","irr"],["suprimir","to suppress","-ir"],["surgir","to emerge/arise","-ir"],["surpreender","to surprise","-er"],["suspeitar","to suspect","-ar"],["suspender","to suspend","-er"],["suspirar","to sigh","-ar"],["sustentar","to sustain","-ar"],["tapar","to cover/block","-ar"],["tardar","to delay","-ar"],["tecer","to weave","-er"],["telefonar","to telephone","-ar"],["temer","to fear","-er"],["temperar","to season","-ar"],["tender","to tend","-er"],["tentar","to try/attempt","-ar"],["ter","to have","irr"],["terminar","to finish","-ar"],["testemunhar","to witness","-ar"],["tirar","to take/remove","-ar"],["tocar","to touch/play (music)","-ar"],["tolerar","to tolerate","-ar"],["tomar","to take/drink","-ar"],["torcer","to twist/support (team)","-er"],["tornar","to become/make","-ar"],["torrar","to toast/roast","-ar"],["torturar","to torture","-ar"],["tossir","to cough","-ir"],["trabalhar","to work","-ar"],["traduzir","to translate","-ir"],["trair","to betray","irr"],["trancar","to lock","-ar"],["transferir","to transfer","-ir"],["transformar","to transform","-ar"],["transmitir","to transmit","-ir"],["transportar","to transport","-ar"],["tratar","to treat/deal with","-ar"],["travar","to brake/engage","-ar"],["trazer","to bring","irr"],["treinar","to train","-ar"],["tremer","to tremble","-er"],["trocar","to exchange/swap","-ar"],["tropeçar","to trip/stumble","-ar"],["ultrapassar","to overtake/surpass","-ar"],["unificar","to unify","-ar"],["unir","to unite","-ir"],["urgir","to be urgent","-ir"],["usar","to use/wear","-ar"],["usufruir","to enjoy (a right)","-ir"],["utilizar","to utilize","-ar"],["vacinar","to vaccinate","-ar"],["valer","to be worth","irr"],["valorizar","to value","-ar"],["variar","to vary","-ar"],["varrer","to sweep","-er"],["vencer","to win/overcome","-er"],["vender","to sell","-er"],["venerar","to venerate","-ar"],["vestir","to dress/wear","-ir"],["viajar","to travel","-ar"],["vir","to come","irr"],["virar","to turn","-ar"],["visitar","to visit","-ar"],["viver","to live","-er"],["voar","to fly","-ar"],["voltar","to return/go back","-ar"],["votar","to vote","-ar"],["zelar","to look after","-ar"],["zoar","to tease","-ar"],
+];
+
+const VERB_LETTERS = [...new Set(ALL_VERBS.map(v => v[0][0].toUpperCase()))].sort();
+const VERB_TYPES = ["-ar", "-er", "-ir", "irr"];
+const VERB_TYPE_COLORS = { "-ar": "#00c875", "-er": "#4ecdc4", "-ir": "#ffe66d", "irr": "#ff6b6b" };
+const VERB_TYPE_LABELS = { "-ar": "-AR", "-er": "-ER", "-ir": "-IR", "irr": "Irregular" };
+const A2_PRIORITY_VERBS = new Set([
+"ser","estar","ter","fazer","ir","poder","dizer","dar","saber","querer","ver","vir",
+"falar","comer","viver","trabalhar","precisar","encontrar","pôr","ficar","dever",
+"trazer","esperar","beber","conhecer","abrir","acabar","achar","acordar","acreditar",
+"ajudar","almoçar","amar","andar","apanhar","aparecer","aprender","apresentar",
+"assistir","atender","avisar","baixar","bater","brincar","buscar","cair","calhar",
+"caminhar","cantar","casar","chegar","chamar","chorar","chover","começar","comprar",
+"compreender","comunicar","concordar","conduzir","confessar","confiar","confirmar",
+"conhecer","conseguir","considerar","construir","contar","continuar","convidar",
+"correr","cortar","costumar","cozinhar","crescer","criar","cuidar","dançar",
+"decidir","deixar","demorar","descansar","descer","descobrir","desculpar","desejar",
+"desenhar","desenvolver","desistir","desligar","despedir","dormir","duvidar",
+"educar","encontrar","ensinar","entender","entrar","entregar","enviar","errar",
+"escolher","escrever","escutar","esquecer","estudar","evitar","experimentar",
+"explicar","fechar","felicitar","funcionar","ganhar","gastar","gostar","gritar",
+"guardar","imaginar","importar","informar","interessar","ir","jantar","jogar",
+"julgar","juntar","lavar","ler","levantar","levar","ligar","limpar","lutar",
+"mandar","marcar","matar","melhorar","mentir","merecer","meter","mexer","morar",
+"morrer","mostrar","mudar","nadar","nascer","navegar","negar","notar","obedecer",
+"odiar","oferecer","olhar","ouvir","pagar","parar","parecer","participar","partir",
+"passar","passear","pedir","pegar","pensar","perceber","perder","perdoar",
+"perguntar","permitir","pertencer","pesquisar","pintar","poder","poupar",
+"praticar","precisar","preferir","preocupar","preparar","pretender","procurar",
+"prometer","propor","proteger","provar","publicar","puxar","quebrar","queimar",
+"querer","reagir","realizar","receber","reclamar","recomendar","reconhecer",
+"recordar","recusar","reduzir","registar","regressar","relaxar","reparar",
+"repetir","reservar","resolver","respeitar","respirar","responder","resultar",
+"retirar","reunir","rir","roubar","saber","sair","saltar","salvar","saudar",
+"secar","seguir","segurar","sentar","sentir","separar","ser","servir",
+"significar","situar","sobreviver","sofrer","sonhar","sorrir","subir",
+"sugerir","telefonar","tentar","ter","terminar","tirar","tocar","tomar",
+"tornar","trabalhar","traduzir","tratar","trazer","treinar","trocar",
+"ultrapassar","usar","utilizar","valer","varrer","vender","ver","verificar",
+"vestir","viajar","vir","virar","visitar","viver","voar","voltar","votar"
+]);
 
 const MODAL_VERBS = [
   { verb: "poder", meaning: "can / to be able to", presente: ["posso","podes","pode","podemos","podeis","podem"], usage: "Ability or permission: Posso abrir a janela?", examples: ["Eu posso ajudar-te.","Tu não podes entrar.","Ela pode falar três línguas."] },
@@ -304,6 +350,7 @@ const SECTIONS = [
   { id: 'escuta', label: 'Escuta', icon: '🎧' },
   { id: 'glossary', label: 'Glossário', icon: '📖' },
   { id: 'progresso', label: 'Progresso', icon: '📊' },
+  { id: 'verbos999', label: '999 Verbos', icon: '📕' },
 ];
 
 // ─── STYLES ────────────────────────────────────────────────────────────────────
@@ -909,6 +956,158 @@ function GlossarySection() {
   );
 }
 
+function Verbos999Section() {
+  const [search, setSearch] = useState("");
+  const [letter, setLetter] = useState(null);
+  const [typeFilter, setTypeFilter] = useState(null);
+  const [a2Only, setA2Only] = useState(false);
+  const [mode, setMode] = useState("list");
+  const [flashIdx, setFlashIdx] = useState(0);
+  const [flipped, setFlipped] = useState(false);
+  const [score, setScore] = useState({ correct: 0, total: 0 });
+
+  const filtered = useCallback(() => {
+    return ALL_VERBS.filter(([verb, meaning, type]) => {
+      if (search) {
+        const q = search.toLowerCase();
+        if (!verb.toLowerCase().includes(q) && !meaning.toLowerCase().includes(q)) return false;
+      }
+      if (letter && verb[0].toUpperCase() !== letter) return false;
+      if (typeFilter && type !== typeFilter) return false;
+      if (a2Only && !A2_PRIORITY_VERBS.has(verb.replace(/-se$/, ""))) return false;
+      return true;
+    });
+  }, [search, letter, typeFilter, a2Only]);
+
+  const shuffled = useCallback(() => {
+    return [...filtered()].sort(() => Math.random() - 0.5);
+  }, [filtered]);
+
+  const clearFilters = () => {
+    setSearch(""); setLetter(null); setTypeFilter(null); setA2Only(false);
+  };
+
+  const typeCounts = useCallback(() => {
+    const c = {};
+    filtered().forEach(([,,t]) => { c[t] = (c[t]||0) + 1; });
+    return c;
+  }, [filtered]);
+
+  const nextFlash = (correct) => {
+    setScore(s => ({ correct: s.correct + (correct ? 1 : 0), total: s.total + 1 }));
+    setFlipped(false);
+    setFlashIdx(i => (i + 1) % Math.max(shuffled().length, 1));
+  };
+
+  const currentFlash = shuffled()[flashIdx % Math.max(shuffled().length, 1)];
+
+  const tc = typeCounts();
+
+  return (
+    <div>
+      <h2 style={S.secTitle}>999 Verbos Portugueses</h2>
+      <p style={S.secDesc}>Complete searchable verb reference with ~1000 European Portuguese verbs. Use filters to narrow down or drill with flashcards.</p>
+
+      <div style={{ marginBottom: '12px' }}>
+        <input
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          placeholder="Search verbs or meanings..."
+          style={{ ...S.input, width: '100%', textAlign: 'left', padding: '10px 14px', borderRadius: '8px', fontSize: '14px' }}
+        />
+      </div>
+
+      <div style={{ display: 'flex', gap: '6px', marginBottom: '10px', flexWrap: 'wrap', alignItems: 'center' }}>
+        {[['list','Reference'],['flash','Flashcards']].map(([m, label]) => (
+          <button key={m} onClick={() => { setMode(m); setFlashIdx(0); setFlipped(false); setScore({correct:0,total:0}); }}
+            style={{ ...S.navBtn(mode === m), padding: '6px 12px', fontSize: '11px' }}>{label}</button>
+        ))}
+        <button onClick={() => setA2Only(!a2Only)} style={{ ...S.navBtn(a2Only), padding: '6px 12px', fontSize: '11px' }}>
+          {a2Only ? '★ A2 Active' : '☆ A2 Filter'}
+        </button>
+        {(search || letter || typeFilter || a2Only) && (
+          <button onClick={clearFilters} style={{ ...S.navBtn(false), padding: '6px 12px', fontSize: '11px', borderColor: '#ff4757', color: '#ff4757' }}>Clear</button>
+        )}
+      </div>
+
+      <div style={{ display: 'flex', gap: '5px', marginBottom: '10px', flexWrap: 'wrap' }}>
+        {VERB_TYPES.map(t => (
+          <button key={t} onClick={() => setTypeFilter(typeFilter === t ? null : t)}
+            style={{ ...S.navBtn(typeFilter === t), padding: '5px 10px', fontSize: '10px', borderColor: typeFilter === t ? VERB_TYPE_COLORS[t] : 'rgba(255,255,255,0.06)', color: typeFilter === t ? VERB_TYPE_COLORS[t] : '#555' }}>
+            {VERB_TYPE_LABELS[t]} {tc[t] ? `(${tc[t]})` : ''}
+          </button>
+        ))}
+      </div>
+
+      <div style={{ display: 'flex', gap: '3px', flexWrap: 'wrap', marginBottom: '12px' }}>
+        {VERB_LETTERS.map(l => (
+          <button key={l} onClick={() => setLetter(letter === l ? null : l)}
+            style={{ width: '26px', height: '26px', borderRadius: '5px', fontSize: '10px', fontWeight: 700, cursor: 'pointer', fontFamily: 'monospace',
+              border: letter === l ? '1px solid #00c875' : '1px solid rgba(255,255,255,0.04)',
+              background: letter === l ? 'rgba(0,200,117,0.15)' : 'rgba(255,255,255,0.02)',
+              color: letter === l ? '#00c875' : '#7a8a80', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            {l}
+          </button>
+        ))}
+      </div>
+
+      <div style={{ fontSize: '11px', color: '#555', marginBottom: '10px' }}>
+        Showing {filtered().length} of {ALL_VERBS.length} verbs
+      </div>
+
+      {mode === 'list' ? (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '5px' }}>
+          {filtered().map(([verb, meaning, type], i) => (
+            <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '9px 12px', borderRadius: '7px',
+              background: type === 'irr' ? 'rgba(255,107,107,0.04)' : 'rgba(255,255,255,0.02)',
+              border: `1px solid ${type === 'irr' ? 'rgba(255,107,107,0.1)' : 'rgba(255,255,255,0.04)'}` }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                {A2_PRIORITY_VERBS.has(verb.replace(/-se$/, "")) && <span style={{ color: '#ffe66d', fontSize: '9px' }}>★</span>}
+                <span style={{ fontFamily: 'monospace', fontWeight: 600, color: VERB_TYPE_COLORS[type], fontSize: '13px' }}>{verb}</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <span style={{ fontSize: '11px', color: '#7a8a80', textAlign: 'right' }}>{meaning}</span>
+                <span style={{ fontSize: '8px', fontWeight: 700, padding: '2px 4px', borderRadius: '3px',
+                  background: `${VERB_TYPE_COLORS[type]}15`, color: VERB_TYPE_COLORS[type], fontFamily: 'monospace' }}>{type}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div>
+          {filtered().length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '40px', color: '#555' }}>No verbs match your filters</div>
+          ) : (
+            <>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                <span style={S.badge}>{(flashIdx % shuffled().length) + 1} / {shuffled().length}</span>
+                {score.total > 0 && <span style={{ fontSize: '12px', color: '#7a8a80' }}>{score.correct}/{score.total} correct</span>}
+              </div>
+              <div style={S.progressBar}><div style={S.progressFill((((flashIdx % shuffled().length)) / Math.max(shuffled().length, 1)) * 100)} /></div>
+              <div style={S.flashcard} onClick={() => setFlipped(!flipped)}>
+                {!flipped ? (
+                  <><div style={{ fontSize: '10px', color: '#7a8a80', marginBottom: '7px', textTransform: 'uppercase', letterSpacing: '1px' }}>
+                    Verbo <span style={{ marginLeft: '8px', fontSize: '9px', padding: '2px 5px', borderRadius: '3px', background: `${VERB_TYPE_COLORS[currentFlash[2]]}15`, color: VERB_TYPE_COLORS[currentFlash[2]] }}>{currentFlash[2]}</span>
+                  </div>
+                  <div style={{ fontFamily: "'DM Serif Display',serif", fontSize: '28px', color: '#fff' }}>{currentFlash[0]}</div>
+                  <div style={{ fontSize: '11px', color: '#444', marginTop: '16px' }}>tap to flip</div></>
+                ) : (
+                  <><div style={{ fontSize: '10px', color: '#7a8a80', marginBottom: '7px', textTransform: 'uppercase', letterSpacing: '1px' }}>English</div>
+                  <div style={{ fontSize: '22px', color: '#00c875', fontWeight: 500 }}>{currentFlash[1]}</div>
+                  <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
+                    <button style={{ ...S.btn, borderColor: '#ff4757', color: '#ff4757', background: 'rgba(255,71,87,0.1)', padding: '8px 16px' }} onClick={e => { e.stopPropagation(); nextFlash(false); }}>Again</button>
+                    <button style={S.btn} onClick={e => { e.stopPropagation(); nextFlash(true); }}>Got it</button>
+                  </div></>
+                )}
+              </div>
+            </>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── SECTION MAP ────────────────────────────────────────────────────────────────
 
 const SECTION_MAP = {
@@ -918,9 +1117,34 @@ const SECTION_MAP = {
   falsefriends: FalseFriendsSection, structure: StructureSection, preterito: PreteritoSection,
   serestar: SerEstarSection, escrita: EscritaSection, oral: OralSection,
   escuta: EscutaSection, glossary: GlossarySection, progresso: ProgressSection,
+  verbos999: Verbos999Section,
 };
 
+// Global error catch
+window.onerror = (msg, src, line, col, err) => console.error('[Global Error]', msg, 'at', src + ':' + line + ':' + col, err);
+window.onunhandledrejection = e => console.error('[Unhandled Promise]', e.reason);
+
 // ─── APP ───────────────────────────────────────────────────────────────────────
+
+class ErrorBoundary extends React.Component {
+  constructor(props) { super(props); this.state = { hasError: false, error: null }; }
+  static getDerivedStateFromError(error) {
+    console.error('[PT Learner Error]', error);
+    return { hasError: true, error };
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{ padding: '40px 20px', textAlign: 'center', color: '#ff4757', background: '#0a0f0d', minHeight: '100vh', fontFamily: 'monospace' }}>
+          <h2 style={{ marginBottom: '16px', color: '#fff' }}>App Error</h2>
+          <pre style={{ textAlign: 'left', fontSize: '12px', color: '#888', maxWidth: '600px', margin: '0 auto', border: '1px solid #333', padding: '12px', borderRadius: '8px' }}>{String(this.state.error?.message || this.state.error)}</pre>
+          <button onClick={() => this.setState({hasError: false})} style={{ marginTop: '20px', padding: '10px 20px', background: '#00c875', color: '#000', border: 'none', borderRadius: '8px', cursor: 'pointer' }}>Try Again</button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 export default function App() {
   const [section, setSection] = useState('verbs25');
@@ -934,20 +1158,22 @@ export default function App() {
   }, []);
 
   return (
-    <div style={S.app}>
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap'); *{box-sizing:border-box;margin:0;padding:0}body{background:#0a0f0d;min-height:100vh}::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-track{background:rgba(255,255,255,0.03)}::-webkit-scrollbar-thumb{background:rgba(0,200,117,0.2);border-radius:3px}::selection{background:rgba(0,200,117,0.3);color:#fff}`}</style>
-      <div style={{ position:'fixed', top:'-50%', left:'-20%', width:'80%', height:'100%', background:'radial-gradient(ellipse, rgba(0,200,117,0.03) 0%, transparent 60%)', pointerEvents:'none', zIndex:0 }} />
-      <div style={{ position:'fixed', bottom:'-40%', right:'-20%', width:'70%', height:'100%', background:'radial-gradient(ellipse, rgba(78,205,196,0.02) 0%, transparent 60%)', pointerEvents:'none', zIndex:0 }} />
-      <header style={S.header}>
-        <h1 style={S.title}>PT Learner</h1>
-        <p style={S.subtitle}>Português Europeu A2 · CIPLE Prep</p>
-      </header>
-      <nav style={S.nav}>
-        {SECTIONS.map(s => <button key={s.id} style={S.navBtn(section === s.id)} onClick={() => setSection(s.id)}><span>{s.icon}</span> {s.label}</button>)}
-      </nav>
-      <main style={S.content}>
-        <SectionComp />
-      </main>
-    </div>
+    <ErrorBoundary>
+      <div style={S.app}>
+        <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap'); *{box-sizing:border-box;margin:0;padding:0}body{background:#0a0f0d;min-height:100vh}::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-track{background:rgba(255,255,255,0.03)}::-webkit-scrollbar-thumb{background:rgba(0,200,117,0.2);border-radius:3px}::selection{background:rgba(0,200,117,0.3);color:#fff}`}</style>
+        <div style={{ position:'fixed', top:'-50%', left:'-20%', width:'80%', height:'100%', background:'radial-gradient(ellipse, rgba(0,200,117,0.03) 0%, transparent 60%)', pointerEvents:'none', zIndex:0 }} />
+        <div style={{ position:'fixed', bottom:'-40%', right:'-20%', width:'70%', height:'100%', background:'radial-gradient(ellipse, rgba(78,205,196,0.02) 0%, transparent 60%)', pointerEvents:'none', zIndex:0 }} />
+        <header style={S.header}>
+          <h1 style={S.title}>PT Learner</h1>
+          <p style={S.subtitle}>Português Europeu A2 · CIPLE Prep</p>
+        </header>
+        <nav style={S.nav}>
+          {SECTIONS.map(s => <button key={s.id} style={S.navBtn(section === s.id)} onClick={() => setSection(s.id)}><span>{s.icon}</span> {s.label}</button>)}
+        </nav>
+        <main style={S.content}>
+          <SectionComp />
+        </main>
+      </div>
+    </ErrorBoundary>
   );
 }
