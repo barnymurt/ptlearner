@@ -339,6 +339,7 @@ const SECTIONS = [
   { id: 'prepositions', label: 'Preposições', icon: '📍' },
   { id: 'articles', label: 'Artigos', icon: '📝' },
   { id: 'vocabulary', label: 'Vocabulário', icon: '📚' },
+  { id: 'verbos999', label: '999 Verbos', icon: '📕' },
   { id: 'modals', label: 'Modais', icon: '🔧' },
   { id: 'idioms', label: 'Expressões', icon: '🇵🇹' },
   { id: 'falsefriends', label: 'Falsos Amigos', icon: '⚠️' },
@@ -350,7 +351,6 @@ const SECTIONS = [
   { id: 'escuta', label: 'Escuta', icon: '🎧' },
   { id: 'glossary', label: 'Glossário', icon: '📖' },
   { id: 'progresso', label: 'Progresso', icon: '📊' },
-  { id: 'verbos999', label: '999 Verbos', icon: '📕' },
 ];
 
 // ─── STYLES ────────────────────────────────────────────────────────────────────
