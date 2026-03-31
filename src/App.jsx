@@ -1478,9 +1478,6 @@ export default function App() {
             {!section && (
               <div className="section-nav-title" style={{ fontFamily: 'var(--font-display)', fontSize: '18px' }}>Fluência</div>
             )}
-            <button className={showEnglish ? 'btn btn-primary' : 'btn btn-ghost'} onClick={() => setShowEnglish(!showEnglish)} style={{ fontSize: '12px', padding: '6px 12px' }}>
-              {showEnglish ? 'Hide English' : 'Show English'}
-            </button>
           </div>
           <div className="content">
             {section ? <SectionComp showEnglish={showEnglish} /> : (
