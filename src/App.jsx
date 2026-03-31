@@ -682,7 +682,10 @@ function WritingTask({ task, showEnglish }) {
             <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1px' }}>Model Answer {effectiveShowEn ? '(EN)' : '(PT)'}</div>
             {task.englishAnswer && <button onClick={() => setShowPT(!showPT)} style={{ fontSize: '11px', padding: '4px 10px', borderRadius: '6px', border: '1px solid rgba(0,138,138,0.3)', background: showPT ? 'rgba(0,138,138,0.1)' : 'transparent', color: '#008a8a', cursor: 'pointer' }}>{showPT ? 'Show EN' : 'Show PT'}</button>}
           </div>
-          <div style={{ fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 1.7, fontFamily: 'var(--font-mono)', whiteSpace: 'pre-wrap' }}>{effectiveShowEn ? task.englishAnswer : task.modelAnswer}</div>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
+            <div style={{ fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 1.7, fontFamily: 'var(--font-mono)', whiteSpace: 'pre-wrap', flex: 1 }}>{effectiveShowEn ? task.englishAnswer : task.modelAnswer}</div>
+            <button onClick={() => speakPortuguese(task.modelAnswer)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '16px', padding: '4px' }}>🔊</button>
+          </div>
         </div>
       </div>
     </ExpandableCard>
@@ -693,6 +696,7 @@ function OralDialogue({ dialogue, showEnglish }) {
   const [showPT, setShowPT] = useState(false);
   const effectiveShowEn = showEnglish && !showPT;
   const difficultyColor = dialogue.difficulty === 'Fácil' ? 'var(--accent)' : dialogue.difficulty === 'Médio' ? 'var(--warning)' : 'var(--error)';
+  const dialogueLines = effectiveShowEn && dialogue.englishDialogue ? dialogue.englishDialogue : dialogue.dialogue;
   return (
     <ExpandableCard
       title={dialogue.title}
@@ -701,14 +705,20 @@ function OralDialogue({ dialogue, showEnglish }) {
       <div style={{ marginTop: '12px' }}>
         {dialogue.tip && <div style={{ fontSize: '12px', color: '#008a8a', fontStyle: 'italic', marginBottom: '12px', padding: '8px 12px', background: 'rgba(0,138,138,0.06)', borderRadius: '6px' }}>💡 {dialogue.tip}</div>}
         <div style={{ marginBottom: '12px' }}>
-          {(effectiveShowEn && dialogue.englishDialogue ? dialogue.englishDialogue : dialogue.dialogue).map((line, i) => <div key={i} style={{ display: 'flex', gap: '10px', marginBottom: '10px', fontSize: '14px' }}><span style={{ fontWeight: 700, color: line.speaker === 'A' || line.speaker === 'Cliente' || line.speaker === 'Paciente' || line.speaker === 'Passageiro' ? 'var(--accent)' : '#008a8a', minWidth: '80px' }}>{line.speaker}:</span><span style={{ color: 'var(--text-primary)' }}>{line.text}</span></div>)}
+          {dialogueLines.map((line, i) => (
+            <div key={i} style={{ display: 'flex', gap: '10px', marginBottom: '10px', fontSize: '14px', alignItems: 'flex-start' }}>
+              <span style={{ fontWeight: 700, color: line.speaker === 'A' || line.speaker === 'Cliente' || line.speaker === 'Paciente' || line.speaker === 'Passageiro' ? 'var(--accent)' : '#008a8a', minWidth: '80px' }}>{line.speaker}:</span>
+              <span style={{ color: 'var(--text-primary)', flex: 1 }}>{line.text}</span>
+              <button onClick={() => speakPortuguese(line.text)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '14px', padding: '2px 4px' }}>🔊</button>
+            </div>
+          ))}
         </div>
         {dialogue.englishDialogue && (
           <button onClick={() => setShowPT(!showPT)} style={{ marginBottom: '12px', fontSize: '12px', padding: '6px 12px', borderRadius: '6px', border: '1px solid rgba(0,138,138,0.3)', background: showPT ? 'rgba(0,138,138,0.1)' : 'transparent', color: '#008a8a', cursor: 'pointer' }}>{showPT ? 'Show EN' : 'Show PT'}</button>
         )}
         <div style={{ borderTop: '1px solid var(--border)', paddingTop: '12px' }}>
           <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 600 }}>Key phrases</div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>{dialogue.keyPhrases.map((p, i) => <span key={i} style={{ background: 'rgba(0,138,138,0.08)', color: '#008a8a', padding: '4px 10px', borderRadius: '6px', fontSize: '12px' }}>{p}</span>)}</div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>{dialogue.keyPhrases.map((p, i) => <span key={i} style={{ background: 'rgba(0,138,138,0.08)', color: '#008a8a', padding: '4px 10px', borderRadius: '6px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '4px' }}>{p} <button onClick={() => speakPortuguese(p)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '11px', padding: '2px' }}>🔊</button></span>)}</div>
         </div>
       </div>
     </ExpandableCard>
