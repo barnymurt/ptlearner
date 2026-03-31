@@ -1,31 +1,31 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 
 const TOP_25_VERBS = [
-  { verb: "ser", meaning: "to be (permanent)", conj: ["sou","és","é","somos","sois","são"] },
-  { verb: "estar", meaning: "to be (temporary)", conj: ["estou","estás","está","estamos","estais","estão"] },
-  { verb: "ter", meaning: "to have", conj: ["tenho","tens","tem","temos","tendes","têm"] },
-  { verb: "fazer", meaning: "to do/make", conj: ["faço","fazes","faz","fazemos","fazeis","fazem"] },
-  { verb: "ir", meaning: "to go", conj: ["vou","vais","vai","vamos","ides","vão"] },
-  { verb: "poder", meaning: "to be able to", conj: ["posso","podes","pode","podemos","podeis","podem"] },
-  { verb: "dizer", meaning: "to say", conj: ["digo","dizes","diz","dizemos","dizeis","dizem"] },
-  { verb: "dar", meaning: "to give", conj: ["dou","dás","dá","damos","dais","dão"] },
-  { verb: "saber", meaning: "to know (facts)", conj: ["sei","sabes","sabe","sabemos","sabeis","sabem"] },
-  { verb: "querer", meaning: "to want", conj: ["quero","queres","quer","queremos","quereis","querem"] },
-  { verb: "ver", meaning: "to see", conj: ["vejo","vês","vê","vemos","vedes","veem"] },
-  { verb: "vir", meaning: "to come", conj: ["venho","vens","vem","vimos","vindes","vêm"] },
-  { verb: "falar", meaning: "to speak", conj: ["falo","falas","fala","falamos","falais","falam"] },
-  { verb: "comer", meaning: "to eat", conj: ["como","comes","come","comemos","comeis","comem"] },
-  { verb: "viver", meaning: "to live", conj: ["vivo","vives","vive","vivemos","viveis","vivem"] },
-  { verb: "trabalhar", meaning: "to work", conj: ["trabalho","trabalhas","trabalha","trabalhamos","trabalhais","trabalham"] },
-  { verb: "precisar", meaning: "to need", conj: ["preciso","precisas","precisa","precisamos","precisais","precisam"] },
-  { verb: "encontrar", meaning: "to find", conj: ["encontro","encontras","encontra","encontramos","encontrais","encontram"] },
-  { verb: "pôr", meaning: "to put", conj: ["ponho","pões","põe","pomos","pondes","põem"] },
-  { verb: "ficar", meaning: "to stay/become", conj: ["fico","ficas","fica","ficamos","ficais","ficam"] },
-  { verb: "dever", meaning: "to owe/should", conj: ["devo","deves","deve","devemos","deveis","devem"] },
-  { verb: "trazer", meaning: "to bring", conj: ["trago","trazes","traz","trazemos","trazeis","trazem"] },
-  { verb: "esperar", meaning: "to wait/hope", conj: ["espero","esperas","espera","esperamos","esperais","esperam"] },
-  { verb: "beber", meaning: "to drink", conj: ["bebo","bebes","bebe","bebemos","bebeis","bebem"] },
-  { verb: "conhecer", meaning: "to know (people)", conj: ["conheço","conheces","conhece","conhecemos","conheceis","conhecem"] },
+  { verb: "ser", meaning: "to be (permanent)", conj: ["sou","és","é","somos","sois","são"], conjEn: ["am","are","is","are","are","are"] },
+  { verb: "estar", meaning: "to be (temporary)", conj: ["estou","estás","está","estamos","estais","estão"], conjEn: ["am","are","is","are","are","are"] },
+  { verb: "ter", meaning: "to have", conj: ["tenho","tens","tem","temos","tendes","têm"], conjEn: ["have","have","has","have","have","have"] },
+  { verb: "fazer", meaning: "to do/make", conj: ["faço","fazes","faz","fazemos","fazeis","fazem"], conjEn: ["do","do","does","do","do","do"] },
+  { verb: "ir", meaning: "to go", conj: ["vou","vais","vai","vamos","ides","vão"], conjEn: ["go","go","goes","go","go","go"] },
+  { verb: "poder", meaning: "to be able to", conj: ["posso","podes","pode","podemos","podeis","podem"], conjEn: ["can","can","can","can","can","can"] },
+  { verb: "dizer", meaning: "to say", conj: ["digo","dizes","diz","dizemos","dizeis","dizem"], conjEn: ["say","say","says","say","say","say"] },
+  { verb: "dar", meaning: "to give", conj: ["dou","dás","dá","damos","dais","dão"], conjEn: ["give","give","gives","give","give","give"] },
+  { verb: "saber", meaning: "to know (facts)", conj: ["sei","sabes","sabe","sabemos","sabeis","sabem"], conjEn: ["know","know","knows","know","know","know"] },
+  { verb: "querer", meaning: "to want", conj: ["quero","queres","quer","queremos","quereis","querem"], conjEn: ["want","want","wants","want","want","want"] },
+  { verb: "ver", meaning: "to see", conj: ["vejo","vês","vê","vemos","vedes","veem"], conjEn: ["see","see","sees","see","see","see"] },
+  { verb: "vir", meaning: "to come", conj: ["venho","vens","vem","vimos","vindes","vêm"], conjEn: ["come","come","comes","come","come","come"] },
+  { verb: "falar", meaning: "to speak", conj: ["falo","falas","fala","falamos","falais","falam"], conjEn: ["speak","speak","speaks","speak","speak","speak"] },
+  { verb: "comer", meaning: "to eat", conj: ["como","comes","come","comemos","comeis","comem"], conjEn: ["eat","eat","eats","eat","eat","eat"] },
+  { verb: "viver", meaning: "to live", conj: ["vivo","vives","vive","vivemos","viveis","vivem"], conjEn: ["live","live","lives","live","live","live"] },
+  { verb: "trabalhar", meaning: "to work", conj: ["trabalho","trabalhas","trabalha","trabalhamos","trabalhais","trabalham"], conjEn: ["work","work","works","work","work","work"] },
+  { verb: "precisar", meaning: "to need", conj: ["preciso","precisas","precisa","precisamos","precisais","precisam"], conjEn: ["need","need","needs","need","need","need"] },
+  { verb: "encontrar", meaning: "to find", conj: ["encontro","encontras","encontra","encontramos","encontrais","encontram"], conjEn: ["find","find","finds","find","find","find"] },
+  { verb: "pôr", meaning: "to put", conj: ["ponho","pões","põe","pomos","pondes","põem"], conjEn: ["put","put","puts","put","put","put"] },
+  { verb: "ficar", meaning: "to stay/become", conj: ["fico","ficas","fica","ficamos","ficais","ficam"], conjEn: ["stay","stay","stays","stay","stay","stay"] },
+  { verb: "dever", meaning: "to owe/should", conj: ["devo","deves","deve","devemos","deveis","devem"], conjEn: ["must","must","must","must","must","must"] },
+  { verb: "trazer", meaning: "to bring", conj: ["trago","trazes","traz","trazemos","trazeis","trazem"], conjEn: ["bring","bring","brings","bring","bring","bring"] },
+  { verb: "esperar", meaning: "to wait/hope", conj: ["espero","esperas","espera","esperamos","esperais","esperam"], conjEn: ["wait","wait","waits","wait","wait","wait"] },
+  { verb: "beber", meaning: "to drink", conj: ["bebo","bebes","bebe","bebemos","bebeis","bebem"], conjEn: ["drink","drink","drinks","drink","drink","drink"] },
+  { verb: "conhecer", meaning: "to know (people)", conj: ["conheço","conheces","conhece","conhecemos","conheceis","conhecem"], conjEn: ["know","know","knows","know","know","know"] },
 ];
 
 const PRONOUNS = ["eu","tu","ele/ela","nós","vós","eles/elas"];
@@ -436,9 +436,10 @@ const PRONOUNS_EN = {
   'Elas': 'they (f)',
 };
 
-function VerbCard({ verb, meaning, conj, showEnglish }) {
+function VerbCard({ verb, meaning, conj, conjEn, showEnglish }) {
   const [show, setShow] = useState(false);
   const displayPronouns = showEnglish ? PRONOUNS.map(p => PRONOUNS_EN[p] || p) : PRONOUNS;
+  const displayConj = showEnglish && conjEn ? conjEn : conj;
   return (
     <div className="card verb-card" onClick={() => setShow(!show)}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px' }}>
@@ -454,7 +455,7 @@ function VerbCard({ verb, meaning, conj, showEnglish }) {
       </div>
       {show && (
         <div className="conj-grid">
-          {displayPronouns.map((p, i) => <React.Fragment key={p}><span className="conj-pronoun">{p}</span><span className="conj-form">{conj[i]}</span></React.Fragment>)}
+          {displayPronouns.map((p, i) => <React.Fragment key={p}><span className="conj-pronoun">{p}</span><span className="conj-form">{displayConj[i]}</span></React.Fragment>)}
         </div>
       )}
       <div style={{ fontSize: '10px', color: 'var(--text-tertiary)', marginTop: '8px', textAlign: 'center' }}>{show ? '▲ hide' : '▼ reveal'}</div>
