@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
 
 const TOP_25_VERBS = [
   { verb: "ser", meaning: "to be (permanent)", conj: ["sou","és","é","somos","sois","são"] },
