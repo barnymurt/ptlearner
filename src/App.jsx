@@ -514,19 +514,19 @@ function OnboardingChat({ onComplete }) {
     
     simulateTyping(() => {
       if (step < questions.length - 1) {
-        addMessage('Interesting! Let me ask you something else...');
+        addMessage('Got it! Let me ask you another question...');
         setTimeout(() => {
           setStep(step + 1);
         }, 800);
       } else {
-        addMessage('Perfect! Based on your answers, let me create your personalized lesson plan...');
+        addMessage('Excellent! Based on your answers, I\'ll create your personalized lesson plan...');
         setTimeout(() => {
           const recommendations = generateLessonPlan(newAnswers);
           const planMessage = recommendations.map(id => {
             const section = SECTIONS_MAP[id];
             return section ? `${section.icon} ${section.labelEn}` : id;
           }).join('\n');
-          addMessage(`Your custom learning path:\n\n${planMessage}\n\nStart with the highlighted sections above! 🚀`);
+          addMessage(`Here's your custom learning path:\n\n${planMessage}\n\nVamos lá! Click on a section above to start learning! 🚀`);
           setTimeout(() => {
             onComplete(recommendations);
           }, 1500);
@@ -538,7 +538,7 @@ function OnboardingChat({ onComplete }) {
   useEffect(() => {
     if (messages.length === 0) {
       setTimeout(() => {
-        addMessage("Hello! I'm here to help create your personalized Portuguese learning journey. 💬");
+        addMessage("Hello! I'm Patrick, your Portuguese learning assistant. 💬 I'm here to help create your personalized learning journey.");
         setTimeout(() => {
           addMessage(questions[0].question);
         }, 800);
@@ -552,7 +552,7 @@ function OnboardingChat({ onComplete }) {
     <div style={{ maxWidth: '500px', margin: '0 auto', padding: '20px' }}>
       <div style={{ background: 'var(--bg-card)', borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', overflow: 'hidden' }}>
         <div style={{ background: 'linear-gradient(135deg, #00a870, #008a5a)', padding: '20px', color: 'white' }}>
-          <h3 style={{ margin: 0, fontSize: '18px' }}>🎯 Your Learning Journey</h3>
+          <h3 style={{ margin: 0, fontSize: '18px' }}>💬 Chat with Patrick</h3>
           <p style={{ margin: '8px 0 0', opacity: 0.9, fontSize: '13px' }}>Answer a few questions to get a personalized plan</p>
         </div>
         
