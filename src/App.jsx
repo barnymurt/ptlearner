@@ -417,8 +417,28 @@ function speakPortuguese(text) {
 
 // ─── COMPONENTS ────────────────────────────────────────────────────────────────
 
-function VerbCard({ verb, meaning, conj }) {
+const PRONOUNS_EN = {
+  'eu': 'I',
+  'tu': 'you (informal)',
+  'ele': 'he',
+  'ela': 'she',
+  'você': 'you (formal)',
+  'nós': 'we',
+  'eles': 'they (m)',
+  'elas': 'they (f)',
+  'Eu': 'I',
+  'Tu': 'you (informal)',
+  'Ele': 'he',
+  'Ela': 'she',
+  'Você': 'you (formal)',
+  'Nós': 'we',
+  'Eles': 'they (m)',
+  'Elas': 'they (f)',
+};
+
+function VerbCard({ verb, meaning, conj, showEnglish }) {
   const [show, setShow] = useState(false);
+  const displayPronouns = showEnglish ? PRONOUNS.map(p => PRONOUNS_EN[p] || p) : PRONOUNS;
   return (
     <div className="card verb-card" onClick={() => setShow(!show)}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px' }}>
@@ -434,7 +454,7 @@ function VerbCard({ verb, meaning, conj }) {
       </div>
       {show && (
         <div className="conj-grid">
-          {PRONOUNS.map((p, i) => <React.Fragment key={p}><span className="conj-pronoun">{p}</span><span className="conj-form">{conj[i]}</span></React.Fragment>)}
+          {displayPronouns.map((p, i) => <React.Fragment key={p}><span className="conj-pronoun">{p}</span><span className="conj-form">{conj[i]}</span></React.Fragment>)}
         </div>
       )}
       <div style={{ fontSize: '10px', color: 'var(--text-tertiary)', marginTop: '8px', textAlign: 'center' }}>{show ? '▲ hide' : '▼ reveal'}</div>
@@ -761,7 +781,7 @@ function Verbs25Section({ showEnglish }) {
         <button className={mode === 'grid' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('grid')}>{showEnglish ? 'Reference' : 'Reference'}</button>
         <button className={mode === 'flash' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('flash')}>{showEnglish ? 'Flashcards' : 'Flashcards'}</button>
       </div>
-      {mode === 'grid' ? <div className="grid-2">{TOP_25_VERBS.map(v => <VerbCard key={v.verb} {...v} />)}</div> : <FlashcardDrill items={TOP_25_VERBS} frontKey="verb" backKey="meaning" title="Verbo" sectionId="verbs25" />}
+      {mode === 'grid' ? <div className="grid-2">{TOP_25_VERBS.map(v => <VerbCard key={v.verb} {...v} showEnglish={showEnglish} />)}</div> : <FlashcardDrill items={TOP_25_VERBS} frontKey="verb" backKey="meaning" title="Verbo" sectionId="verbs25" />}
     </div>
   );
 }
