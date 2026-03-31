@@ -468,7 +468,14 @@ function VocabCard({ pt, en }) {
   return (
     <div className="card verb-card" onClick={() => setShow(!show)}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px' }}>
-        <span className="verb-text">{pt}</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span className="verb-text">{pt}</span>
+          <button 
+            onClick={(e) => { e.stopPropagation(); speakPortuguese(pt); }}
+            style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '16px', padding: '2px 6px', borderRadius: '4px' }}
+            title="Listen to pronunciation"
+          >🔊</button>
+        </div>
         <span className="verb-meaning">{en}</span>
       </div>
       {show && (
@@ -489,7 +496,10 @@ function AdjectiveCard({ pt, en }) {
   return (
     <div className="card verb-card" onClick={() => setShow(!show)}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px' }}>
-        <span className="verb-text">{pt}</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span className="verb-text">{pt}</span>
+          <button onClick={(e) => { e.stopPropagation(); speakPortuguese(pt); }} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '16px', padding: '2px 6px', borderRadius: '4px' }}>🔊</button>
+        </div>
         <span className="verb-meaning">{en}</span>
       </div>
       {show && (
@@ -603,6 +613,7 @@ function FillGap({ exercises }) {
               <span style={{ color: 'var(--text-primary)' }}>{parts[0]}</span>
               <input className="input" style={{ width: '120px', textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: '14px', fontWeight: 600 }} value={answers[i] || ''} onChange={(e) => { setAnswers(a => ({ ...a, [i]: e.target.value })); setChecked(c => { const n = { ...c }; delete n[i]; return n; }); }} onKeyDown={(e) => e.key === 'Enter' && check(i)} placeholder="..." />
               <span style={{ color: 'var(--text-primary)' }}>{parts[1]}</span>
+              <button onClick={() => speakPortuguese(ex.sentence)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '14px', padding: '2px 6px' }}>🔊</button>
             </div>
             <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
               {showHints && <span style={{ fontSize: '12px', color: 'var(--text-tertiary)', fontStyle: 'italic' }}>{ex.hint}</span>}
@@ -620,7 +631,7 @@ function ScenarioCard({ scenario, question, correct, explanation, note }) {
   const [selected, setSelected] = useState(null);
   const handleSelect = (c) => { setSelected(c); setRevealed(true); };
   return (
-    <ExpandableCard title={`"${scenario}"`} accentColor="var(--border-strong)" defaultOpen>
+    <ExpandableCard title={<span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>"{scenario}" <button onClick={(e) => { e.stopPropagation(); speakPortuguese(scenario); }} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '12px', padding: '2px 4px' }}>🔊</button></span>} accentColor="var(--border-strong)" defaultOpen>
       <div style={{ marginTop: '8px' }}>
         <div style={{ fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '12px' }}>{question}</div>
         <div style={{ display: 'flex', gap: '10px', marginBottom: '12px' }}>
@@ -727,11 +738,11 @@ function ListeningItem({ item, showEnglish }) {
 
 function GlossaryEntry({ term }) {
   return (
-    <ExpandableCard title={term.term} accentColor="var(--accent)">
+    <ExpandableCard title={<span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>{term.term} <button onClick={(e) => { e.stopPropagation(); speakPortuguese(term.term); }} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '12px', padding: '2px 4px' }}>🔊</button></span>} accentColor="var(--accent)">
       <div style={{ marginTop: '8px' }}>
         <span className="badge" style={{ marginBottom: '10px', display: 'inline-block' }}>{term.category}</span>
         <div style={{ fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: '10px' }}>{term.explanation}</div>
-        <div style={{ fontSize: '13px', color: 'var(--text-tertiary)', fontStyle: 'italic' }}>Example: {term.example}</div>
+        <div style={{ fontSize: '13px', color: 'var(--text-tertiary)', fontStyle: 'italic' }}>Example: {term.example} <button onClick={() => speakPortuguese(term.example)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '12px', padding: '2px 4px' }}>🔊</button></div>
       </div>
     </ExpandableCard>
   );
@@ -791,6 +802,10 @@ function ConjugationSection({ showEnglish }) {
   const [tense, setTense] = useState('Presente');
   const data = CONJUGATION_PATTERNS[tense];
   const tenseLabels = showEnglish ? { 'Presente': 'Present', 'Pretérito Perfeito': 'Perfect', 'Pretérito Imperfeito': 'Imperfect', 'Futuro': 'Future', 'Condicional': 'Conditional' } : {};
+  const displayPronouns = showEnglish ? PRONOUNS.map(p => PRONOUNS_EN[p] || p) : PRONOUNS;
+  const exampleArEn = "falar → falo, falas, fala, falamos, falais, falam";
+  const exampleErEn = "comer → como, comes, come, comemos, comeis, comem";
+  const exampleIrEn = "partir → parto, partes, parte, partimos, partis, partem";
   return (
     <div>
       <h2 className="sec-title">{showEnglish ? 'Regular Conjugation' : 'Conjugação Regular'}</h2>
@@ -799,8 +814,8 @@ function ConjugationSection({ showEnglish }) {
       {[['ar','var(--accent)'],['er','#008a8a'],['ir','var(--warning)']].map(([type,col]) => (
         <ExpandableCard key={type} title={showEnglish ? `-${type.toUpperCase()} verbs` : `-${type.toUpperCase()} verbs`} accentColor={col}>
           <div style={{ marginTop: '12px' }}>
-            <div className="conj-grid">{PRONOUNS.map((p, i) => <React.Fragment key={p}><span className="conj-pronoun">{p}</span><span style={{ color: col, fontWeight: 600 }}>{data[type][i]}</span></React.Fragment>)}</div>
-            <div style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '12px', fontFamily: 'var(--font-mono)', paddingTop: '12px', borderTop: '1px solid var(--border)' }}>{data['example_'+type]}</div>
+            <div className="conj-grid">{displayPronouns.map((p, i) => <React.Fragment key={p}><span className="conj-pronoun">{p}</span><span style={{ color: col, fontWeight: 600 }}>{data[type][i]}</span></React.Fragment>)}</div>
+            <div style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '12px', fontFamily: 'var(--font-mono)', paddingTop: '12px', borderTop: '1px solid var(--border)' }}>{showEnglish ? (type === 'ar' ? exampleArEn : type === 'er' ? exampleErEn : exampleIrEn) : data['example_'+type]}</div>
           </div>
         </ExpandableCard>
       ))}
@@ -867,7 +882,7 @@ function ArticlesSection({ showEnglish }) {
             <div key={type} className="card">
               <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '16px', color: 'var(--text-primary)', marginBottom: '12px' }}>{articleTitles[type] || ARTICLES_DATA[type].title}</h3>
               <table className="data-table"><thead><tr><th>Usage</th><th>Article</th><th>Example</th></tr></thead>
-                <tbody>{ARTICLES_DATA[type].forms.map((f, i) => <tr key={i}><td style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{f.label}</td><td className="col-pt" style={{ fontSize: '15px' }}>{f.article}</td><td style={{ fontSize: '12px', color: 'var(--text-tertiary)' }}>{f.example}</td></tr>)}</tbody>
+                <tbody>{ARTICLES_DATA[type].forms.map((f, i) => <tr key={i}><td style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{f.label}</td><td className="col-pt" style={{ fontSize: '15px' }}>{f.article}</td><td style={{ fontSize: '12px', color: 'var(--text-tertiary)', display: 'flex', alignItems: 'center', gap: '4px' }}>{f.example} <button onClick={() => speakPortuguese(f.example)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '11px', padding: '2px' }}>🔊</button></td></tr>)}</tbody>
               </table>
             </div>
           ))}
@@ -897,6 +912,7 @@ function VocabularySection({ showEnglish }) {
 }
 
 function ModalsSection({ showEnglish }) {
+  const displayPronouns = showEnglish ? PRONOUNS.map(p => PRONOUNS_EN[p] || p) : PRONOUNS;
   return (
     <div>
       <h2 className="sec-title">{showEnglish ? 'Modal Verbs' : 'Verbos Modais'}</h2>
@@ -904,10 +920,13 @@ function ModalsSection({ showEnglish }) {
       {MODAL_VERBS.map((m, i) => (
         <ExpandableCard key={i} title={`${m.verb} — ${m.meaning}`} accentColor="var(--accent)">
           <div style={{ marginTop: '12px' }}>
-            <div style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '12px', lineHeight: 1.5 }}>{m.usage}</div>
-            <div className="conj-grid">{PRONOUNS.map((p, j) => <React.Fragment key={p}><span className="conj-pronoun">{p}</span><span className="conj-form">{m.presente[j]}</span></React.Fragment>)}</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+              <div style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: 1.5 }}>{m.usage}</div>
+              <button onClick={() => speakPortuguese(m.verb)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '14px', padding: '2px 6px', borderRadius: '4px' }}>🔊</button>
+            </div>
+            <div className="conj-grid">{displayPronouns.map((p, j) => <React.Fragment key={p}><span className="conj-pronoun">{p}</span><span className="conj-form">{m.presente[j]}</span></React.Fragment>)}</div>
             <div style={{ marginTop: '12px', borderTop: '1px solid var(--border)', paddingTop: '12px' }}>
-              {m.examples.map((ex, j) => <div key={j} style={{ fontSize: '13px', color: 'var(--text-secondary)', fontStyle: 'italic', padding: '4px 0', fontFamily: 'var(--font-mono)' }}>{ex}</div>)}
+              {m.examples.map((ex, j) => <div key={j} style={{ fontSize: '13px', color: 'var(--text-secondary)', fontStyle: 'italic', padding: '4px 0', fontFamily: 'var(--font-mono)' }}>{ex} <button onClick={() => speakPortuguese(ex)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '12px', padding: '2px 4px' }}>🔊</button></div>)}
             </div>
           </div>
         </ExpandableCard>
@@ -926,7 +945,10 @@ function IdiomsSection({ showEnglish }) {
       {mode === 'list' ? IDIOMS.map((idiom, i) => (
         <ExpandableCard key={i} title={showEnglish ? `"${idiom.en}"` : `"${idiom.pt}"`} accentColor="var(--accent)">
           <div style={{ marginTop: '8px' }}>
-            <div style={{ fontSize: '14px', color: 'var(--accent)', fontWeight: 500 }}>{showEnglish ? idiom.pt : idiom.en}</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', color: 'var(--accent)', fontWeight: 500 }}>
+              <span>{showEnglish ? idiom.pt : idiom.en}</span>
+              <button onClick={() => speakPortuguese(showEnglish ? idiom.pt : idiom.en)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '14px', padding: '2px 6px' }}>🔊</button>
+            </div>
             <div style={{ fontSize: '12px', color: 'var(--text-tertiary)', marginTop: '6px' }}>Literal: {idiom.literal}</div>
           </div>
         </ExpandableCard>
@@ -945,8 +967,11 @@ function FalseFriendsSection({ showEnglish }) {
       {mode === 'list' ? FALSE_FRIENDS.map((ff, i) => (
         <ExpandableCard key={i} title={showEnglish ? ff.pt : ff.pt} accentColor="var(--error)">
           <div style={{ marginTop: '8px' }}>
-            <div style={{ fontSize: '13px', color: 'var(--error)', marginBottom: '4px' }}><span style={{ textDecoration: 'line-through' }}>✗ {showEnglish ? ff.seems : ff.seems}</span></div>
-            <div style={{ fontSize: '14px', color: 'var(--accent)', fontWeight: 500 }}>✓ {showEnglish ? ff.actually : ff.actually}</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: 'var(--error)', marginBottom: '4px' }}>
+              <span><span style={{ textDecoration: 'line-through' }}>✗ {ff.seems}</span></span>
+              <button onClick={() => speakPortuguese(ff.pt)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '12px', padding: '2px 4px' }}>🔊</button>
+            </div>
+            <div style={{ fontSize: '14px', color: 'var(--accent)', fontWeight: 500 }}>✓ {ff.actually}</div>
           </div>
         </ExpandableCard>
       )) : <FlashcardDrill items={FALSE_FRIENDS} frontKey="pt" backKey={(item) => 'NOT "'+item.seems+'" → '+item.actually} title={showEnglish ? 'False Friend' : 'Falso Amigo'} sectionId="falsefriends" />}
@@ -960,10 +985,13 @@ function StructureSection({ showEnglish }) {
       <h2 className="sec-title">{showEnglish ? 'Sentence Structure' : 'Estrutura das Frases'}</h2>
       <p className="sec-desc">{showEnglish ? 'Core sentence patterns for A2. European Portuguese follows SVO order. Tap each pattern to see examples and usage tips.' : 'Core sentence patterns for A2. European Portuguese follows SVO order. Tap each pattern to see examples and usage tips.'}</p>
       {SENTENCE_STRUCTURE.map((s, i) => (
-        <ExpandableCard key={i} title={showEnglish ? s.pattern : s.pattern} accentColor="#008a8a">
+        <ExpandableCard key={i} title={s.pattern} accentColor="#008a8a">
           <div style={{ marginTop: '8px' }}>
-            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '15px', color: 'var(--text-primary)', marginBottom: '6px' }}>{s.example}</div>
-            <div style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '8px' }}>{showEnglish ? s.translation : s.translation}</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontFamily: 'var(--font-mono)', fontSize: '15px', color: 'var(--text-primary)', marginBottom: '6px' }}>
+              <span>{s.example}</span>
+              <button onClick={() => speakPortuguese(s.example)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '14px', padding: '2px 6px' }}>🔊</button>
+            </div>
+            <div style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '8px' }}>{s.translation}</div>
             <div style={{ fontSize: '12px', color: 'var(--text-tertiary)', fontStyle: 'italic' }}>{showEnglish ? 'Usage: Replace the highlighted words with your own vocabulary to create sentences.' : 'Usage: Replace the highlighted words with your own vocabulary to create sentences.'}</div>
           </div>
         </ExpandableCard>
@@ -981,15 +1009,15 @@ function StructureSection({ showEnglish }) {
         <div style={{ marginTop: '8px', fontSize: '14px', lineHeight: 1.8 }}>
           <div style={{ marginBottom: '10px' }}>
             <strong style={{ color: 'var(--accent)' }}>Continuous:</strong> Use <strong>estar + a + infinitive</strong> for ongoing actions<br/>
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'var(--text-secondary)' }}>→ "Estou a comer" (I am eating) — not "Estou comendo" (BP)</span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'var(--text-secondary)' }}>→ "Estou a comer" (I am eating) — not "Estou comendo" (BP) <button onClick={() => speakPortuguese('Estou a comer')} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '12px', padding: '2px 4px' }}>🔊</button></span>
           </div>
           <div style={{ marginBottom: '10px' }}>
             <strong style={{ color: 'var(--accent)' }}>Clitic placement:</strong> Pronouns come after the verb, joined by hyphen<br/>
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'var(--text-secondary)' }}>→ "Ele deu-me o livro" (He gave me the book)</span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'var(--text-secondary)' }}>→ "Ele deu-me o livro" (He gave me the book) <button onClick={() => speakPortuguese('Ele deu-me o livro')} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '12px', padding: '2px 4px' }}>🔊</button></span>
           </div>
           <div>
             <strong style={{ color: 'var(--accent)' }}>Mesoclisis:</strong> Pronouns insert into the future/past verb<br/>
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'var(--text-secondary)' }}>→ "Dir-lhe-ei amanhã" (I will tell him tomorrow) — unique to EP</span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'var(--text-secondary)' }}>→ "Dir-lhe-ei amanhã" (I will tell him tomorrow) — unique to EP <button onClick={() => speakPortuguese('Dir-lhe-ei amanhã')} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '12px', padding: '2px 4px' }}>🔊</button></span>
           </div>
         </div>
       </ExpandableCard>
@@ -1042,7 +1070,7 @@ function PreteritoSection({ showEnglish }) {
       ) : (
         <div>
           {PRETERITO_EXERCISES.map(ex => (
-            <ExpandableCard key={ex.id} title={ex.sentence} accentColor="var(--border-strong)">
+            <ExpandableCard key={ex.id} title={<span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>{ex.sentence} <button onClick={(e) => { e.stopPropagation(); speakPortuguese(ex.sentence); }} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '12px', padding: '2px 4px' }}>🔊</button></span>} accentColor="var(--border-strong)">
               <div style={{ marginTop: '8px' }}>
                 <div style={{ fontSize: '12px', color: 'var(--text-tertiary)', fontStyle: 'italic', marginBottom: '8px' }}>{showEnglish ? 'Hint' : 'Hint'}: {ex.hint}</div>
                 <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginBottom: '8px' }}>
@@ -1226,6 +1254,7 @@ function Verbos999Section({ showEnglish }) {
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                     {A2_PRIORITY_VERBS.has(verb.replace(/-se$/, "")) && <span style={{ color: '#c9963c', fontSize: '10px' }}>★</span>}
                     <span className="verb-text">{verb}</span>
+                    <button onClick={() => speakPortuguese(verb)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '14px', padding: '2px 4px' }}>🔊</button>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                     <span className="verb-meaning">{meaning}</span>
