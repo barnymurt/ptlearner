@@ -420,6 +420,19 @@ function VerbCard({ verb, meaning, conj }) {
   );
 }
 
+function ExpandableCard({ title, children, defaultOpen = false, accentColor }) {
+  const [expanded, setExpanded] = useState(defaultOpen);
+  return (
+    <div className={`expandable-card ${expanded ? 'expanded' : ''}`} style={accentColor ? { borderLeft: `3px solid ${accentColor}` } : {}}>
+      <div className="expandable-header" onClick={() => setExpanded(!expanded)}>
+        <div className="expandable-title">{title}</div>
+        <div className="expandable-chevron">{expanded ? '▲' : '▼'}</div>
+      </div>
+      {expanded && <div className="expandable-content">{children}</div>}
+    </div>
+  );
+}
+
 function FlashcardDrill({ items, frontKey, backKey, title, sectionId }) {
   const [wrongKey] = useLocal('wrong', {});
   const [idx, setIdx] = useState(0);
@@ -720,12 +733,12 @@ function PronounsSection() {
       <p className="sec-desc">European Portuguese pronoun system. Note: "tu" is widely used in EP, unlike Brazilian Portuguese where "você" dominates.</p>
       <div className="toggle-row">{Object.keys(PRONOUNS_DATA).map(c => <button key={c} className={cat === c ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setCat(c)}>{c}</button>)}</div>
       <div className="card">
-        <table className="conj-table"><thead><tr><th className="conj-th">Português</th><th className="conj-th">English</th></tr></thead>
-          <tbody>{PRONOUNS_DATA[cat].map(([pt,en], i) => <tr key={i}><td style={{ ...S.td, fontFamily: 'monospace', fontWeight: 600, color: '#00a870' }}>{pt}</td><td style={{ ...S.td, color: '#c0b8a8' }}>{en}</td></tr>)}</tbody>
+        <table className="data-table"><thead><tr><th>Português</th><th>English</th></tr></thead>
+          <tbody>{PRONOUNS_DATA[cat].map(([pt,en], i) => <tr key={i}><td className="col-pt">{pt}</td><td className="col-en">{en}</td></tr>)}</tbody>
         </table>
       </div>
-      <div style={{ ...S.card, marginTop: '7px', background: 'rgba(0,168,112,0.04)' }}>
-        <div style={{ fontSize: '12px', color: '#7a8a80', lineHeight: 1.6 }}><strong style={{ color: '#00a870' }}>EP Tip:</strong> In EP, object pronouns come <em>after</em> the verb with a hyphen: "Ele deu-<strong>me</strong> o livro" (He gave me the book).</div>
+      <div className="card" style={{ marginTop: '12px', background: 'rgba(0,168,112,0.04)', border: '1px solid rgba(0,168,112,0.15)' }}>
+        <strong style={{ color: 'var(--accent)' }}>EP Tip:</strong> In EP, object pronouns come <em>after</em> the verb with a hyphen: "Ele deu-<strong>me</strong> o livro" (He gave me the book).
       </div>
     </div>
   );
@@ -738,7 +751,7 @@ function AdjectivesSection() {
       <h2 className="sec-title">40 Adjetivos Essenciais</h2>
       <p className="sec-desc">Core adjectives for A2. Remember: most adjectives agree in gender and number.</p>
       <div className="toggle-row"><button className={mode === 'grid' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('grid')}>Reference</button><button className={mode === 'flash' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('flash')}>Flashcards</button></div>
-      {mode === 'grid' ? <div className="grid-2">{ADJECTIVES.map(([pt,en], i) => <div key={i} style={{ ...S.card, padding: '10px 14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}><span style={{ fontFamily: 'monospace', fontWeight: 600, color: '#00a870' }}>{pt}</span><span style={{ fontSize: '12px', color: '#7a8a80' }}>{en}</span></div>)}</div> : <FlashcardDrill items={ADJECTIVES.map(([pt,en]) => ({ pt, en }))} frontKey="pt" backKey="en" title="Adjetivo" sectionId="adjectives" />}
+      {mode === 'grid' ? <div className="vocab-grid">{ADJECTIVES.map(([pt,en], i) => <div key={i} className="vocab-item"><span className="vocab-pt">{pt}</span><span className="vocab-en">{en}</span></div>)}</div> : <FlashcardDrill items={ADJECTIVES.map(([pt,en]) => ({ pt, en }))} frontKey="pt" backKey="en" title="Adjetivo" sectionId="adjectives" />}
     </div>
   );
 }
@@ -787,7 +800,7 @@ function VocabularySection() {
       <p className="sec-desc">A2+ vocabulary organized by CIPLE exam topics. Learn with the articles!</p>
       <div className="toggle-row">{Object.keys(VOCABULARY).map(t => <button key={t} className={topic === t ? 'toggle-btn active' : 'toggle-btn'} onClick={() => { setTopic(t); setMode('grid'); }}>{t}</button>)}</div>
       <div style={{ marginBottom: '10px' }}><button className={mode === 'grid' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('grid')}>Reference</button><button style={{ ...S.navBtn(mode === 'flash'), marginLeft: '5px' }} onClick={() => setMode('flash')}>Flashcards</button></div>
-      {mode === 'grid' ? <div className="grid-2">{VOCABULARY[topic].map(([pt,en], i) => <div key={i} style={{ ...S.card, padding: '9px 14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}><span style={{ fontFamily: 'monospace', fontWeight: 500, color: '#00a870', fontSize: '13px' }}>{pt}</span><span style={{ fontSize: '12px', color: '#7a8a80' }}>{en}</span></div>)}</div> : <FlashcardDrill items={VOCABULARY[topic].map(([pt,en]) => ({ pt, en }))} frontKey="pt" backKey="en" title={topic} sectionId={'vocab_'+topic} />}
+      {mode === 'grid' ? <div className="vocab-grid">{VOCABULARY[topic].map(([pt,en], i) => <div key={i} className="vocab-item"><span className="vocab-pt">{pt}</span><span className="vocab-en">{en}</span></div>)}</div> : <FlashcardDrill items={VOCABULARY[topic].map(([pt,en]) => ({ pt, en }))} frontKey="pt" backKey="en" title={topic} sectionId={'vocab_'+topic} />}
     </div>
   );
 }
@@ -798,12 +811,15 @@ function ModalsSection() {
       <h2 className="sec-title">Verbos Modais</h2>
       <p className="sec-desc">Modal verbs express ability, obligation, desire, and necessity. Critical for A2 communication.</p>
       {MODAL_VERBS.map((m, i) => (
-        <div key={i} style={{ ...S.card, borderLeft: '3px solid #00a870' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', flexWrap: 'wrap', gap: '7px' }}><span className="verb-text">{m.verb}</span><span className="verb-meaning">{m.meaning}</span></div>
-          <div style={{ fontSize: '12px', color: '#c0b8a8', margin: '9px 0', lineHeight: 1.5 }}>{m.usage}</div>
-          <div className="conj-grid">{PRONOUNS.map((p, j) => <React.Fragment key={p}><span className="conj-pronoun">{p}</span><span className="conj-form">{m.presente[j]}</span></React.Fragment>)}</div>
-          <div style={{ marginTop: '10px' }}>{m.examples.map((ex, j) => <div key={j} style={{ fontSize: '12px', color: '#7a8a80', fontStyle: 'italic', padding: '2px 0', fontFamily: 'monospace' }}>{ex}</div>)}</div>
-        </div>
+        <ExpandableCard key={i} title={`${m.verb} — ${m.meaning}`} accentColor="var(--accent)">
+          <div style={{ marginTop: '12px' }}>
+            <div style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '12px', lineHeight: 1.5 }}>{m.usage}</div>
+            <div className="conj-grid">{PRONOUNS.map((p, j) => <React.Fragment key={p}><span className="conj-pronoun">{p}</span><span className="conj-form">{m.presente[j]}</span></React.Fragment>)}</div>
+            <div style={{ marginTop: '12px', borderTop: '1px solid var(--border)', paddingTop: '12px' }}>
+              {m.examples.map((ex, j) => <div key={j} style={{ fontSize: '13px', color: 'var(--text-secondary)', fontStyle: 'italic', padding: '4px 0', fontFamily: 'var(--font-mono)' }}>{ex}</div>)}
+            </div>
+          </div>
+        </ExpandableCard>
       ))}
     </div>
   );
@@ -816,7 +832,14 @@ function IdiomsSection() {
       <h2 className="sec-title">Expressões Idiomáticas</h2>
       <p className="sec-desc">Common Portuguese expressions. Knowing these will impress in conversation.</p>
       <div className="toggle-row"><button className={mode === 'list' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('list')}>Reference</button><button className={mode === 'flash' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('flash')}>Flashcards</button></div>
-      {mode === 'list' ? IDIOMS.map((idiom, i) => <div key={i} style={{ ...S.card, padding: '12px 16px' }}><div style={{ fontFamily: "'DM Serif Display',serif", fontSize: '16px', color: '#1a1a1a' }}>"{idiom.pt}"</div><div style={{ fontSize: '13px', color: '#00a870', fontWeight: 500, marginTop: '3px' }}>{idiom.en}</div><div style={{ fontSize: '11px', color: '#444', marginTop: '3px' }}>Literal: {idiom.literal}</div></div>) : <FlashcardDrill items={IDIOMS} frontKey="pt" backKey={(item) => item.en+'\n(Literal: '+item.literal+')'} title="Expressão" sectionId="idioms" />}
+      {mode === 'list' ? IDIOMS.map((idiom, i) => (
+        <ExpandableCard key={i} title={`"${idiom.pt}"`} accentColor="var(--accent)">
+          <div style={{ marginTop: '8px' }}>
+            <div style={{ fontSize: '14px', color: 'var(--accent)', fontWeight: 500 }}>{idiom.en}</div>
+            <div style={{ fontSize: '12px', color: 'var(--text-tertiary)', marginTop: '6px' }}>Literal: {idiom.literal}</div>
+          </div>
+        </ExpandableCard>
+      )) : <FlashcardDrill items={IDIOMS} frontKey="pt" backKey={(item) => item.en+'\n(Literal: '+item.literal+')'} title="Expressão" sectionId="idioms" />}
     </div>
   );
 }
@@ -828,7 +851,14 @@ function FalseFriendsSection() {
       <h2 className="sec-title">Falsos Amigos</h2>
       <p className="sec-desc">Words that look like English but mean something different. Essential to avoid mistakes!</p>
       <div className="toggle-row"><button className={mode === 'list' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('list')}>Reference</button><button className={mode === 'flash' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('flash')}>Flashcards</button></div>
-      {mode === 'list' ? <div className="grid-2">{FALSE_FRIENDS.map((ff, i) => <div key={i} className="card"><div style={{ fontFamily: 'monospace', fontSize: '15px', fontWeight: 600, color: '#1a1a1a' }}>{ff.pt}</div><div style={{ fontSize: '11px', color: '#b82035', marginTop: '5px' }}><span style={{ textDecoration: 'line-through' }}>✗ {ff.seems}</span></div><div style={{ fontSize: '13px', color: '#00a870', fontWeight: 500, marginTop: '3px' }}>✓ {ff.actually}</div></div>)}</div> : <FlashcardDrill items={FALSE_FRIENDS} frontKey="pt" backKey={(item) => 'NOT "'+item.seems+'" → '+item.actually} title="Falso Amigo" sectionId="falsefriends" />}
+      {mode === 'list' ? FALSE_FRIENDS.map((ff, i) => (
+        <ExpandableCard key={i} title={ff.pt} accentColor="var(--error)">
+          <div style={{ marginTop: '8px' }}>
+            <div style={{ fontSize: '13px', color: 'var(--error)', marginBottom: '4px' }}><span style={{ textDecoration: 'line-through' }}>✗ {ff.seems}</span></div>
+            <div style={{ fontSize: '14px', color: 'var(--accent)', fontWeight: 500 }}>✓ {ff.actually}</div>
+          </div>
+        </ExpandableCard>
+      )) : <FlashcardDrill items={FALSE_FRIENDS} frontKey="pt" backKey={(item) => 'NOT "'+item.seems+'" → '+item.actually} title="Falso Amigo" sectionId="falsefriends" />}
     </div>
   );
 }

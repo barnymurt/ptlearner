@@ -263,6 +263,51 @@ a:hover { text-decoration: underline; }
   box-shadow: var(--shadow-hover);
 }
 
+/* ─── Expandable Cards ─── */
+.expandable-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-3);
+  overflow: hidden;
+  transition: box-shadow 0.2s ease;
+}
+
+.expandable-card:hover {
+  box-shadow: var(--shadow-hover);
+}
+
+.expandable-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-4);
+  cursor: pointer;
+  user-select: none;
+  gap: var(--space-3);
+}
+
+.expandable-header:hover {
+  background: var(--bg-hover);
+}
+
+.expandable-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.expandable-chevron {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+}
+
+.expandable-content {
+  padding: 0 var(--space-4) var(--space-4);
+  border-top: 1px solid var(--border);
+}
+
 /* ─── Buttons ─── */
 .btn {
   display: inline-flex;
@@ -383,6 +428,40 @@ a:hover { text-decoration: underline; }
   gap: var(--space-3);
 }
 
+/* ─── Vocabulary Grid ─── */
+.vocab-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--space-2);
+}
+
+.vocab-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-3) var(--space-4);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  gap: var(--space-3);
+}
+
+.vocab-item:hover {
+  background: var(--bg-hover);
+}
+
+.vocab-pt {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.vocab-en {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
 /* ─── Verb / Vocab Items ─── */
 .verb-item {
   display: flex;
@@ -469,7 +548,28 @@ a:hover { text-decoration: underline; }
 .verb-type-ir { background: var(--warning-light); color: var(--warning); }
 .verb-type-irr { background: var(--error-light); color: var(--error); }
 
-/* ─── Conjugation ─── */
+/* ─── Tables ─── */
+.data-table { width: 100%; border-collapse: collapse; }
+.data-table th {
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 2px solid var(--border);
+  background: var(--bg-muted);
+}
+.data-table td {
+  padding: var(--space-3) var(--space-4);
+  font-size: 14px;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border);
+}
+.data-table tr:hover td { background: var(--bg-hover); }
+.data-table .col-pt { font-family: var(--font-mono); font-weight: 600; color: var(--accent); }
+.data-table .col-en { color: var(--text-secondary); }
 .conj-table { width: 100%; border-collapse: collapse; }
 .conj-table th {
   text-align: left;
