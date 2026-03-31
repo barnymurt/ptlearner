@@ -522,7 +522,7 @@ function ScenarioCard({ scenario, question, correct, explanation, note }) {
   const handleSelect = (c) => { setSelected(c); setRevealed(true); };
   return (
     <div style={{ ...S.card, padding: '16px 18px' }}>
-      <div style={{ fontSize: '15px', color: '#fff', marginBottom: '6px', fontFamily: 'monospace' }}>"{scenario}"</div>
+      <div style={{ fontSize: '15px', color: '#1a1a1a', marginBottom: '6px', fontFamily: 'monospace' }}>"{scenario}"</div>
       <div style={{ fontSize: '12px', color: '#7a8a80', marginBottom: '14px' }}>{question}</div>
       <div style={{ display: 'flex', gap: '8px', marginBottom: '10px' }}>
         {['ser','estar'].map(c => (
@@ -540,15 +540,16 @@ function ScenarioCard({ scenario, question, correct, explanation, note }) {
   );
 }
 
-function WritingTask({ task }) {
+function WritingTask({ task, showEnglish }) {
   const [revealed, setRevealed] = useState(false);
   const [showEn, setShowEn] = useState(false);
+  const effectiveShowEn = showEnglish || showEn;
   return (
     <div style={{ ...S.card, padding: '16px 18px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '10px', flexWrap: 'wrap', gap: '6px' }}>
         <div><span className="tag tag-teal">{task.type}</span><span style={{ ...S.tag(), marginLeft: '5px' }}>{task.targetWords} words</span></div>
       </div>
-      <div style={{ fontFamily: "'DM Serif Display',serif", fontSize: '17px', color: '#fff', marginBottom: '6px' }}>{task.title}</div>
+      <div style={{ fontFamily: "'DM Serif Display',serif", fontSize: '17px', color: '#1a1a1a', marginBottom: '6px' }}>{task.title}</div>
       <div style={{ fontSize: '13px', color: '#7a8a80', marginBottom: '12px', lineHeight: 1.5 }}>{task.description}</div>
       <div style={{ marginBottom: '14px' }}>
         <div style={{ fontSize: '11px', color: '#555', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '1px' }}>Key vocabulary</div>
@@ -561,10 +562,10 @@ function WritingTask({ task }) {
         <div style={{ marginTop: '14px', background: 'rgba(0,168,112,0.04)', border: '1px solid rgba(0,168,112,0.12)', borderRadius: '10px', padding: '14px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
             <div style={{ fontSize: '11px', color: '#7a8a80', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1px' }}>Model Answer</div>
-            <button onClick={() => setShowEn(!showEn)} style={{ fontSize: '10px', padding: '3px 8px', borderRadius: '5px', border: '1px solid rgba(0,138,138,0.3)', background: showEn ? 'rgba(0,138,138,0.1)' : 'transparent', color: '#008a8a', cursor: 'pointer' }}>{showEn ? 'Hide English' : 'Show English'}</button>
+            <button onClick={() => setShowEn(!showEn)} style={{ fontSize: '10px', padding: '3px 8px', borderRadius: '5px', border: '1px solid rgba(0,138,138,0.3)', background: effectiveShowEn ? 'rgba(0,138,138,0.1)' : 'transparent', color: '#008a8a', cursor: 'pointer' }}>{effectiveShowEn ? 'Hide English' : 'Show English'}</button>
           </div>
           <div style={{ fontSize: '13px', color: '#c0b8a8', lineHeight: 1.7, fontFamily: 'monospace', whiteSpace: 'pre-wrap' }}>{task.modelAnswer}</div>
-          {showEn && task.englishAnswer && (
+          {effectiveShowEn && task.englishAnswer && (
             <div style={{ marginTop: '14px', paddingTop: '12px', borderTop: '1px solid rgba(0,138,138,0.15)' }}>
               <div style={{ fontSize: '11px', color: '#008a8a', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px' }}>English Translation</div>
               <div style={{ fontSize: '13px', color: '#7a8a80', lineHeight: 1.7, fontFamily: 'monospace', whiteSpace: 'pre-wrap' }}>{task.englishAnswer}</div>
@@ -576,24 +577,25 @@ function WritingTask({ task }) {
   );
 }
 
-function OralDialogue({ dialogue }) {
+function OralDialogue({ dialogue, showEnglish }) {
   const [expanded, setExpanded] = useState(false);
   const [showEn, setShowEn] = useState(false);
+  const effectiveShowEn = showEnglish || showEn;
   return (
     <div style={{ ...S.card, padding: '16px 18px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', flexWrap: 'wrap', gap: '6px' }}>
-        <div><span style={{ fontFamily: "'DM Serif Display',serif", fontSize: '16px', color: '#fff' }}>{dialogue.title}</span></div>
+        <div><span style={{ fontFamily: "'DM Serif Display',serif", fontSize: '16px', color: '#1a1a1a' }}>{dialogue.title}</span></div>
         <span style={{ ...S.tag(), background: dialogue.difficulty === 'Fácil' ? '#00a87018' : dialogue.difficulty === 'Médio' ? '#c9963c18' : '#b8203518', color: dialogue.difficulty === 'Fácil' ? '#00a870' : dialogue.difficulty === 'Médio' ? '#c9963c' : '#b82035' }}>{dialogue.difficulty}</span>
       </div>
       {dialogue.tip && <div style={{ fontSize: '11px', color: '#008a8a', fontStyle: 'italic', marginBottom: '12px', padding: '8px 10px', background: 'rgba(0,138,138,0.06)', borderRadius: '6px' }}>💡 {dialogue.tip}</div>}
       <button className="btn btn-primary" onClick={() => setExpanded(!expanded)}>{expanded ? 'Hide Dialogue' : 'Show Dialogue'}</button>
       {expanded && (
         <div style={{ marginTop: '12px' }}>
-          {dialogue.dialogue.map((line, i) => <div key={i} style={{ display: 'flex', gap: '10px', marginBottom: '8px', fontSize: '13px' }}><span style={{ fontWeight: 700, color: line.speaker === 'A' || line.speaker === 'Cliente' || line.speaker === 'Paciente' || line.speaker === 'Passageiro' ? '#00a870' : '#008a8a', minWidth: '80px' }}>{line.speaker}:</span><span style={{ color: '#e8e6e1' }}>{line.text}</span></div>)}
+          {dialogue.dialogue.map((line, i) => <div key={i} style={{ display: 'flex', gap: '10px', marginBottom: '8px', fontSize: '13px' }}><span style={{ fontWeight: 700, color: line.speaker === 'A' || line.speaker === 'Cliente' || line.speaker === 'Paciente' || line.speaker === 'Passageiro' ? '#00a870' : '#008a8a', minWidth: '80px' }}>{line.speaker}:</span><span style={{ color: '#1a1a1a' }}>{line.text}</span></div>)}
           {dialogue.englishDialogue && (
             <>
-              <button onClick={() => setShowEn(!showEn)} style={{ marginTop: '10px', fontSize: '11px', padding: '4px 10px', borderRadius: '6px', border: '1px solid rgba(0,138,138,0.3)', background: showEn ? 'rgba(0,138,138,0.1)' : 'transparent', color: '#008a8a', cursor: 'pointer' }}>{showEn ? 'Hide English' : 'Show English'}</button>
-              {showEn && (
+              <button onClick={() => setShowEn(!showEn)} style={{ marginTop: '10px', fontSize: '11px', padding: '4px 10px', borderRadius: '6px', border: '1px solid rgba(0,138,138,0.3)', background: effectiveShowEn ? 'rgba(0,138,138,0.1)' : 'transparent', color: '#008a8a', cursor: 'pointer' }}>{effectiveShowEn ? 'Hide English' : 'Show English'}</button>
+              {effectiveShowEn && (
                 <div style={{ marginTop: '10px', paddingTop: '10px', borderTop: '1px solid rgba(0,138,138,0.1)' }}>
                   {dialogue.englishDialogue.map((line, i) => <div key={i} style={{ display: 'flex', gap: '10px', marginBottom: '8px', fontSize: '13px' }}><span style={{ fontWeight: 700, color: '#008a8a', minWidth: '80px' }}>{line.speaker}:</span><span style={{ color: '#7a8a80', fontStyle: 'italic' }}>{line.text}</span></div>)}
                 </div>
@@ -610,21 +612,22 @@ function OralDialogue({ dialogue }) {
   );
 }
 
-function ListeningItem({ item }) {
+function ListeningItem({ item, showEnglish }) {
   const [showTranscript, setShowTranscript] = useState(false);
+  const effectiveShowTranscript = showTranscript || showEnglish;
   return (
     <div style={{ ...S.card, padding: '16px 18px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px', flexWrap: 'wrap', gap: '6px' }}>
-        <div style={{ fontFamily: "'DM Serif Display',serif", fontSize: '16px', color: '#fff' }}>{item.title}</div>
+        <div style={{ fontFamily: "'DM Serif Display',serif", fontSize: '16px', color: '#1a1a1a' }}>{item.title}</div>
         <span style={{ ...S.tag(), background: item.difficulty === 'Fácil' ? '#00a87018' : item.difficulty === 'Médio' ? '#c9963c18' : '#b8203518', color: item.difficulty === 'Fácil' ? '#00a870' : item.difficulty === 'Médio' ? '#c9963c' : '#b82035' }}>{item.difficulty}</span>
       </div>
       <div style={{ fontSize: '12px', color: '#7a8a80', marginBottom: '10px', lineHeight: 1.5 }}>{item.description}</div>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginBottom: '12px' }}>{item.topics.map((t, i) => <span key={i} style={{ ...S.tag('#008a8a'), fontSize: '9px' }}>{t}</span>)}</div>
       <a href={item.url} target="_blank" rel="noopener noreferrer" style={{ ...S.btn, display: 'inline-block', textDecoration: 'none' }}>🔗 Open Resource</a>
-      <button style={{ ...S.btn, marginTop: '8px', marginLeft: '7px', borderColor: '#008a8a', color: '#008a8a', background: 'rgba(0,138,138,0.08)' }} onClick={() => setShowTranscript(!showTranscript)}>{showTranscript ? 'Hide Transcript' : 'Show Transcript'}</button>
-      {showTranscript && (
+      <button style={{ ...S.btn, marginTop: '8px', marginLeft: '7px', borderColor: '#008a8a', color: '#008a8a', background: 'rgba(0,138,138,0.08)' }} onClick={() => setShowTranscript(!showTranscript)}>{effectiveShowTranscript ? 'Hide Transcript' : 'Show Transcript'}</button>
+      {effectiveShowTranscript && (
         <div style={{ marginTop: '10px', padding: '12px', background: 'rgba(0,138,138,0.04)', borderRadius: '8px' }}>
-          <div style={{ fontSize: '12px', color: '#e8e6e1', lineHeight: 1.7, fontFamily: 'monospace', marginBottom: item.englishTranscript ? '12px' : 0 }}>{item.transcript}</div>
+          <div style={{ fontSize: '12px', color: '#1a1a1a', lineHeight: 1.7, fontFamily: 'monospace', marginBottom: item.englishTranscript ? '12px' : 0 }}>{item.transcript}</div>
           {item.englishTranscript && (
             <>
               <div style={{ fontSize: '10px', color: '#008a8a', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '6px', fontWeight: 600 }}>English</div>
@@ -677,7 +680,7 @@ function ProgressSection() {
         </div>
         <div style={{ ...S.card }}>
           <div style={{ fontSize: '13px', color: '#7a8a80', lineHeight: 1.6 }}>
-            <p style={{ marginBottom: '8px' }}>💡 <strong style={{ color: '#e8e6e1' }}>Dica:</strong> Usa os flashcards regularmente para memorizar vocabulário.</p>
+            <p style={{ marginBottom: '8px' }}>💡 <strong style={{ color: '#1a1a1a' }}>Dica:</strong> Usa os flashcards regularmente para memorizar vocabulário.</p>
             <p>❌ As palavras erradas aparecem com mais frequência nos flashcards.</p>
           </div>
         </div>
@@ -853,9 +856,9 @@ function StructureSection() {
     <div>
       <h2 className="sec-title">Estrutura das Frases</h2>
       <p className="sec-desc">Core sentence patterns for A2. European Portuguese follows SVO order.</p>
-      {SENTENCE_STRUCTURE.map((s, i) => <div key={i} className="card"><div style={{ ...S.tag('#008a8a'), marginBottom: '9px' }}>{s.pattern}</div><div style={{ fontFamily: 'monospace', fontSize: '15px', color: '#fff', marginBottom: '3px' }}>{s.example}</div><div style={{ fontSize: '12px', color: '#7a8a80' }}>{s.translation}</div></div>)}
+      {SENTENCE_STRUCTURE.map((s, i) => <div key={i} className="card"><div style={{ ...S.tag('#008a8a'), marginBottom: '9px' }}>{s.pattern}</div><div style={{ fontFamily: 'monospace', fontSize: '15px', color: '#1a1a1a', marginBottom: '3px' }}>{s.example}</div><div style={{ fontSize: '12px', color: '#7a8a80' }}>{s.translation}</div></div>)}
       <div style={{ ...S.card, marginTop: '14px', background: 'rgba(0,168,112,0.04)' }}>
-        <h3 style={{ fontFamily: "'DM Serif Display',serif", fontSize: '16px', color: '#fff', marginBottom: '9px' }}>EP-Specific Patterns</h3>
+        <h3 style={{ fontFamily: "'DM Serif Display',serif", fontSize: '16px', color: '#1a1a1a', marginBottom: '9px' }}>EP-Specific Patterns</h3>
         <div style={{ fontSize: '13px', color: '#c0b8a8', lineHeight: 1.8 }}>
           <div><strong style={{ color: '#00a870' }}>Continuous:</strong> estar + a + infinitive → "Estou a comer" (not "Estou comendo")</div>
           <div><strong style={{ color: '#00a870' }}>Clitic placement:</strong> After verb: "Ele deu-me" / Before with negation: "Ele não me deu"</div>
@@ -880,22 +883,22 @@ function PreteritoSection() {
         <>
           <div style={{ ...S.card, background: 'rgba(0,168,112,0.04)', border: '1px solid rgba(0,168,112,0.15)', padding: '16px 18px', marginBottom: '14px' }}>
             <h3 style={{ fontFamily: "'DM Serif Display',serif", fontSize: '17px', color: '#00a870', marginBottom: '10px' }}>Perfeito = Specific, Completed</h3>
-            <p style={{ fontSize: '13px', color: '#c0b8a8', lineHeight: 1.6, marginBottom: '8px' }}>Use the <strong style={{ color: '#fff' }}>Pretérito Perfeito</strong> when:</p>
+            <p style={{ fontSize: '13px', color: '#c0b8a8', lineHeight: 1.6, marginBottom: '8px' }}>Use the <strong style={{ color: '#1a1a1a' }}>Pretérito Perfeito</strong> when:</p>
             <ul style={{ fontSize: '12px', color: '#7a8a80', lineHeight: 1.8, paddingLeft: '18px' }}>
-              <li>The action happened at a <strong style={{ color: '#e8e6e1' }}>specific time</strong> (ontem, às três horas, no verão passado)</li>
-              <li>The action is <strong style={{ color: '#e8e6e1' }}>completed</strong> — it has a clear beginning and end</li>
-              <li>You're describing a <strong style={{ color: '#e8e6e1' }}>one-time event</strong></li>
+              <li>The action happened at a <strong style={{ color: '#1a1a1a' }}>specific time</strong> (ontem, às três horas, no verão passado)</li>
+              <li>The action is <strong style={{ color: '#1a1a1a' }}>completed</strong> — it has a clear beginning and end</li>
+              <li>You're describing a <strong style={{ color: '#1a1a1a' }}>one-time event</strong></li>
             </ul>
             <p style={{ fontSize: '13px', color: '#00a870', fontFamily: 'monospace', marginTop: '10px' }}>Falei com ele ontem. (I spoke with him yesterday.)</p>
           </div>
           <div style={{ ...S.card, background: 'rgba(0,138,138,0.04)', border: '1px solid rgba(0,138,138,0.15)', padding: '16px 18px', marginBottom: '14px' }}>
             <h3 style={{ fontFamily: "'DM Serif Display',serif", fontSize: '17px', color: '#008a8a', marginBottom: '10px' }}>Imperfeito = Ongoing, Habitual, Descriptive</h3>
-            <p style={{ fontSize: '13px', color: '#c0b8a8', lineHeight: 1.6, marginBottom: '8px' }}>Use the <strong style={{ color: '#fff' }}>Pretérito Imperfeito</strong> when:</p>
+            <p style={{ fontSize: '13px', color: '#c0b8a8', lineHeight: 1.6, marginBottom: '8px' }}>Use the <strong style={{ color: '#1a1a1a' }}>Pretérito Imperfeito</strong> when:</p>
             <ul style={{ fontSize: '12px', color: '#7a8a80', lineHeight: 1.8, paddingLeft: '18px' }}>
-              <li>The action was <strong style={{ color: '#e8e6e1' }}>habitual</strong> or repeated (todos os dias, sempre)</li>
-              <li>You're <strong style={{ color: '#e8e6e1' }}>describing</strong> what something was like in the past</li>
-              <li>There's <strong style={{ color: '#e8e6e1' }}>no specific time</strong> mentioned</li>
-              <li>Describing someone's <strong style={{ color: '#e8e6e1' }}>age, personality, or physical state</strong> in the past</li>
+              <li>The action was <strong style={{ color: '#1a1a1a' }}>habitual</strong> or repeated (todos os dias, sempre)</li>
+              <li>You're <strong style={{ color: '#1a1a1a' }}>describing</strong> what something was like in the past</li>
+              <li>There's <strong style={{ color: '#1a1a1a' }}>no specific time</strong> mentioned</li>
+              <li>Describing someone's <strong style={{ color: '#1a1a1a' }}>age, personality, or physical state</strong> in the past</li>
             </ul>
             <p style={{ fontSize: '13px', color: '#008a8a', fontFamily: 'monospace', marginTop: '10px' }}>Falava português todos os dias. (I used to speak Portuguese every day.)</p>
           </div>
@@ -911,7 +914,7 @@ function PreteritoSection() {
         <div>
           {PRETERITO_EXERCISES.map(ex => (
             <div key={ex.id} style={{ ...S.card, padding: '14px 16px', marginBottom: '12px' }}>
-              <div style={{ fontSize: '14px', color: '#fff', marginBottom: '8px', fontFamily: 'monospace' }}>{ex.sentence}</div>
+              <div style={{ fontSize: '14px', color: '#1a1a1a', marginBottom: '8px', fontFamily: 'monospace' }}>{ex.sentence}</div>
               <div style={{ fontSize: '11px', color: '#7a8a80', fontStyle: 'italic', marginBottom: '8px' }}>Hint: {ex.hint}</div>
               <div style={{ display: 'flex', gap: '7px', flexWrap: 'wrap' }}>
                 <span style={{ fontSize: '12px', color: '#00a870' }}>✓ Perfeito: <strong>{ex.correct_perfeito}</strong></span>
@@ -940,32 +943,32 @@ function SerEstarSection() {
   );
 }
 
-function EscritaSection() {
+function EscritaSection({ showEnglish }) {
   return (
     <div>
       <h2 className="sec-title">Escrita — Prática CIPLE</h2>
       <p className="sec-desc">CIPLE-style writing tasks. Read the task, write your answer, then check the model.</p>
-      {WRITING_TASKS.map(t => <WritingTask key={t.id} task={t} />)}
+      {WRITING_TASKS.map(t => <WritingTask key={t.id} task={t} showEnglish={showEnglish} />)}
     </div>
   );
 }
 
-function OralSection() {
+function OralSection({ showEnglish }) {
   return (
     <div>
       <h2 className="sec-title">Oral — Diálogos para Praticar</h2>
       <p className="sec-desc">Read the dialogues aloud, then try to say the lines yourself. Shadowing is the fastest way to improve pronunciation.</p>
-      {ORAL_DIALOGUES.map(d => <OralDialogue key={d.id} dialogue={d} />)}
+      {ORAL_DIALOGUES.map(d => <OralDialogue key={d.id} dialogue={d} showEnglish={showEnglish} />)}
     </div>
   );
 }
 
-function EscutaSection() {
+function EscutaSection({ showEnglish }) {
   return (
     <div>
       <h2 className="sec-title">Escuta — Recursos de Audio</h2>
       <p className="sec-desc">Curated EP listening resources. Click to open and listen, then try the transcript toggle to check your understanding.</p>
-      {LISTENING_RESOURCES.map(item => <ListeningItem key={item.id} item={item} />)}
+      {LISTENING_RESOURCES.map(item => <ListeningItem key={item.id} item={item} showEnglish={showEnglish} />)}
     </div>
   );
 }
@@ -1246,6 +1249,7 @@ class ErrorBoundary extends React.Component {
 
 export default function App() {
   const [section, setSection] = useState(null);
+  const [showEnglish, setShowEnglish] = useState(false);
   const SectionComp = section ? (SECTION_MAP[section] || Verbs25Section) : null;
 
   useEffect(() => {
@@ -1276,9 +1280,12 @@ export default function App() {
               <div className="section-nav-title">
                 {SECTIONS.find(s => s.id === section)?.label || section}
               </div>
+              <button className={showEnglish ? 'btn btn-primary' : 'btn btn-ghost'} onClick={() => setShowEnglish(!showEnglish)} style={{ fontSize: '11px', padding: '5px 10px' }}>
+                EN {showEnglish ? '✓' : ''}
+              </button>
             </div>
             <main className="content">
-              <SectionComp />
+              <SectionComp showEnglish={showEnglish} />
             </main>
           </>
         )}
