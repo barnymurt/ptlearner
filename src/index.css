@@ -202,10 +202,11 @@ a:hover { text-decoration: underline; }
 }
 
 @media (min-width: 1024px) {
-  .home-sections { grid-template-columns: repeat(4, 1fr); }
+  .home-sections { grid-template-columns: repeat(3, 1fr); }
 }
 
 @media (min-width: 1280px) {
+  .home-sections { grid-template-columns: repeat(3, 1fr); }
   .content { max-width: 1100px; }
   .home-grid { max-width: 1100px; }
 }
@@ -245,8 +246,10 @@ a:hover { text-decoration: underline; }
 }
 
 .section-card[data-group="reference"]::before { background: var(--border-strong); }
+.section-card[data-group="grammar"]::before { background: var(--text-secondary); }
+.section-card[data-group="vocabulary"]::before { background: var(--accent-warm, #e07b54); }
 .section-card[data-group="practice"]::before { background: var(--accent); }
-.section-card[data-group="activities"]::before { background: var(--error); }
+.section-card[data-group="communication"]::before { background: var(--error); }
 .section-card[data-group="tools"]::before { background: var(--text-tertiary); }
 
 .section-card:hover {
@@ -273,8 +276,8 @@ a:hover { text-decoration: underline; }
 }
 
 .section-card-desc {
-  font-size: 11px;
-  color: var(--text-tertiary);
+  font-size: 13px;
+  color: var(--text-secondary);
   line-height: 1.4;
   margin-top: auto;
 }
