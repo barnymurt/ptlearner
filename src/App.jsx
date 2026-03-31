@@ -1394,19 +1394,22 @@ export default function App() {
         <Sidebar section={section} onSelect={handleSectionSelect} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} showEnglish={showEnglish} />
         {sidebarOpen && <div className="sidebar-overlay" onClick={() => setSidebarOpen(false)} />}
         <main className="main-content">
-          {section && (
-            <div className="section-nav">
-              <button className="hamburger-btn" onClick={() => setSidebarOpen(!sidebarOpen)}>
-                <span className="hamburger-icon">{sidebarOpen ? '✕' : '☰'}</span>
-              </button>
+          <div className="section-nav">
+            <button className="hamburger-btn" onClick={() => setSidebarOpen(!sidebarOpen)}>
+              <span className="hamburger-icon">{sidebarOpen ? '✕' : '☰'}</span>
+            </button>
+            {section && (
               <div className="section-nav-title">
                 {showEnglish ? (SECTIONS.find(s => s.id === section)?.labelEn || section) : (SECTIONS.find(s => s.id === section)?.label || section)}
               </div>
-              <button className={showEnglish ? 'btn btn-primary' : 'btn btn-ghost'} onClick={() => setShowEnglish(!showEnglish)} style={{ fontSize: '12px', padding: '6px 12px' }}>
-                {showEnglish ? 'Hide English' : 'Show English'}
-              </button>
-            </div>
-          )}
+            )}
+            {!section && (
+              <div className="section-nav-title" style={{ fontFamily: 'var(--font-display)', fontSize: '18px' }}>Fluência</div>
+            )}
+            <button className={showEnglish ? 'btn btn-primary' : 'btn btn-ghost'} onClick={() => setShowEnglish(!showEnglish)} style={{ fontSize: '12px', padding: '6px 12px' }}>
+              {showEnglish ? 'Hide English' : 'Show English'}
+            </button>
+          </div>
           <div className="content">
             {section ? <SectionComp showEnglish={showEnglish} /> : (
               <div className="welcome-screen">
