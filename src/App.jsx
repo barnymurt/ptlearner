@@ -1948,12 +1948,12 @@ const SECTION_GROUPS = [
   },
 ];
 
-function LandingPage({ onStartChat, onSelectSection }) {
+function LandingPage({ onStartChat }) {
   return (
-    <div style={{ padding: '24px', maxWidth: '900px', margin: '0 auto' }}>
+    <div style={{ padding: '24px', maxWidth: '600px', margin: '0 auto' }}>
       <div style={{ textAlign: 'center', marginBottom: '40px' }}>
         <h1 style={{ fontSize: '42px', fontWeight: 700, margin: '0 0 12px', color: 'var(--text-primary)', fontFamily: 'var(--font-display)' }}>Fluência</h1>
-        <p style={{ fontSize: '18px', color: 'var(--text-secondary)', margin: '0 0 24px' }}>Master European Portuguese for your CIPLE A2 exam</p>
+        <p style={{ fontSize: '18px', color: 'var(--text-secondary)', margin: '0 0 32px' }}>Master European Portuguese for your CIPLE A2 exam</p>
         <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
           <button 
             onClick={onStartChat}
@@ -1997,51 +1997,6 @@ function LandingPage({ onStartChat, onSelectSection }) {
             ☕ Support Fluência
           </a>
         </div>
-      </div>
-
-      <div style={{ marginBottom: '40px' }}>
-        <h2 style={{ fontSize: '20px', fontWeight: 600, margin: '0 0 16px', color: 'var(--text-primary)' }}>Popular Sections</h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '12px' }}>
-          {SECTION_GROUPS.flatMap(g => g.sections).slice(0, 8).map(s => (
-            <button
-              key={s.id}
-              onClick={() => onSelectSection(s.id)}
-              style={{
-                padding: '16px',
-                background: 'var(--bg-card)',
-                border: '1px solid var(--border)',
-                borderRadius: '12px',
-                cursor: 'pointer',
-                textAlign: 'left',
-                transition: 'all 0.2s ease'
-              }}
-            >
-              <span style={{ fontSize: '24px', marginBottom: '8px', display: 'block' }}>{s.icon}</span>
-              <span style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)', display: 'block' }}>{s.labelEn}</span>
-              <span style={{ fontSize: '12px', color: 'var(--text-tertiary)', display: 'block', marginTop: '4px' }}>{s.desc}</span>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div style={{ background: 'var(--bg-card)', borderRadius: '16px', padding: '24px', textAlign: 'center' }}>
-        <h3 style={{ fontSize: '18px', fontWeight: 600, margin: '0 0 8px', color: 'var(--text-primary)' }}>Not sure where to start?</h3>
-        <p style={{ fontSize: '14px', color: 'var(--text-secondary)', margin: '0 0 16px' }}>Chat with Patrick and get a personalized learning plan in under 2 minutes!</p>
-        <button 
-          onClick={onStartChat}
-          style={{ 
-            padding: '14px 28px', 
-            background: 'var(--accent)', 
-            color: 'white', 
-            border: 'none', 
-            borderRadius: '10px', 
-            cursor: 'pointer', 
-            fontSize: '15px', 
-            fontWeight: 600
-          }}
-        >
-          Get Started with Patrick →
-        </button>
       </div>
     </div>
   );
@@ -2203,7 +2158,7 @@ export default function App() {
           <div className="content">
             {section ? <SectionComp showEnglish={showEnglish} /> : (
               <div className="welcome-screen">
-                <LandingPage onStartChat={() => setChatOpen(true)} onSelectSection={(id) => setSection(id)} />
+                <LandingPage onStartChat={() => setChatOpen(true)} />
               </div>
             )}
           </div>
