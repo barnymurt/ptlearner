@@ -739,6 +739,30 @@ function ListeningItem({ item, showEnglish }) {
   const [showPlayer, setShowPlayer] = useState(false);
   const effectiveShowTranscript = showTranscript || showEnglish;
   const difficultyColor = item.difficulty === 'Fácil' ? 'var(--accent)' : item.difficulty === 'Médio' ? 'var(--warning)' : 'var(--error)';
+  
+  const getEmbedUrl = (url) => {
+    if (url.includes('youtube.com/watch')) {
+      const videoId = url.split('v=')[1]?.split('&')[0];
+      return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
+    }
+    if (url.includes('youtu.be/')) {
+      const videoId = url.split('youtu.be/')[1]?.split('?')[0];
+      return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
+    }
+    return url;
+  };
+  
+  const embedUrl = getEmbedUrl(item.url);
+  const canEmbed = embedUrl && !embedUrl.includes('youtube.com/watch') && !embedUrl.includes('youtu.be/');
+  
+  const handleOpenResource = () => {
+    if (canEmbed) {
+      setShowPlayer(true);
+    } else {
+      window.open(item.url, '_blank', 'noopener,noreferrer');
+    }
+  };
+  
   return (
     <>
       <ExpandableCard
@@ -749,7 +773,7 @@ function ListeningItem({ item, showEnglish }) {
           <div style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '12px', lineHeight: 1.5 }}>{item.description}</div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '12px' }}>{item.topics.map((t, i) => <span key={i} style={{ background: 'rgba(0,138,138,0.08)', color: '#008a8a', padding: '4px 10px', borderRadius: '6px', fontSize: '11px' }}>{t}</span>)}</div>
           <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-            <button className={showPlayer ? 'btn btn-primary' : 'btn btn-ghost'} onClick={() => setShowPlayer(!showPlayer)} style={{ fontSize: '13px', padding: '8px 16px' }}>▶ Open Resource</button>
+            <button className={showPlayer ? 'btn btn-primary' : 'btn btn-ghost'} onClick={handleOpenResource} style={{ fontSize: '13px', padding: '8px 16px' }}>▶ Open Resource</button>
             <button style={{ border: '1px solid #008a8a', color: '#008a8a', background: effectiveShowTranscript ? 'rgba(0,138,138,0.1)' : 'transparent', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer', fontSize: '13px' }} onClick={() => setShowTranscript(!showTranscript)}>{effectiveShowTranscript ? 'Hide Transcript' : 'Show Transcript'}</button>
           </div>
           {effectiveShowTranscript && (
@@ -768,7 +792,7 @@ function ListeningItem({ item, showEnglish }) {
               <button onClick={() => setShowPlayer(false)} style={{ background: 'transparent', border: 'none', fontSize: '20px', cursor: 'pointer', color: 'var(--text-tertiary)' }}>✕</button>
             </div>
             <iframe 
-              src={item.url} 
+              src={embedUrl} 
               style={{ width: '100%', height: '400px', border: 'none', borderRadius: '8px' }}
               allow="autoplay; fullscreen"
               title={item.title}
