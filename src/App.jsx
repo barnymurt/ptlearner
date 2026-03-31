@@ -43,26 +43,26 @@ const ADJECTIVES = [
 ];
 
 const PREPOSITION_EXERCISES = [
-  { sentence: "O gato está ___ a cama.", answer: "em", hint: "location: on/in" },
-  { sentence: "Vamos viajar ___ carro amanhã.", answer: "de", hint: "means of transport" },
-  { sentence: "Ela falou muito ___ o problema.", answer: "sobre", hint: "about a topic" },
-  { sentence: "O livro foi escrito ___ uma autora famosa.", answer: "por", hint: "by someone" },
-  { sentence: "Eles estão ___ o parque.", answer: "no", hint: "at a place (em + o)" },
-  { sentence: "Ele saiu ___ casa muito cedo.", answer: "de", hint: "from a place" },
-  { sentence: "Chegámos ___ aeroporto atrasados.", answer: "ao", hint: "to a place (a + o)" },
-  { sentence: "Posso contar ___ você?", answer: "com", hint: "rely on someone" },
-  { sentence: "Este café é feito ___ leite.", answer: "com", hint: "made with" },
-  { sentence: "Vou mandar este e-mail ___ meu chefe.", answer: "para", hint: "to someone (destination)" },
-  { sentence: "Ele passou ___ o túnel rapidamente.", answer: "por", hint: "through a place" },
-  { sentence: "Hoje estou ___ paciência para isso.", answer: "sem", hint: "without" },
-  { sentence: "A loja fica ___ a farmácia e o banco.", answer: "entre", hint: "between two things" },
-  { sentence: "Vou estudar ___ às dez horas.", answer: "até", hint: "until a time" },
-  { sentence: "Ela pôs o livro ___ a mesa.", answer: "sobre", hint: "on top of" },
-  { sentence: "Isto é ___ ti.", answer: "para", hint: "for someone" },
-  { sentence: "Estou ___ Lisboa há dois anos.", answer: "em", hint: "in a city" },
-  { sentence: "Ele foi ___ Portugal no verão.", answer: "a", hint: "to (a country)" },
-  { sentence: "O comboio passa ___ aqui.", answer: "por", hint: "passes through" },
-  { sentence: "Não consigo viver ___ música.", answer: "sem", hint: "without something" },
+  { sentence: "O gato está ___ a cama.", sentenceEn: "The cat is ___ the bed.", answer: "em", hint: "location: on/in" },
+  { sentence: "Vamos viajar ___ carro amanhã.", sentenceEn: "We are going to travel ___ car tomorrow.", answer: "de", hint: "means of transport" },
+  { sentence: "Ela falou muito ___ o problema.", sentenceEn: "She talked a lot ___ the problem.", answer: "sobre", hint: "about a topic" },
+  { sentence: "O livro foi escrito ___ uma autora famosa.", sentenceEn: "The book was written ___ a famous author.", answer: "por", hint: "by someone" },
+  { sentence: "Eles estão ___ o parque.", sentenceEn: "They are ___ the park.", answer: "no", hint: "at a place (em + o)" },
+  { sentence: "Ele saiu ___ casa muito cedo.", sentenceEn: "He left ___ home very early.", answer: "de", hint: "from a place" },
+  { sentence: "Chegámos ___ aeroporto atrasados.", sentenceEn: "We arrived ___ the airport late.", answer: "ao", hint: "to a place (a + o)" },
+  { sentence: "Posso contar ___ você?", sentenceEn: "Can I count ___ you?", answer: "com", hint: "rely on someone" },
+  { sentence: "Este café é feito ___ leite.", sentenceEn: "This coffee is made ___ milk.", answer: "com", hint: "made with" },
+  { sentence: "Vou mandar este e-mail ___ meu chefe.", sentenceEn: "I'm going to send this email ___ my boss.", answer: "para", hint: "to someone (destination)" },
+  { sentence: "Ele passou ___ o túnel rapidamente.", sentenceEn: "He passed ___ the tunnel quickly.", answer: "por", hint: "through a place" },
+  { sentence: "Hoje estou ___ paciência para isso.", sentenceEn: "Today I am ___ patience for this.", answer: "sem", hint: "without" },
+  { sentence: "A loja fica ___ a farmácia e o banco.", sentenceEn: "The store is ___ the pharmacy and the bank.", answer: "entre", hint: "between two things" },
+  { sentence: "Vou estudar ___ às dez horas.", sentenceEn: "I am going to study ___ ten o'clock.", answer: "até", hint: "until a time" },
+  { sentence: "Ela pôs o livro ___ a mesa.", sentenceEn: "She put the book ___ the table.", answer: "sobre", hint: "on top of" },
+  { sentence: "Isto é ___ ti.", sentenceEn: "This is ___ you.", answer: "para", hint: "for someone" },
+  { sentence: "Estou ___ Lisboa há dois anos.", sentenceEn: "I have been ___ Lisbon for two years.", answer: "em", hint: "in a city" },
+  { sentence: "Ele foi ___ Portugal no verão.", sentenceEn: "He went ___ Portugal in the summer.", answer: "a", hint: "to (a country)" },
+  { sentence: "O comboio passa ___ aqui.", sentenceEn: "The train passes ___ here.", answer: "por", hint: "passes through" },
+  { sentence: "Não consigo viver ___ música.", sentenceEn: "I can't live ___ music.", answer: "sem", hint: "without something" },
 ];
 
 const PRONOUNS_DATA = {
@@ -176,16 +176,16 @@ const ARTICLES_DATA = {
 };
 
 const ARTICLES_EXERCISES = [
-  { sentence: "___ menino está na escola.", answer: "O", hint: "definite, masc. sing." },
-  { sentence: "Vou comprar ___ livro.", answer: "um", hint: "indefinite, masc. sing." },
-  { sentence: "___ raparigas estão no parque.", answer: "As", hint: "definite, fem. pl." },
-  { sentence: "Preciso ___ caneta.", answer: "de uma", hint: "de + indefinite, fem. sing." },
-  { sentence: "Ela foi ___ supermercado.", answer: "ao", hint: "a + definite, masc. sing." },
-  { sentence: "Os livros estão ___ mesa.", answer: "na", hint: "em + definite, fem. sing." },
-  { sentence: "Recebi ___ carta ___ amigos.", answer: "uma / dos", hint: "indef. fem. / de + def. masc. pl." },
-  { sentence: "Ele vem ___ Brasil.", answer: "do", hint: "de + definite, masc. sing." },
-  { sentence: "Ela gosta ___ flores.", answer: "das", hint: "de + definite, fem. pl." },
-  { sentence: "Vou ___ praia.", answer: "à", hint: "a + definite, fem. sing." },
+  { sentence: "___ menino está na escola.", sentenceEn: "___ boy is at school.", answer: "O", hint: "definite, masc. sing." },
+  { sentence: "Vou comprar ___ livro.", sentenceEn: "I am going to buy ___ book.", answer: "um", hint: "indefinite, masc. sing." },
+  { sentence: "___ raparigas estão no parque.", sentenceEn: "___ girls are in the park.", answer: "As", hint: "definite, fem. pl." },
+  { sentence: "Preciso ___ caneta.", sentenceEn: "I need ___ pen.", answer: "de uma", hint: "de + indefinite, fem. sing." },
+  { sentence: "Ela foi ___ supermercado.", sentenceEn: "She went ___ supermarket.", answer: "ao", hint: "a + definite, masc. sing." },
+  { sentence: "Os livros estão ___ mesa.", sentenceEn: "The books are ___ table.", answer: "na", hint: "em + definite, fem. sing." },
+  { sentence: "Recebi ___ carta ___ amigos.", sentenceEn: "I received ___ letter ___ friends.", answer: "uma / dos", hint: "indef. fem. / de + def. masc. pl." },
+  { sentence: "Ele vem ___ Brasil.", sentenceEn: "He comes ___ Brazil.", answer: "do", hint: "de + definite, masc. sing." },
+  { sentence: "Ela gosta ___ flores.", sentenceEn: "She likes ___ flowers.", answer: "das", hint: "de + definite, fem. pl." },
+  { sentence: "Vou ___ praia.", sentenceEn: "I'm going ___ beach.", answer: "à", hint: "a + definite, fem. sing." },
 ];
 
 const IDIOMS = [
@@ -234,20 +234,20 @@ const SENTENCE_STRUCTURE = [
 ];
 
 const PRETERITO_EXERCISES = [
-  { id: 1, sentence: "Eu ___ (falar) com ele ontem ao telefone.", correct_perfeito: "falei", correct_imperfeito: "falava", required: "perfeito", hint: "Specific completed action — a one-time event", explanation: "'Falei' describes a specific completed conversation that happened and finished yesterday." },
-  { id: 2, sentence: "Quando eu ___ (ser) criança, ___ (morar) em Lisboa.", correct_perfeito: "fui / moriei", correct_imperfeito: "era / morava", required: "imperfeito", hint: "Habitual or ongoing state in the past", explanation: "'Era' and 'morava' describe what your life was like over a period of time in the past." },
-  { id: 3, sentence: "Ele ___ (chegar) às três horas e ___ (sair) às cinco.", correct_perfeito: "chegou / saiu", correct_imperfeito: "chegava / saía", required: "perfeito", hint: "Two specific actions at defined times", explanation: "'Chegou' and 'saiu' tell us exactly when these happened." },
-  { id: 4, sentence: "Eu ___ (estudar) português todos os dias durante dois anos.", correct_perfeito: "estudei", correct_imperfeito: "estudava", required: "imperfeito", hint: "A habitual action repeated over a period", explanation: "'Estudava' describes a habit continued over time with no defined beginning or end." },
-  { id: 5, sentence: "A Maria ___ (ser) muito bonita quando ___ (ter) vinte anos.", correct_perfeito: "foi / teve", correct_imperfeito: "era / tinha", required: "perfeito", hint: "A specific moment in time in the past", explanation: "When referring to a specific age, use Perfeito: 'foi' and 'teve'." },
-  { id: 6, sentence: "Nós ___ (viver) no Porto antes de ___ (mudar) para Lisboa.", correct_perfeito: "vivemos / mudamos", correct_imperfeito: "vivíamos / mudávamos", required: "perfeito", hint: "Two sequential completed actions", explanation: "'Viver' and 'mudar' describe a sequence of completed events." },
-  { id: 7, sentence: "Eu ___ (estar) cansado porque ___ (trabalhar) muito.", correct_perfeito: "estive / trabalhei", correct_imperfeito: "estava / trabalhava", required: "imperfeito", hint: "Describing a past state (no specific time)", explanation: "'Estava cansado' describes how you felt — a state. Use Imperfeito for past states." },
-  { id: 8, sentence: "Ontem, eu ___ (comer) arroz e peixe no restaurante.", correct_perfeito: "comi", correct_imperfeito: "comia", required: "perfeito", hint: "A specific meal at a specific time (ontem)", explanation: "'Comi' tells us what you ate yesterday — a specific completed action." },
-  { id: 9, sentence: "Ele sempre ___ (dizer) que ___ (querer) viajar.", correct_perfeito: "disse / quis", correct_imperfeito: "dizia / queria", required: "imperfeito", hint: "'Sempre' (always) signals a habitual past action", explanation: "'Sempre dizia' describes something he repeatedly said in the past." },
-  { id: 10, sentence: "Quando eu ___ (ver) o filme, ele já ___ (ser) muito famoso.", correct_perfeito: "vi / era", correct_imperfeito: "via / era", required: "perfeito", hint: "Two events: completed action + ongoing state", explanation: "'Vi' is the completed action. 'Era' describes the state at that moment." },
-  { id: 11, sentence: "___ (haver) muitos problemas naquela altura.", correct_perfeito: "houve", correct_imperfeito: "havia", required: "imperfeito", hint: "Describing what existed over a past period", explanation: "'Havia' describes what existed or happened habitually in the past." },
-  { id: 12, sentence: "Eu não ___ (saber) que tu ___ (estar) aqui.", correct_perfeito: "soube / estavas", correct_imperfeito: "sabia / estavas", required: "imperfeito", hint: "Describing a state of not knowing in the past", explanation: "'Não sabia' describes the state of not knowing — an ongoing condition." },
-  { id: 13, sentence: "Naquele dia, nós ___ (ir) ao cinema e depois ___ (jantar) fora.", correct_perfeito: "fomos / jantamos", correct_imperfeito: "íamos / jantávamos", required: "perfeito", hint: "A sequence of specific completed events", explanation: "'Fomos' and 'jantamos' describe the specific activities of a particular day." },
-  { id: 14, sentence: "Eu ___ (estudar) muito, por isso ___ (passar) no exame.", correct_perfeito: "estudei / passei", correct_imperfeito: "estudava / passava", required: "perfeito", hint: "Cause-and-effect between two completed actions", explanation: "'Estudei' and 'passei' describe specific completed actions where one caused the other." },
+  { id: 1, sentence: "Eu ___ (falar) com ele ontem ao telefone.", sentenceEn: "I ___ (speak) with him yesterday on the phone.", correct_perfeito: "falei", correct_imperfeito: "falava", required: "perfeito", hint: "Specific completed action — a one-time event", explanation: "'Falei' describes a specific completed conversation that happened and finished yesterday." },
+  { id: 2, sentence: "Quando eu ___ (ser) criança, ___ (morar) em Lisboa.", sentenceEn: "When I ___ (be) a child, I ___ (live) in Lisbon.", correct_perfeito: "fui / moriei", correct_imperfeito: "era / morava", required: "imperfeito", hint: "Habitual or ongoing state in the past", explanation: "'Era' and 'morava' describe what your life was like over a period of time in the past." },
+  { id: 3, sentence: "Ele ___ (chegar) às três horas e ___ (sair) às cinco.", sentenceEn: "He ___ (arrive) at three o'clock and ___ (leave) at five.", correct_perfeito: "chegou / saiu", correct_imperfeito: "chegava / saía", required: "perfeito", hint: "Two specific actions at defined times", explanation: "'Chegou' and 'saiu' tell us exactly when these happened." },
+  { id: 4, sentence: "Eu ___ (estudar) português todos os dias durante dois anos.", sentenceEn: "I ___ (study) Portuguese every day for two years.", correct_perfeito: "estudei", correct_imperfeito: "estudava", required: "imperfeito", hint: "A habitual action repeated over a period", explanation: "'Estudava' describes a habit continued over time with no defined beginning or end." },
+  { id: 5, sentence: "A Maria ___ (ser) muito bonita quando ___ (ter) vinte anos.", sentenceEn: "Maria ___ (be) very beautiful when she ___ (have) twenty years old.", correct_perfeito: "foi / teve", correct_imperfeito: "era / tinha", required: "perfeito", hint: "A specific moment in time in the past", explanation: "When referring to a specific age, use Perfeito: 'foi' and 'teve'." },
+  { id: 6, sentence: "Nós ___ (viver) no Porto antes de ___ (mudar) para Lisboa.", sentenceEn: "We ___ (live) in Porto before ___ (move) to Lisbon.", correct_perfeito: "vivemos / mudamos", correct_imperfeito: "vivíamos / mudávamos", required: "perfeito", hint: "Two sequential completed actions", explanation: "'Viver' and 'mudar' describe a sequence of completed events." },
+  { id: 7, sentence: "Eu ___ (estar) cansado porque ___ (trabalhar) muito.", sentenceEn: "I ___ (be) tired because I ___ (work) a lot.", correct_perfeito: "estive / trabalhei", correct_imperfeito: "estava / trabalhava", required: "imperfeito", hint: "Describing a past state (no specific time)", explanation: "'Estava cansado' describes how you felt — a state. Use Imperfeito for past states." },
+  { id: 8, sentence: "Ontem, eu ___ (comer) arroz e peixe no restaurante.", sentenceEn: "Yesterday, I ___ (eat) rice and fish at the restaurant.", correct_perfeito: "comi", correct_imperfeito: "comia", required: "perfeito", hint: "A specific meal at a specific time (ontem)", explanation: "'Comi' tells us what you ate yesterday — a specific completed action." },
+  { id: 9, sentence: "Ele sempre ___ (dizer) que ___ (querer) viajar.", sentenceEn: "He always ___ (say) that he ___ (want) to travel.", correct_perfeito: "disse / quis", correct_imperfeito: "dizia / queria", required: "imperfeito", hint: "'Sempre' (always) signals a habitual past action", explanation: "'Sempre dizia' describes something he repeatedly said in the past." },
+  { id: 10, sentence: "Quando eu ___ (ver) o filme, ele já ___ (ser) muito famoso.", sentenceEn: "When I ___ (see) the film, it already ___ (be) very famous.", correct_perfeito: "vi / era", correct_imperfeito: "via / era", required: "perfeito", hint: "Two events: completed action + ongoing state", explanation: "'Vi' is the completed action. 'Era' describes the state at that moment." },
+  { id: 11, sentence: "___ (haver) muitos problemas naquela altura.", sentenceEn: "There ___ (be) many problems at that time.", correct_perfeito: "houve", correct_imperfeito: "havia", required: "imperfeito", hint: "Describing what existed over a past period", explanation: "'Havia' describes what existed or happened habitually in the past." },
+  { id: 12, sentence: "Eu não ___ (saber) que tu ___ (estar) aqui.", sentenceEn: "I didn't ___ (know) that you ___ (be) here.", correct_perfeito: "soube / estavas", correct_imperfeito: "sabia / estavas", required: "imperfeito", hint: "Describing a state of not knowing in the past", explanation: "'Não sabia' describes the state of not knowing — an ongoing condition." },
+  { id: 13, sentence: "Naquele dia, nós ___ (ir) ao cinema e depois ___ (jantar) fora.", sentenceEn: "That day, we ___ (go) to the cinema and then ___ (dine) out.", correct_perfeito: "fomos / jantamos", correct_imperfeito: "íamos / jantávamos", required: "perfeito", hint: "A sequence of specific completed events", explanation: "'Fomos' and 'jantamos' describe the specific activities of a particular day." },
+  { id: 14, sentence: "Eu ___ (estudar) muito, por isso ___ (passar) no exame.", sentenceEn: "I ___ (study) a lot, that's why I ___ (pass) the exam.", correct_perfeito: "estudei / passei", correct_imperfeito: "estudava / passava", required: "perfeito", hint: "Cause-and-effect between two completed actions", explanation: "'Estudei' and 'passei' describe specific completed actions where one caused the other." },
 ];
 
 const SER_ESTAR_SCENARIOS = [
@@ -578,7 +578,7 @@ function FlashcardDrill({ items, frontKey, backKey, title, sectionId }) {
   );
 }
 
-function FillGap({ exercises }) {
+function FillGap({ exercises, showEnglish }) {
   const [answers, setAnswers] = useState({});
   const [checked, setChecked] = useState({});
   const [showHints, setShowHints] = useState(false);
@@ -603,7 +603,8 @@ function FillGap({ exercises }) {
         {attempted > 0 && <span className="badge">{score}/{attempted} correct</span>}
       </div>
       {exercises.map((ex, i) => {
-        const parts = ex.sentence.split('___');
+        const sentence = showEnglish && ex.sentenceEn ? ex.sentenceEn : ex.sentence;
+        const parts = sentence.split('___');
         const isChk = checked[i] !== undefined;
         const isCorr = checked[i];
         return (
@@ -863,7 +864,7 @@ function PrepositionsSection({ showEnglish }) {
     <div>
       <h2 className="sec-title">{showEnglish ? 'Prepositions — Fill in the blanks' : 'Preposições — Preenche os espaços'}</h2>
       <p className="sec-desc">{showEnglish ? 'Practice with: em, de, para, com, sem, entre, sobre, a, por, até — and their contracted forms (no, na, ao, à, do, da...)' : 'Practice with: em, de, para, com, sem, entre, sobre, a, por, até — and their contracted forms (no, na, ao, à, do, da...)'}</p>
-      <FillGap exercises={PREPOSITION_EXERCISES} />
+      <FillGap exercises={PREPOSITION_EXERCISES} showEnglish={showEnglish} />
     </div>
   );
 }
@@ -892,7 +893,7 @@ function ArticlesSection({ showEnglish }) {
             </div>
           </ExpandableCard>
         </>
-      ) : <FillGap exercises={ARTICLES_EXERCISES} />}
+      ) : <FillGap exercises={ARTICLES_EXERCISES} showEnglish={showEnglish} />}
     </div>
   );
 }
@@ -1070,9 +1071,9 @@ function PreteritoSection({ showEnglish }) {
       ) : (
         <div>
           {PRETERITO_EXERCISES.map(ex => (
-            <ExpandableCard key={ex.id} title={<span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>{ex.sentence} <button onClick={(e) => { e.stopPropagation(); speakPortuguese(ex.sentence); }} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '12px', padding: '2px 4px' }}>🔊</button></span>} accentColor="var(--border-strong)">
+            <ExpandableCard key={ex.id} title={<span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>{showEnglish && ex.sentenceEn ? ex.sentenceEn : ex.sentence} <button onClick={(e) => { e.stopPropagation(); speakPortuguese(ex.sentence); }} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '12px', padding: '2px 4px' }}>🔊</button></span>} accentColor="var(--border-strong)">
               <div style={{ marginTop: '8px' }}>
-                <div style={{ fontSize: '12px', color: 'var(--text-tertiary)', fontStyle: 'italic', marginBottom: '8px' }}>{showEnglish ? 'Hint' : 'Hint'}: {ex.hint}</div>
+                <div style={{ fontSize: '12px', color: 'var(--text-tertiary)', fontStyle: 'italic', marginBottom: '8px' }}>Hint: {ex.hint}</div>
                 <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginBottom: '8px' }}>
                   <span style={{ fontSize: '13px', color: 'var(--accent)' }}>✓ Perfeito: <strong>{ex.correct_perfeito}</strong></span>
                   <span style={{ fontSize: '13px', color: '#008a8a' }}>✓ Imperfeito: <strong>{ex.correct_imperfeito}</strong></span>
