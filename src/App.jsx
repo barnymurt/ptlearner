@@ -782,12 +782,12 @@ function ArticlesSection() {
         <>
           {['definite','indefinite'].map(type => (
             <div key={type} style={{ ...S.card, marginBottom: '14px' }}>
-              <h3 style={{ fontFamily: "'DM Serif Display',serif", fontSize: '16px', color: '#fff', marginBottom: '10px' }}>{ARTICLES_DATA[type].title}</h3>
+              <h3 style={{ fontFamily: "'DM Serif Display',serif", fontSize: '16px', color: '#1a1a1a', marginBottom: '10px' }}>{ARTICLES_DATA[type].title}</h3>
               <div className="grid-2">{ARTICLES_DATA[type].forms.map((f, i) => <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '7px 0', borderBottom: '1px solid rgba(255,255,255,0.04)' }}><span style={{ fontSize: '11px', color: '#7a8a80' }}>{f.label}</span><span><strong style={{ color: '#00a870', fontSize: '15px' }}>{f.article}</strong> <span style={{ fontSize: '11px', color: '#444' }}>{f.example}</span></span></div>)}</div>
             </div>
           ))}
           <div className="card">
-            <h3 style={{ fontFamily: "'DM Serif Display',serif", fontSize: '16px', color: '#fff', marginBottom: '10px' }}>Contrações</h3>
+            <h3 style={{ fontFamily: "'DM Serif Display',serif", fontSize: '16px', color: '#1a1a1a', marginBottom: '10px' }}>Contrações</h3>
             {ARTICLES_DATA.definite.contractions.map((row, i) => <div key={i} style={{ display: 'flex', flexWrap: 'wrap', gap: '7px', marginBottom: '7px' }}>{row.map((c, j) => <span key={j} style={{ ...S.tag('#008a8a'), fontSize: '11px', fontFamily: 'monospace' }}>{c}</span>)}</div>)}
           </div>
         </>
@@ -834,7 +834,7 @@ function IdiomsSection() {
       <h2 className="sec-title">Expressões Idiomáticas</h2>
       <p className="sec-desc">Common Portuguese expressions. Knowing these will impress in conversation.</p>
       <div className="toggle-row"><button className={mode === 'list' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('list')}>Reference</button><button className={mode === 'flash' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('flash')}>Flashcards</button></div>
-      {mode === 'list' ? IDIOMS.map((idiom, i) => <div key={i} style={{ ...S.card, padding: '12px 16px' }}><div style={{ fontFamily: "'DM Serif Display',serif", fontSize: '16px', color: '#fff' }}>"{idiom.pt}"</div><div style={{ fontSize: '13px', color: '#00a870', fontWeight: 500, marginTop: '3px' }}>{idiom.en}</div><div style={{ fontSize: '11px', color: '#444', marginTop: '3px' }}>Literal: {idiom.literal}</div></div>) : <FlashcardDrill items={IDIOMS} frontKey="pt" backKey={(item) => item.en+'\n(Literal: '+item.literal+')'} title="Expressão" sectionId="idioms" />}
+      {mode === 'list' ? IDIOMS.map((idiom, i) => <div key={i} style={{ ...S.card, padding: '12px 16px' }}><div style={{ fontFamily: "'DM Serif Display',serif", fontSize: '16px', color: '#1a1a1a' }}>"{idiom.pt}"</div><div style={{ fontSize: '13px', color: '#00a870', fontWeight: 500, marginTop: '3px' }}>{idiom.en}</div><div style={{ fontSize: '11px', color: '#444', marginTop: '3px' }}>Literal: {idiom.literal}</div></div>) : <FlashcardDrill items={IDIOMS} frontKey="pt" backKey={(item) => item.en+'\n(Literal: '+item.literal+')'} title="Expressão" sectionId="idioms" />}
     </div>
   );
 }
@@ -846,7 +846,7 @@ function FalseFriendsSection() {
       <h2 className="sec-title">Falsos Amigos</h2>
       <p className="sec-desc">Words that look like English but mean something different. Essential to avoid mistakes!</p>
       <div className="toggle-row"><button className={mode === 'list' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('list')}>Reference</button><button className={mode === 'flash' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('flash')}>Flashcards</button></div>
-      {mode === 'list' ? <div className="grid-2">{FALSE_FRIENDS.map((ff, i) => <div key={i} className="card"><div style={{ fontFamily: 'monospace', fontSize: '15px', fontWeight: 600, color: '#fff' }}>{ff.pt}</div><div style={{ fontSize: '11px', color: '#b82035', marginTop: '5px' }}><span style={{ textDecoration: 'line-through' }}>✗ {ff.seems}</span></div><div style={{ fontSize: '13px', color: '#00a870', fontWeight: 500, marginTop: '3px' }}>✓ {ff.actually}</div></div>)}</div> : <FlashcardDrill items={FALSE_FRIENDS} frontKey="pt" backKey={(item) => 'NOT "'+item.seems+'" → '+item.actually} title="Falso Amigo" sectionId="falsefriends" />}
+      {mode === 'list' ? <div className="grid-2">{FALSE_FRIENDS.map((ff, i) => <div key={i} className="card"><div style={{ fontFamily: 'monospace', fontSize: '15px', fontWeight: 600, color: '#1a1a1a' }}>{ff.pt}</div><div style={{ fontSize: '11px', color: '#b82035', marginTop: '5px' }}><span style={{ textDecoration: 'line-through' }}>✗ {ff.seems}</span></div><div style={{ fontSize: '13px', color: '#00a870', fontWeight: 500, marginTop: '3px' }}>✓ {ff.actually}</div></div>)}</div> : <FlashcardDrill items={FALSE_FRIENDS} frontKey="pt" backKey={(item) => 'NOT "'+item.seems+'" → '+item.actually} title="Falso Amigo" sectionId="falsefriends" />}
     </div>
   );
 }
