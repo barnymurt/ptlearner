@@ -1157,8 +1157,20 @@ const SECTION_GROUPS = [
       { id: 'conjugation', label: 'Conjugação', icon: '📐', desc: 'Verb conjugation patterns' },
       { id: 'pronouns', label: 'Pronomes', icon: '👤', desc: 'All Portuguese pronouns' },
       { id: 'adjectives', label: 'Adjetivos', icon: '🎨', desc: 'Common adjectives' },
+    ],
+  },
+  {
+    label: 'Grammar',
+    sections: [
       { id: 'prepositions', label: 'Preposições', icon: '📍', desc: 'Preposition usage drills' },
       { id: 'articles', label: 'Artigos', icon: '📝', desc: 'Definite & indefinite articles' },
+      { id: 'modals', label: 'Modais', icon: '🔧', desc: 'Modal verb conjugations' },
+      { id: 'serestar', label: 'Ser/Estar', icon: '🔄', desc: 'Ser vs Estar distinction' },
+    ],
+  },
+  {
+    label: 'Vocabulary',
+    sections: [
       { id: 'vocabulary', label: 'Vocabulário', icon: '📚', desc: '20 themed vocabulary sets' },
       { id: 'verbos999', label: '999 Verbos', icon: '📕', desc: 'Complete verb reference' },
     ],
@@ -1166,16 +1178,14 @@ const SECTION_GROUPS = [
   {
     label: 'Practice',
     sections: [
-      { id: 'modals', label: 'Modais', icon: '🔧', desc: 'Modal verb conjugations' },
       { id: 'idioms', label: 'Expressões', icon: '🇵🇹', desc: 'Portuguese idioms & phrases' },
       { id: 'falsefriends', label: 'Falsos Amigos', icon: '⚠️', desc: 'False friends trap quiz' },
       { id: 'structure', label: 'Frases', icon: '🧱', desc: 'Sentence structure patterns' },
       { id: 'preterito', label: 'Pretéritos', icon: '⏱️', desc: 'Perfeito vs Imperfeito drill' },
-      { id: 'serestar', label: 'Ser/Estar', icon: '🔄', desc: 'Ser vs Estar distinction' },
     ],
   },
   {
-    label: 'Activities',
+    label: 'Communication',
     sections: [
       { id: 'escrita', label: 'Escrita', icon: '✍️', desc: 'Writing tasks with model answers' },
       { id: 'oral', label: 'Oral', icon: '🗣️', desc: 'Shadowing dialogues' },
