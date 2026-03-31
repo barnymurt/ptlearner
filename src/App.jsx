@@ -980,6 +980,7 @@ function Verbos999Section() {
   const [flashIdx, setFlashIdx] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [score, setScore] = useState({ correct: 0, total: 0 });
+  const [visibleCount, setVisibleCount] = useState(100);
 
   const filtered = useMemo(() => {
     return ALL_VERBS.filter(([verb, meaning, type]) => {
@@ -999,7 +1000,7 @@ function Verbos999Section() {
   }, [filtered, mode]);
 
   const clearFilters = () => {
-    setSearch(""); setLetter(null); setTypeFilter(null); setA2Only(false);
+    setSearch(""); setLetter(null); setTypeFilter(null); setA2Only(false); setVisibleCount(100);
   };
 
   const typeCounts = useMemo(() => {
@@ -1029,7 +1030,7 @@ function Verbos999Section() {
         <input
           className="input"
           value={search}
-          onChange={e => setSearch(e.target.value)}
+          onChange={e => { setSearch(e.target.value); setVisibleCount(100); }}
           placeholder="Search verbs or meanings..."
         />
         {search && (
@@ -1041,7 +1042,7 @@ function Verbos999Section() {
         {[['list','Reference'],['flash','Flashcards']].map(([m, label]) => (
           <button key={m} className={mode === m ? 'toggle-btn active' : 'toggle-btn'} onClick={() => { setMode(m); setFlashIdx(0); setFlipped(false); setScore({correct:0,total:0}); }}>{label}</button>
         ))}
-        <button className={a2Only ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setA2Only(!a2Only)}>
+        <button className={a2Only ? 'toggle-btn active' : 'toggle-btn'} onClick={() => { setA2Only(!a2Only); setVisibleCount(100); }}>
           {a2Only ? '★ A2 Active' : '☆ A2 Filter'}
         </button>
         {(search || letter || typeFilter || a2Only) && (
@@ -1051,7 +1052,7 @@ function Verbos999Section() {
 
       <div className="type-pills">
         {VERB_TYPES.map(t => (
-          <button key={t} className={typeFilter === t ? `type-pill active-${t.replace('-','')}` : 'type-pill'} onClick={() => setTypeFilter(typeFilter === t ? null : t)}>
+          <button key={t} className={typeFilter === t ? `type-pill active-${t.replace('-','')}` : 'type-pill'} onClick={() => { setTypeFilter(typeFilter === t ? null : t); setVisibleCount(100); }}>
             {VERB_TYPE_LABELS[t]} {tc[t] ? `(${tc[t]})` : ''}
           </button>
         ))}
@@ -1059,7 +1060,7 @@ function Verbos999Section() {
 
       <div className="letter-bar">
         {VERB_LETTERS.map(l => (
-          <button key={l} className={letter === l ? 'letter-btn active' : 'letter-btn'} onClick={() => setLetter(letter === l ? null : l)}>{l}</button>
+          <button key={l} className={letter === l ? 'letter-btn active' : 'letter-btn'} onClick={() => { setLetter(letter === l ? null : l); setVisibleCount(100); }}>{l}</button>
         ))}
       </div>
 
@@ -1068,21 +1069,30 @@ function Verbos999Section() {
       </div>
 
       {mode === 'list' ? (
-        <div className="grid-2">
-          {filtered.map(([verb, meaning, type], i) => (
-            <div key={i} className="card" style={{ padding: '10px 14px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  {A2_PRIORITY_VERBS.has(verb.replace(/-se$/, "")) && <span style={{ color: '#c9963c', fontSize: '10px' }}>★</span>}
-                  <span className="verb-text">{verb}</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <span className="verb-meaning">{meaning}</span>
-                  <span className={`verb-type-badge verb-type-${type.replace('-','')}`}>{type}</span>
+        <div>
+          <div className="grid-2">
+            {filtered.slice(0, visibleCount).map(([verb, meaning, type], i) => (
+              <div key={i} className="card" style={{ padding: '10px 14px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    {A2_PRIORITY_VERBS.has(verb.replace(/-se$/, "")) && <span style={{ color: '#c9963c', fontSize: '10px' }}>★</span>}
+                    <span className="verb-text">{verb}</span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <span className="verb-meaning">{meaning}</span>
+                    <span className={`verb-type-badge verb-type-${type.replace('-','')}`}>{type}</span>
+                  </div>
                 </div>
               </div>
+            ))}
+          </div>
+          {visibleCount < filtered.length && (
+            <div style={{ textAlign: 'center', marginTop: '16px' }}>
+              <button className="btn btn-primary" onClick={() => setVisibleCount(v => v + 100)}>
+                Load more ({filtered.length - visibleCount} remaining)
+              </button>
             </div>
-          ))}
+          )}
         </div>
       ) : (
         <div>
