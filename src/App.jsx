@@ -598,8 +598,8 @@ function ScenarioCard({ scenario, question, correct, explanation, note }) {
 }
 
 function WritingTask({ task, showEnglish }) {
-  const [showEn, setShowEn] = useState(false);
-  const effectiveShowEn = showEnglish || showEn;
+  const [showPT, setShowPT] = useState(false);
+  const effectiveShowEn = showEnglish && !showPT;
   return (
     <ExpandableCard
       title={task.title}
@@ -620,7 +620,7 @@ function WritingTask({ task, showEnglish }) {
         <div style={{ background: 'rgba(0,168,112,0.04)', border: '1px solid rgba(0,168,112,0.12)', borderRadius: '8px', padding: '14px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
             <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1px' }}>Model Answer {effectiveShowEn ? '(EN)' : '(PT)'}</div>
-            {task.englishAnswer && <button onClick={() => setShowEn(!showEn)} style={{ fontSize: '11px', padding: '4px 10px', borderRadius: '6px', border: '1px solid rgba(0,138,138,0.3)', background: effectiveShowEn ? 'rgba(0,138,138,0.1)' : 'transparent', color: '#008a8a', cursor: 'pointer' }}>{effectiveShowEn ? 'Show PT' : 'Show EN'}</button>}
+            {task.englishAnswer && <button onClick={() => setShowPT(!showPT)} style={{ fontSize: '11px', padding: '4px 10px', borderRadius: '6px', border: '1px solid rgba(0,138,138,0.3)', background: showPT ? 'rgba(0,138,138,0.1)' : 'transparent', color: '#008a8a', cursor: 'pointer' }}>{showPT ? 'Show EN' : 'Show PT'}</button>}
           </div>
           <div style={{ fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 1.7, fontFamily: 'var(--font-mono)', whiteSpace: 'pre-wrap' }}>{effectiveShowEn ? task.englishAnswer : task.modelAnswer}</div>
         </div>
@@ -630,8 +630,8 @@ function WritingTask({ task, showEnglish }) {
 }
 
 function OralDialogue({ dialogue, showEnglish }) {
-  const [showEn, setShowEn] = useState(false);
-  const effectiveShowEn = showEnglish || showEn;
+  const [showPT, setShowPT] = useState(false);
+  const effectiveShowEn = showEnglish && !showPT;
   const difficultyColor = dialogue.difficulty === 'Fácil' ? 'var(--accent)' : dialogue.difficulty === 'Médio' ? 'var(--warning)' : 'var(--error)';
   return (
     <ExpandableCard
@@ -644,7 +644,7 @@ function OralDialogue({ dialogue, showEnglish }) {
           {(effectiveShowEn && dialogue.englishDialogue ? dialogue.englishDialogue : dialogue.dialogue).map((line, i) => <div key={i} style={{ display: 'flex', gap: '10px', marginBottom: '10px', fontSize: '14px' }}><span style={{ fontWeight: 700, color: line.speaker === 'A' || line.speaker === 'Cliente' || line.speaker === 'Paciente' || line.speaker === 'Passageiro' ? 'var(--accent)' : '#008a8a', minWidth: '80px' }}>{line.speaker}:</span><span style={{ color: 'var(--text-primary)' }}>{line.text}</span></div>)}
         </div>
         {dialogue.englishDialogue && (
-          <button onClick={() => setShowEn(!showEn)} style={{ marginBottom: '12px', fontSize: '12px', padding: '6px 12px', borderRadius: '6px', border: '1px solid rgba(0,138,138,0.3)', background: effectiveShowEn ? 'rgba(0,138,138,0.1)' : 'transparent', color: '#008a8a', cursor: 'pointer' }}>{effectiveShowEn ? 'Show PT' : 'Show EN'}</button>
+          <button onClick={() => setShowPT(!showPT)} style={{ marginBottom: '12px', fontSize: '12px', padding: '6px 12px', borderRadius: '6px', border: '1px solid rgba(0,138,138,0.3)', background: showPT ? 'rgba(0,138,138,0.1)' : 'transparent', color: '#008a8a', cursor: 'pointer' }}>{showPT ? 'Show EN' : 'Show PT'}</button>
         )}
         <div style={{ borderTop: '1px solid var(--border)', paddingTop: '12px' }}>
           <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 600 }}>Key phrases</div>
