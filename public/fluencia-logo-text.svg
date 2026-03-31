@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 100" width="300" height="100">
+  <!-- F with accent -->
+  <text x="20" y="70" 
+        font-family="Georgia, serif" 
+        font-size="70" 
+        font-weight="bold" 
+        fill="#00a870">F</text>
+  
+  <!-- luência text -->
+  <text x="70" y="70" 
+        font-family="Georgia, serif" 
+        font-size="50" 
+        fill="#1a1a1a">luência</text>
+  
+  <!-- Underline accent -->
+  <rect x="22" y="78" width="250" height="4" rx="2" fill="#c9963c"/>
+</svg>

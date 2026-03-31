@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Background circle -->
+  <circle cx="100" cy="100" r="95" fill="#00a870" />
+  
+  <!-- Stylized F letter -->
+  <text x="100" y="130" 
+        font-family="Georgia, serif" 
+        font-size="100" 
+        font-weight="bold" 
+        fill="white" 
+        text-anchor="middle">F</text>
+  
+  <!-- Accent dot (Portuguese flag reference) -->
+  <circle cx="145" cy="65" r="18" fill="#c9963c" />
+  
+  <!-- Small wave underneath to suggest speech/fluency -->
+  <path d="M50 155 Q75 165, 100 155 T150 155" 
+        stroke="white" 
+        stroke-width="6" 
+        fill="none" 
+        stroke-linecap="round"/>
+</svg>
