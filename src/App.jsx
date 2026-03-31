@@ -475,188 +475,233 @@ function generateLessonPlan(text) {
 }
 
 function OnboardingChat({ onComplete, recommendedSections = [] }) {
-  const [input, setInput] = useState('');
-  const [messages, setMessages] = useState([]);
+  const [answers, setAnswers] = useState({ level: '', goal: '', context: '', time: '' });
+  const [currentAnswer, setCurrentAnswer] = useState('');
+  const [activeQuestion, setActiveQuestion] = useState(0);
   const [isListening, setIsListening] = useState(false);
-  const [lessonPlan, setLessonPlan] = useState(recommendedSections);
   const [transcript, setTranscript] = useState('');
   const [recognition, setRecognition] = useState(null);
-  
-  const addMessage = (text, isUser = false) => {
-    setMessages(prev => [...prev, { text, isUser, id: Date.now() + Math.random() }]);
-  };
-  
+  const [lessonPlan, setLessonPlan] = useState(recommendedSections);
+
+  const questions = [
+    { id: 'level', label: "What's your current level in Portuguese?", hint: 'Complete beginner, some basics, or intermediate' },
+    { id: 'goal', label: "What brings you to learn Portuguese?", hint: 'Exam, travel, work, family, or just for fun' },
+    { id: 'context', label: "Where will you use Portuguese most?", hint: 'Portugal, Brazil, business, daily life, or social' },
+    { id: 'time', label: "How much time can you study each week?", hint: 'A few hours, 30 minutes daily, or intensive' }
+  ];
+
   const initRecognition = () => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) return null;
     const rec = new SpeechRecognition();
     rec.lang = 'en-US';
-    rec.continuous = false;
+    rec.continuous = true;
     rec.interimResults = true;
     return rec;
   };
-  
+
   const startVoice = () => {
     if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
-      addMessage("Voice recording isn't supported. Try Chrome on desktop or mobile!");
       return;
     }
-    
+
     const rec = initRecognition();
     if (!rec) return;
-    
+
     setRecognition(rec);
     setIsListening(true);
     setTranscript('');
-    
+
     rec.onstart = () => setIsListening(true);
-    
+
     rec.onresult = (event) => {
       const results = Array.from(event.results);
       const transcriptText = results.map(r => r[0].transcript).join('');
       setTranscript(transcriptText);
-      
+
       if (event.results[event.results.length - 1].isFinal) {
         const finalTranscript = event.results[event.results.length - 1][0].transcript;
-        setInput(finalTranscript);
+        setCurrentAnswer(finalTranscript);
         setIsListening(false);
-        handleSubmit(finalTranscript);
       }
     };
-    
-    rec.onerror = (event) => {
+
+    rec.onerror = () => {
       setIsListening(false);
-      if (event.error === 'not-allowed') {
-        addMessage("Microphone access denied. Please allow mic permissions in your browser settings.");
-      } else {
-        addMessage("Couldn't hear that. Try typing or tap the mic again!");
-      }
     };
-    
+
     rec.onend = () => {
-      if (isListening) {
-        setIsListening(false);
-        if (transcript) {
-          handleSubmit(transcript);
-        }
-      }
+      setIsListening(false);
     };
-    
+
     try {
       rec.start();
     } catch (e) {
       setIsListening(false);
-      addMessage("Couldn't start recording. Try refreshing the page!");
     }
   };
-  
+
   const stopVoice = () => {
-    if (recognition) {
-      recognition.stop();
-    }
+    if (recognition) recognition.stop();
     setIsListening(false);
   };
-  
-  const handleSubmit = (text) => {
-    if (!text.trim()) return;
+
+  const handleNext = () => {
+    const question = questions[activeQuestion];
+    setAnswers(prev => ({ ...prev, [question.id]: currentAnswer }));
+    setCurrentAnswer('');
     setTranscript('');
-    addMessage(text, true);
-    const plan = generateLessonPlan(text);
-    setLessonPlan(plan);
-    const planWithDescriptions = plan.map(id => `${SECTIONS_MAP[id]?.icon} ${SECTIONS_MAP[id]?.labelEn}: ${SECTIONS_MAP[id]?.desc}`).join('\n');
-    addMessage(`Great! Here's your personalized plan:\n\n${planWithDescriptions}\n\nClick "Let's Go!" to start learning! 🚀`);
+
+    if (activeQuestion < questions.length - 1) {
+      setActiveQuestion(prev => prev + 1);
+    }
   };
-  
-  useEffect(() => {
-    setTimeout(() => {
-      addMessage("Hey! I'm Patrick 👋 I'll create a personalized lesson plan for you.\n\nWhat brings you to learn Portuguese? (e.g., upcoming trip to Portugal, exam prep, or just for fun)");
-    }, 200);
-  }, []);
-  
+
+  const handleSubmit = () => {
+    const allAnswers = { ...answers, [questions[activeQuestion].id]: currentAnswer };
+    const combinedText = `level: ${allAnswers.level}. goal: ${allAnswers.goal}. context: ${allAnswers.context}. time: ${allAnswers.time}`;
+    const plan = generateLessonPlan(combinedText);
+    setLessonPlan(plan);
+  };
+
+  if (lessonPlan.length > 0) {
+    const planWithDescriptions = lessonPlan.map(id => `${SECTIONS_MAP[id]?.icon} ${SECTIONS_MAP[id]?.labelEn}: ${SECTIONS_MAP[id]?.desc}`).join('\n');
+    return (
+      <div style={{ maxWidth: '500px', margin: '0 auto', padding: '20px' }}>
+        <div style={{ background: 'var(--bg-card)', borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', padding: '24px' }}>
+          <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+            <div style={{ fontSize: '48px', marginBottom: '12px' }}>🎯</div>
+            <h3 style={{ margin: 0, fontSize: '20px', color: 'var(--text-primary)' }}>Your Personalized Plan</h3>
+            <p style={{ margin: '8px 0 0', fontSize: '14px', color: 'var(--text-secondary)' }}>Based on your goals, here's what to study:</p>
+          </div>
+          <div style={{ background: 'var(--bg)', borderRadius: '12px', padding: '16px', marginBottom: '20px' }}>
+            <pre style={{ margin: 0, fontSize: '14px', lineHeight: 1.8, whiteSpace: 'pre-wrap' }}>{planWithDescriptions}</pre>
+          </div>
+          <button 
+            onClick={() => onComplete(lessonPlan)} 
+            style={{ width: '100%', padding: '16px', background: 'var(--accent)', color: 'white', border: 'none', borderRadius: '12px', cursor: 'pointer', fontSize: '16px', fontWeight: 600 }}
+          >
+            Let's Go! 🚀
+          </button>
+          <button 
+            onClick={() => { setLessonPlan([]); setAnswers({}); setActiveQuestion(0); setCurrentAnswer(''); }} 
+            style={{ width: '100%', marginTop: '12px', padding: '12px', background: 'transparent', border: '1px solid var(--border)', borderRadius: '12px', cursor: 'pointer', color: 'var(--text-secondary)', fontSize: '14px' }}
+          >
+            Start over ↺
+          </button>
+        </div>
+        <button onClick={() => onComplete([])} style={{ display: 'block', margin: '16px auto 0', padding: '10px 20px', background: 'transparent', border: '1px solid var(--border)', borderRadius: '8px', cursor: 'pointer', color: 'var(--text-secondary)', fontSize: '13px' }}>
+          Browse all sections →
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div style={{ maxWidth: '500px', margin: '0 auto', padding: '20px' }}>
       <div style={{ background: 'var(--bg-card)', borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', overflow: 'hidden' }}>
         <div style={{ background: 'linear-gradient(135deg, #00a870, #008a5a)', padding: '20px', color: 'white' }}>
-          <h3 style={{ margin: 0, fontSize: '18px' }}>💬 Chat with Patrick</h3>
-          <p style={{ margin: '8px 0 0', opacity: 0.9, fontSize: '13px' }}>Your personal Portuguese guide</p>
+          <h3 style={{ margin: 0, fontSize: '18px' }}>💬 Tell me about yourself</h3>
+          <p style={{ margin: '8px 0 0', opacity: 0.9, fontSize: '13px' }}>Answer all questions for the best plan</p>
         </div>
-        
-        <div style={{ height: '320px', overflowY: 'auto', padding: '20px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          {messages.map(msg => (
-            <div key={msg.id} style={{ display: 'flex', justifyContent: msg.isUser ? 'flex-end' : 'flex-start' }}>
-              <div style={{ 
-                maxWidth: '85%', 
-                padding: '12px 16px', 
-                borderRadius: msg.isUser ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
-                background: msg.isUser ? 'var(--accent)' : 'var(--bg-secondary)',
-                color: msg.isUser ? 'white' : 'var(--text-primary)',
-                fontSize: '14px',
-                lineHeight: 1.5,
-                whiteSpace: 'pre-wrap'
-              }}>
-                {msg.text}
-              </div>
-            </div>
-          ))}
-          {isListening && transcript && (
-            <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
-              <div style={{ padding: '12px 16px', borderRadius: '16px 16px 16px 4px', background: 'var(--bg-secondary)', color: 'var(--text-secondary)', fontSize: '14px', fontStyle: 'italic' }}>
-                {transcript}...
-              </div>
-            </div>
-          )}
-          {isListening && (
-            <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
-              <div style={{ padding: '12px 16px', borderRadius: '16px 16px 16px 4px', background: 'var(--accent)', color: 'white', fontSize: '14px', animation: 'pulse 1s infinite', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#ff4444', animation: 'recording 1s infinite' }}></span>
-                Tap mic again to stop & send
-              </div>
-            </div>
-          )}
-        </div>
-        
-        {lessonPlan.length === 0 && (
-          <div style={{ padding: '16px', borderTop: '1px solid var(--border)', background: 'var(--bg)' }}>
-            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-              <input 
-                type="text" 
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleSubmit(input)}
-                placeholder={isListening ? "Listening..." : "Type or tap mic to record..."}
-                style={{ flex: 1, padding: '14px 16px', borderRadius: '12px', border: '1px solid var(--border)', fontSize: '16px', outline: 'none' }}
-              />
-              <button 
-                onClick={isListening ? stopVoice : startVoice} 
+
+        <div style={{ padding: '20px', maxHeight: '400px', overflowY: 'auto' }}>
+          {questions.map((q, idx) => {
+            const isAnswered = answers[q.id];
+            const isActive = idx === activeQuestion;
+            
+            return (
+              <div 
+                key={q.id}
                 style={{ 
-                  padding: '14px 18px', 
-                  background: isListening ? '#ff4444' : 'var(--accent)', 
-                  border: 'none', 
-                  borderRadius: '12px', 
-                  cursor: 'pointer', 
-                  fontSize: '20px',
-                  transition: 'all 0.2s',
-                  boxShadow: isListening ? '0 4px 12px rgba(255,68,68,0.4)' : '0 4px 12px rgba(0,168,112,0.3)'
+                  marginBottom: idx < questions.length - 1 ? '20px' : 0,
+                  padding: '16px',
+                  borderRadius: '12px',
+                  background: isActive ? 'var(--bg)' : isAnswered ? 'var(--accent-light)' : 'transparent',
+                  border: isActive ? '2px solid var(--accent)' : '2px solid transparent',
+                  opacity: idx <= activeQuestion ? 1 : 0.5,
+                  transition: 'all 0.3s ease'
                 }}
               >
-                🎙️
-              </button>
-              <button onClick={() => handleSubmit(input)} style={{ padding: '14px 20px', background: 'var(--accent)', color: 'white', border: 'none', borderRadius: '12px', cursor: 'pointer', fontWeight: 600 }}>→</button>
-            </div>
-          </div>
-        )}
-      </div>
-      
-      {lessonPlan.length > 0 && (
-        <div style={{ marginTop: '16px', textAlign: 'center' }}>
-          <button onClick={() => onComplete(lessonPlan)} style={{ padding: '14px 32px', background: 'var(--accent)', color: 'white', border: 'none', borderRadius: '12px', cursor: 'pointer', fontSize: '16px', fontWeight: 600 }}>
-            Let's Go! 🚀
-          </button>
-          <button onClick={() => { setLessonPlan([]); setMessages([]); setTimeout(() => addMessage("What brings you to learn Portuguese? (e.g., upcoming trip to Portugal, exam prep, or just for fun)"), 100); }} style={{ display: 'block', margin: '12px auto 0', padding: '8px 16px', background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--text-secondary)', fontSize: '13px' }}>
-            Start over ↺
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                  <span style={{ 
+                    width: '24px', 
+                    height: '24px', 
+                    borderRadius: '50%', 
+                    background: isAnswered ? 'var(--accent)' : isActive ? 'var(--accent)' : 'var(--border)',
+                    color: 'white',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '12px',
+                    fontWeight: 600
+                  }}>
+                    {isAnswered ? '✓' : idx + 1}
+                  </span>
+                  <span style={{ fontSize: '15px', fontWeight: 600, color: 'var(--text-primary)' }}>{q.label}</span>
+                </div>
+                {isAnswered && !isActive && (
+                  <p style={{ margin: 0, paddingLeft: '32px', fontSize: '14px', color: 'var(--text-secondary)' }}>{answers[q.id]}</p>
+                )}
+                {isActive && (
+                  <div style={{ paddingLeft: '32px' }}>
+                    <p style={{ margin: '0 0 12px', fontSize: '13px', color: 'var(--text-tertiary)' }}>{q.hint}</p>
+                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                      <input 
+                        type="text" 
+                        value={currentAnswer}
+                        onChange={(e) => setCurrentAnswer(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && handleNext()}
+                        placeholder="Type or tap mic to record..."
+                        style={{ flex: 1, padding: '14px 16px', borderRadius: '12px', border: '1px solid var(--border)', fontSize: '15px', outline: 'none' }}
+                      />
+                      <button 
+                        onClick={isListening ? stopVoice : startVoice} 
+                        style={{ 
+                          padding: '14px', 
+                          background: isListening ? '#ff4444' : 'var(--accent)', 
+                          border: 'none', 
+                          borderRadius: '12px', 
+                          cursor: 'pointer', 
+                          fontSize: '18px',
+                          transition: 'all 0.2s',
+                          boxShadow: isListening ? '0 4px 12px rgba(255,68,68,0.4)' : '0 4px 12px rgba(0,168,112,0.3)'
+                        }}
+                      >
+                        🎙️
+                      </button>
+                      <button onClick={handleNext} style={{ padding: '14px 20px', background: 'var(--accent)', color: 'white', border: 'none', borderRadius: '12px', cursor: 'pointer', fontWeight: 600 }}>→</button>
+                    </div>
+                    {isListening && transcript && (
+                      <p style={{ margin: '8px 0 0', fontSize: '13px', color: 'var(--accent)', fontStyle: 'italic' }}>{transcript}</p>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        <div style={{ padding: '16px', borderTop: '1px solid var(--border)', background: 'var(--bg)' }}>
+          <button 
+            onClick={handleSubmit} 
+            disabled={Object.values(answers).some(a => !a) || currentAnswer}
+            style={{ 
+              width: '100%', 
+              padding: '14px', 
+              background: (Object.values(answers).every(a => a) && !currentAnswer) ? 'var(--accent)' : 'var(--border)',
+              color: 'white', 
+              border: 'none', 
+              borderRadius: '12px', 
+              cursor: (Object.values(answers).every(a => a) && !currentAnswer) ? 'pointer' : 'not-allowed',
+              fontSize: '15px',
+              fontWeight: 600
+            }}
+          >
+            Get My Plan →
           </button>
         </div>
-      )}
+      </div>
       
       <button onClick={() => onComplete([])} style={{ display: 'block', margin: '16px auto 0', padding: '10px 20px', background: 'transparent', border: '1px solid var(--border)', borderRadius: '8px', cursor: 'pointer', color: 'var(--text-secondary)', fontSize: '13px' }}>
         Browse all sections →
