@@ -753,13 +753,14 @@ function ListeningItem({ item, showEnglish }) {
   };
   
   const embedUrl = getEmbedUrl(item.url);
-  const canEmbed = embedUrl && !embedUrl.includes('youtube.com/watch') && !embedUrl.includes('youtu.be/');
+  const blockedHosts = ['youtube.com', 'youtu.be', 'rtp.pt', 'sic.pt', 'tvglobo.pt'];
+  const isBlocked = blockedHosts.some(host => item.url.includes(host));
   
   const handleOpenResource = () => {
-    if (canEmbed) {
-      setShowPlayer(true);
-    } else {
+    if (isBlocked) {
       window.open(item.url, '_blank', 'noopener,noreferrer');
+    } else {
+      setShowPlayer(true);
     }
   };
   
@@ -784,7 +785,7 @@ function ListeningItem({ item, showEnglish }) {
           )}
         </div>
       </ExpandableCard>
-      {showPlayer && (
+      {showPlayer && !isBlocked && (
         <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.8)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }} onClick={() => setShowPlayer(false)}>
           <div style={{ background: 'var(--bg-card)', borderRadius: '12px', padding: '20px', maxWidth: '800px', width: '100%', maxHeight: '90vh', overflow: 'auto' }} onClick={e => e.stopPropagation()}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
