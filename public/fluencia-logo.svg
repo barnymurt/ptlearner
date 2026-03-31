@@ -2,29 +2,29 @@
   <!-- Background circle -->
   <circle cx="100" cy="100" r="95" fill="#00a870" />
   
-  <!-- Stylized F with accent mark -->
-  <text x="75" y="130" 
-        font-family="Georgia, serif" 
-        font-size="90" 
-        font-weight="bold" 
-        fill="white" 
-        text-anchor="middle">F</text>
+  <!-- Blackletter F main stem -->
+  <path d="M80 35 L80 165" 
+        stroke="white" 
+        stroke-width="14" 
+        stroke-linecap="round"
+        fill="none"/>
   
-  <!-- Acute accent on ú -->
-  <text x="135" y="115" 
-        font-family="Georgia, serif" 
-        font-size="50" 
-        font-weight="bold" 
-        fill="white" 
-        text-anchor="middle">ú</text>
+  <!-- Top crossbar with curl -->
+  <path d="M80 35 L145 35 Q165 40 155 55 Q150 45 130 45" 
+        stroke="white" 
+        stroke-width="12" 
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        fill="none"/>
   
-  <!-- lência -->
-  <text x="130" y="150" 
-        font-family="Georgia, serif" 
-        font-size="50" 
-        fill="white" 
-        text-anchor="middle">ência</text>
+  <!-- Middle crossbar with curl -->
+  <path d="M80 100 L140 100 Q155 105 148 118 Q142 110 125 112" 
+        stroke="white" 
+        stroke-width="10" 
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        fill="none"/>
   
-  <!-- Gold accent dot (Portuguese flag reference) -->
-  <circle cx="155" cy="55" r="16" fill="#c9963c" />
+  <!-- Gold accent dot -->
+  <circle cx="158" cy="50" r="14" fill="#c9963c" />
 </svg>

@@ -1,33 +1,33 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
-  <!-- Background -->
+  <!-- Background rounded square -->
   <rect width="200" height="200" rx="30" fill="#00a870"/>
   
-  <!-- F with accent -->
-  <text x="70" y="130" 
-        font-family="Georgia, serif" 
-        font-size="85" 
-        font-weight="bold" 
-        fill="white" 
-        text-anchor="middle">F</text>
+  <!-- Blackletter F main stem -->
+  <path d="M75 35 L75 165" 
+        stroke="white" 
+        stroke-width="14" 
+        stroke-linecap="round"
+        fill="none"/>
   
-  <!-- Acute accent -->
-  <text x="125" y="115" 
-        font-family="Georgia, serif" 
-        font-size="45" 
-        font-weight="bold" 
-        fill="white" 
-        text-anchor="middle">ú</text>
+  <!-- Top crossbar with curl -->
+  <path d="M75 35 L140 35 Q160 40 150 55 Q145 45 125 45" 
+        stroke="white" 
+        stroke-width="12" 
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        fill="none"/>
   
-  <!-- lência -->
-  <text x="122" y="150" 
-        font-family="Georgia, serif" 
-        font-size="45" 
-        fill="white" 
-        text-anchor="middle">ência</text>
+  <!-- Middle crossbar with curl -->
+  <path d="M75 100 L135 100 Q150 105 143 118 Q137 110 120 112" 
+        stroke="white" 
+        stroke-width="10" 
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        fill="none"/>
   
   <!-- Gold accent bar -->
-  <rect x="40" y="40" width="45" height="10" rx="5" fill="#008a5a"/>
+  <rect x="35" y="35" width="40" height="10" rx="5" fill="#008a5a"/>
   
-  <!-- Gold dot -->
-  <circle cx="150" cy="45" r="12" fill="#c9963c"/>
+  <!-- Gold accent dot -->
+  <circle cx="155" cy="45" r="12" fill="#c9963c" />
 </svg>

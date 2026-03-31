@@ -1,24 +1,33 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 100" width="300" height="100">
-  <!-- F with accent -->
-  <text x="15" y="70" 
-        font-family="Georgia, serif" 
-        font-size="65" 
-        font-weight="bold" 
-        fill="#00a870">F</text>
+  <!-- Blackletter F main stem -->
+  <path d="M35 15 L35 85" 
+        stroke="#00a870" 
+        stroke-width="12" 
+        stroke-linecap="round"
+        fill="none"/>
   
-  <!-- Acute accent -->
-  <text x="58" y="52" 
-        font-family="Georgia, serif" 
-        font-size="30" 
-        font-weight="bold" 
-        fill="#00a870">ú</text>
+  <!-- Top crossbar with curl -->
+  <path d="M35 15 L85 15 Q100 18 95 28 Q92 22 80 23" 
+        stroke="#00a870" 
+        stroke-width="10" 
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        fill="none"/>
   
-  <!-- lência -->
-  <text x="70" y="70" 
+  <!-- Middle crossbar with curl -->
+  <path d="M35 55 L80 55 Q92 58 88 66 Q85 62 75 63" 
+        stroke="#00a870" 
+        stroke-width="8" 
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        fill="none"/>
+  
+  <!-- luência text -->
+  <text x="105" y="72" 
         font-family="Georgia, serif" 
-        font-size="50" 
+        font-size="42" 
         fill="#1a1a1a">luência</text>
   
-  <!-- Underline accent -->
-  <rect x="18" y="78" width="260" height="4" rx="2" fill="#c9963c"/>
+  <!-- Gold underline accent -->
+  <rect x="38" y="86" width="250" height="4" rx="2" fill="#c9963c"/>
 </svg>
