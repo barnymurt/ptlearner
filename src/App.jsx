@@ -400,6 +400,21 @@ function useLocal(key, def) {
   return [v, setAndStore];
 }
 
+function speakPortuguese(text) {
+  if (!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(text);
+  const voices = window.speechSynthesis.getVoices();
+  const ptVoice = voices.find(v => v.lang.startsWith('pt')) || voices[0];
+  if (ptVoice) {
+    utterance.voice = ptVoice;
+    utterance.lang = ptVoice.lang;
+  }
+  utterance.rate = 0.85;
+  utterance.pitch = 1;
+  window.speechSynthesis.speak(utterance);
+}
+
 // ─── COMPONENTS ────────────────────────────────────────────────────────────────
 
 function VerbCard({ verb, meaning, conj }) {
@@ -407,7 +422,14 @@ function VerbCard({ verb, meaning, conj }) {
   return (
     <div className="card verb-card" onClick={() => setShow(!show)}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px' }}>
-        <span className="verb-text">{verb}</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span className="verb-text">{verb}</span>
+          <button 
+            onClick={(e) => { e.stopPropagation(); speakPortuguese(verb); }}
+            style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '16px', padding: '2px 6px', borderRadius: '4px' }}
+            title="Listen to pronunciation"
+          >🔊</button>
+        </div>
         <span className="verb-meaning">{meaning}</span>
       </div>
       {show && (
