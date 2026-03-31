@@ -1441,6 +1441,29 @@ function Sidebar({ section, onSelect, isOpen, onClose, showEnglish }) {
           </div>
         ))}
       </nav>
+      <div style={{ padding: '16px', borderTop: '1px solid var(--border)', marginTop: 'auto' }}>
+        <a 
+          href="https://ko-fi.com/fluencia" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center', 
+            gap: '8px',
+            background: '#13c3ba', 
+            color: '#fff', 
+            padding: '12px 16px', 
+            borderRadius: '8px', 
+            textDecoration: 'none',
+            fontFamily: 'var(--font-sans)',
+            fontWeight: 600,
+            fontSize: '14px'
+          }}
+        >
+          ☕ Support Fluência
+        </a>
+      </div>
     </aside>
   );
 }
