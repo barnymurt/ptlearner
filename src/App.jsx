@@ -429,6 +429,186 @@ function speakPortuguese(text) {
   window.speechSynthesis.speak(utterance);
 }
 
+const SECTIONS_MAP = {
+  'verbs25': { label: '25 Verbos', labelEn: '25 Most Used Verbs', icon: '⚡', keywords: ['beginner', 'essential', 'basic', 'common', 'most used', 'core', 'fundamental', 'starter'] },
+  'conjugation': { label: 'Conjugação', labelEn: 'Conjugation', icon: '📐', keywords: ['grammar', 'verbs', 'endings', 'patterns', 'tenses', 'present', 'past', 'future'] },
+  'pronouns': { label: 'Pronomes', labelEn: 'Pronouns', icon: '👤', keywords: ['pronouns', 'subject', 'object', 'possessive', 'demonstrative', 'personal'] },
+  'adjectives': { label: 'Adjetivos', labelEn: 'Adjectives', icon: '🎨', keywords: ['describing', 'descriptions', 'appearance', 'personality', 'character'] },
+  'prepositions': { label: 'Preposições', labelEn: 'Prepositions', icon: '📍', keywords: ['location', 'movement', 'prepositions', 'place', 'position', 'direction'] },
+  'articles': { label: 'Artigos', labelEn: 'Articles', icon: '📝', keywords: ['articles', 'definite', 'indefinite', 'the', 'a', 'an', 'gender'] },
+  'vocabulary': { label: 'Vocabulário', labelEn: 'Vocabulary', icon: '📚', keywords: ['vocabulary', 'words', 'topics', 'themes', 'daily', 'everyday', 'topics'] },
+  'verbos999': { label: '999 Verbos', labelEn: '999 Verbs', icon: '📕', keywords: ['verbs', 'complete', 'reference', 'all', 'extensive', 'comprehensive'] },
+  'modals': { label: 'Modais', labelEn: 'Modals', icon: '🔧', keywords: ['ability', 'permission', 'obligation', 'modals', 'can', 'must', 'should', 'want', 'need'] },
+  'idioms': { label: 'Expressões', labelEn: 'Expressions', icon: '🇵🇹', keywords: ['idioms', 'natural', 'native', 'speaking', 'expressions', 'slang', 'informal', 'fluency'] },
+  'falsefriends': { label: 'Falsos Amigos', labelEn: 'False Friends', icon: '⚠️', keywords: ['traps', 'mistakes', 'confusing', 'similar', 'english', 'cognates'] },
+  'structure': { label: 'Frases', labelEn: 'Phrases', icon: '🧱', keywords: ['sentence', 'structure', 'word order', 'patterns', 'svo', 'construction'] },
+  'preterito': { label: 'Pretéritos', labelEn: 'Past Tense', icon: '⏱️', keywords: ['past', 'history', 'yesterday', 'completed', 'imperfect', 'perfect', 'telling stories'] },
+  'serestar': { label: 'Ser/Estar', labelEn: 'Ser/Estar', icon: '🔄', keywords: ['be', 'being', 'identity', 'states', 'permanent', 'temporary', 'characteristics'] },
+  'escrita': { label: 'Escrita', labelEn: 'Writing', icon: '✍️', keywords: ['writing', 'exam', 'cile', 'practice', 'essay', 'formal'] },
+  'oral': { label: 'Oral', labelEn: 'Speaking', icon: '🗣️', keywords: ['speaking', 'conversation', 'dialogue', 'listening', 'pronunciation', 'shadowing'] },
+  'escuta': { label: 'Escuta', labelEn: 'Listening', icon: '🎧', keywords: ['listening', 'comprehension', 'audio', 'media', 'youtube', 'tv', 'movies'] },
+  'glossary': { label: 'Glossário', labelEn: 'Glossary', icon: '📖', keywords: ['grammar', 'terms', 'definitions', 'reference', 'help', 'explanations'] },
+};
+
+function generateLessonPlan(answers) {
+  const text = Object.values(answers).join(' ').toLowerCase();
+  const recommendations = [];
+  
+  const levelPatterns = { beginner: ['verbs25', 'conjugation', 'pronouns', 'vocabulary'], intermediate: ['adjectives', 'prepositions', 'articles', 'modals', 'structure'], advanced: ['preterito', 'serestar', 'idioms', 'falsefriends', 'escrita', 'oral'] };
+  if (text.includes('beginner') || text.includes('new') || text.includes('starting') || text.includes('never') || text.includes('zero')) {
+    recommendations.push(...levelPatterns.beginner);
+  }
+  if (text.includes('intermediate') || text.includes('some') || text.includes('basic') || text.includes('a1') || text.includes('a2')) {
+    recommendations.push(...levelPatterns.beginner, ...levelPatterns.intermediate);
+  }
+  if (text.includes('advanced') || text.includes('fluent') || text.includes('b1') || text.includes('b2') || text.includes('c1')) {
+    recommendations.push(...Object.keys(SECTIONS_MAP));
+  }
+  
+  if (text.includes('grammar') || text.includes('rules') || text.includes('structure')) recommendations.push('conjugation', 'pronouns', 'articles', 'prepositions');
+  if (text.includes('speak') || text.includes('talk') || text.includes('conversation') || text.includes('pronunciation')) recommendations.push('oral', 'vocabulary', 'modals');
+  if (text.includes('listen') || text.includes('audio') || text.includes('video') || text.includes('movie')) recommendations.push('escuta');
+  if (text.includes('write') || text.includes('essay') || text.includes('exam') || text.includes('cile')) recommendations.push('escrita');
+  if (text.includes('travel') || text.includes('vacation') || text.includes('portugal')) recommendations.push('vocabulary', 'oral', 'prepositions');
+  if (text.includes('work') || text.includes('business') || text.includes('job')) recommendations.push('escrita', 'modals', 'vocabulary');
+  if (text.includes('friend') || text.includes('family') || text.includes('relationship')) recommendations.push('oral', 'vocabulary', 'idioms');
+  if (text.includes('study') || text.includes('study')) recommendations.push('verbs25', 'conjugation', 'vocabulary');
+  
+  const unique = [...new Set(recommendations)];
+  return unique.slice(0, 5);
+}
+
+function OnboardingChat({ onComplete }) {
+  const [step, setStep] = useState(0);
+  const [answers, setAnswers] = useState({});
+  const [input, setInput] = useState('');
+  const [messages, setMessages] = useState([]);
+  const [isTyping, setIsTyping] = useState(false);
+  
+  const questions = [
+    { id: 'level', question: 'What is your current Portuguese level?', questionPt: 'Qual é o teu nível atual de português?', placeholder: 'e.g., Complete beginner, A1, A2, some basics...' },
+    { id: 'learning', question: 'How do you like to learn?', questionPt: 'Como gosta de aprender?', placeholder: 'e.g., Grammar rules, speaking practice, flashcards, watching shows...' },
+    { id: 'personality', question: 'How would a close friend describe your personality?', questionPt: 'Como é que um amigo próximo descreveria a tua personalidade?', placeholder: 'e.g., Extroverted, introverted, analytical, creative...' },
+    { id: 'goal', question: 'What is your main goal for learning Portuguese?', questionPt: 'Qual é o teu objetivo principal para aprender português?', placeholder: 'e.g., Travel to Portugal, speak with family, pass an exam, work...' },
+  ];
+  
+  const addMessage = (text, isUser = false) => {
+    setMessages(prev => [...prev, { text, isUser, id: Date.now() }]);
+  };
+  
+  const simulateTyping = (callback) => {
+    setIsTyping(true);
+    setTimeout(() => {
+      setIsTyping(false);
+      callback();
+    }, 1000);
+  };
+  
+  const handleAnswer = () => {
+    if (!input.trim()) return;
+    const currentQ = questions[step];
+    const newAnswers = { ...answers, [currentQ.id]: input };
+    setAnswers(newAnswers);
+    addMessage(input, true);
+    setInput('');
+    
+    simulateTyping(() => {
+      if (step < questions.length - 1) {
+        addMessage('Interesting! Let me ask you something else...');
+        setTimeout(() => {
+          setStep(step + 1);
+        }, 800);
+      } else {
+        addMessage('Perfect! Based on your answers, let me create your personalized lesson plan...');
+        setTimeout(() => {
+          const recommendations = generateLessonPlan(newAnswers);
+          const planMessage = recommendations.map(id => {
+            const section = SECTIONS_MAP[id];
+            return section ? `${section.icon} ${section.labelEn}` : id;
+          }).join('\n');
+          addMessage(`Your custom learning path:\n\n${planMessage}\n\nStart with the highlighted sections above! 🚀`);
+          setTimeout(() => {
+            onComplete(recommendations);
+          }, 1500);
+        }, 1000);
+      }
+    });
+  };
+  
+  useEffect(() => {
+    if (messages.length === 0) {
+      setTimeout(() => {
+        addMessage("Hello! I'm here to help create your personalized Portuguese learning journey. 💬");
+        setTimeout(() => {
+          addMessage(questions[0].question);
+        }, 800);
+      }, 300);
+    }
+  }, []);
+  
+  const currentQuestion = questions[step];
+  
+  return (
+    <div style={{ maxWidth: '500px', margin: '0 auto', padding: '20px' }}>
+      <div style={{ background: 'var(--bg-card)', borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', overflow: 'hidden' }}>
+        <div style={{ background: 'linear-gradient(135deg, #00a870, #008a5a)', padding: '20px', color: 'white' }}>
+          <h3 style={{ margin: 0, fontSize: '18px' }}>🎯 Your Learning Journey</h3>
+          <p style={{ margin: '8px 0 0', opacity: 0.9, fontSize: '13px' }}>Answer a few questions to get a personalized plan</p>
+        </div>
+        
+        <div style={{ height: '300px', overflowY: 'auto', padding: '20px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          {messages.map(msg => (
+            <div key={msg.id} style={{ display: 'flex', justifyContent: msg.isUser ? 'flex-end' : 'flex-start' }}>
+              <div style={{ 
+                maxWidth: '75%', 
+                padding: '12px 16px', 
+                borderRadius: msg.isUser ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
+                background: msg.isUser ? 'var(--accent)' : 'var(--bg-secondary)',
+                color: msg.isUser ? 'white' : 'var(--text-primary)',
+                fontSize: '14px',
+                lineHeight: 1.5,
+                whiteSpace: 'pre-wrap'
+              }}>
+                {msg.text}
+              </div>
+            </div>
+          ))}
+          {isTyping && (
+            <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+              <div style={{ padding: '12px 16px', borderRadius: '16px 16px 16px 4px', background: 'var(--bg-secondary)', color: 'var(--text-tertiary)', fontSize: '14px' }}>
+                typing...
+              </div>
+            </div>
+          )}
+        </div>
+        
+        {step < questions.length && (
+          <div style={{ padding: '16px', borderTop: '1px solid var(--border)', background: 'var(--bg)' }}>
+            <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '8px' }}>{currentQuestion.question}</p>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <input 
+                type="text" 
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleAnswer()}
+                placeholder={currentQuestion.placeholder}
+                style={{ flex: 1, padding: '12px 16px', borderRadius: '12px', border: '1px solid var(--border)', fontSize: '14px', outline: 'none' }}
+              />
+              <button onClick={handleAnswer} style={{ padding: '12px 20px', background: 'var(--accent)', color: 'white', border: 'none', borderRadius: '12px', cursor: 'pointer', fontWeight: 600 }}>→</button>
+            </div>
+          </div>
+        )}
+      </div>
+      
+      {messages.length > 3 && (
+        <button onClick={() => onComplete([])} style={{ display: 'block', margin: '16px auto 0', padding: '10px 20px', background: 'transparent', border: '1px solid var(--border)', borderRadius: '8px', cursor: 'pointer', color: 'var(--text-secondary)', fontSize: '13px' }}>
+          Skip & Browse All Sections →
+        </button>
+      )}
+    </div>
+  );
+}
+
 // ─── COMPONENTS ────────────────────────────────────────────────────────────────
 
 const PRONOUNS_EN = {
@@ -1536,8 +1716,11 @@ export default function App() {
           <div className="content">
             {section ? <SectionComp showEnglish={showEnglish} /> : (
               <div className="welcome-screen">
-                <h2 className="sec-title">{showEnglish ? 'Welcome to Fluência' : 'Bem-vindo à Fluência'}</h2>
-                <p className="sec-desc">{showEnglish ? 'Select a section from the sidebar to begin learning European Portuguese.' : 'Seleciona uma secção da barra lateral para começar a aprender Português Europeu.'}</p>
+                <OnboardingChat onComplete={(recommendedSections) => {
+                  if (recommendedSections.length > 0) {
+                    setSection(recommendedSections[0]);
+                  }
+                }} />
               </div>
             )}
           </div>
