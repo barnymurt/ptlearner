@@ -332,25 +332,25 @@ const GLOSSARY_TERMS = [
 ];
 
 const SECTIONS = [
-  { id: 'verbs25', label: '25 Verbos', icon: '⚡' },
-  { id: 'conjugation', label: 'Conjugação', icon: '📐' },
-  { id: 'pronouns', label: 'Pronomes', icon: '👤' },
-  { id: 'adjectives', label: 'Adjetivos', icon: '🎨' },
-  { id: 'prepositions', label: 'Preposições', icon: '📍' },
-  { id: 'articles', label: 'Artigos', icon: '📝' },
-  { id: 'vocabulary', label: 'Vocabulário', icon: '📚' },
-  { id: 'verbos999', label: '999 Verbos', icon: '📕' },
-  { id: 'modals', label: 'Modais', icon: '🔧' },
-  { id: 'idioms', label: 'Expressões', icon: '🇵🇹' },
-  { id: 'falsefriends', label: 'Falsos Amigos', icon: '⚠️' },
-  { id: 'structure', label: 'Frases', icon: '🧱' },
-  { id: 'preterito', label: 'Pretéritos', icon: '⏱️' },
-  { id: 'serestar', label: 'Ser/Estar', icon: '🔄' },
-  { id: 'escrita', label: 'Escrita', icon: '✍️' },
-  { id: 'oral', label: 'Oral', icon: '🗣️' },
-  { id: 'escuta', label: 'Escuta', icon: '🎧' },
-  { id: 'glossary', label: 'Glossário', icon: '📖' },
-  { id: 'progresso', label: 'Progresso', icon: '📊' },
+  { id: 'verbs25', label: '25 Verbos', labelEn: '25 Verbs', icon: '⚡' },
+  { id: 'conjugation', label: 'Conjugação', labelEn: 'Conjugation', icon: '📐' },
+  { id: 'pronouns', label: 'Pronomes', labelEn: 'Pronouns', icon: '👤' },
+  { id: 'adjectives', label: 'Adjetivos', labelEn: 'Adjectives', icon: '🎨' },
+  { id: 'prepositions', label: 'Preposições', labelEn: 'Prepositions', icon: '📍' },
+  { id: 'articles', label: 'Artigos', labelEn: 'Articles', icon: '📝' },
+  { id: 'vocabulary', label: 'Vocabulário', labelEn: 'Vocabulary', icon: '📚' },
+  { id: 'verbos999', label: '999 Verbos', labelEn: '999 Verbs', icon: '📕' },
+  { id: 'modals', label: 'Modais', labelEn: 'Modals', icon: '🔧' },
+  { id: 'idioms', label: 'Expressões', labelEn: 'Expressions', icon: '🇵🇹' },
+  { id: 'falsefriends', label: 'Falsos Amigos', labelEn: 'False Friends', icon: '⚠️' },
+  { id: 'structure', label: 'Frases', labelEn: 'Phrases', icon: '🧱' },
+  { id: 'preterito', label: 'Pretéritos', labelEn: 'Past Tense', icon: '⏱️' },
+  { id: 'serestar', label: 'Ser/Estar', labelEn: 'Ser/Estar', icon: '🔄' },
+  { id: 'escrita', label: 'Escrita', labelEn: 'Writing', icon: '✍️' },
+  { id: 'oral', label: 'Oral', labelEn: 'Speaking', icon: '🗣️' },
+  { id: 'escuta', label: 'Escuta', labelEn: 'Listening', icon: '🎧' },
+  { id: 'glossary', label: 'Glossário', labelEn: 'Glossary', icon: '📖' },
+  { id: 'progresso', label: 'Progresso', labelEn: 'Progress', icon: '📊' },
 ];
 
 // Styles are now in index.css — using CSS class names throughout
@@ -1258,63 +1258,69 @@ window.onunhandledrejection = e => console.error('[Unhandled Promise]', e.reason
 const SECTION_GROUPS = [
   {
     label: 'Reference',
+    labelPt: 'Referência',
     sections: [
-      { id: 'verbs25', label: '25 Verbos', icon: '⚡', desc: 'Essential verbs for A2' },
-      { id: 'conjugation', label: 'Conjugação', icon: '📐', desc: 'Verb conjugation patterns' },
-      { id: 'pronouns', label: 'Pronomes', icon: '👤', desc: 'All Portuguese pronouns' },
-      { id: 'adjectives', label: 'Adjetivos', icon: '🎨', desc: 'Common adjectives' },
+      { id: 'verbs25', label: '25 Verbos', labelEn: '25 Verbs', icon: '⚡', desc: 'Essential verbs for A2' },
+      { id: 'conjugation', label: 'Conjugação', labelEn: 'Conjugation', icon: '📐', desc: 'Verb conjugation patterns' },
+      { id: 'pronouns', label: 'Pronomes', labelEn: 'Pronouns', icon: '👤', desc: 'All Portuguese pronouns' },
+      { id: 'adjectives', label: 'Adjetivos', labelEn: 'Adjectives', icon: '🎨', desc: 'Common adjectives' },
     ],
   },
   {
     label: 'Grammar',
+    labelPt: 'Gramática',
     sections: [
-      { id: 'prepositions', label: 'Preposições', icon: '📍', desc: 'Preposition usage drills' },
-      { id: 'articles', label: 'Artigos', icon: '📝', desc: 'Definite & indefinite articles' },
-      { id: 'modals', label: 'Modais', icon: '🔧', desc: 'Modal verb conjugations' },
-      { id: 'serestar', label: 'Ser/Estar', icon: '🔄', desc: 'Ser vs Estar distinction' },
+      { id: 'prepositions', label: 'Preposições', labelEn: 'Prepositions', icon: '📍', desc: 'Preposition usage drills' },
+      { id: 'articles', label: 'Artigos', labelEn: 'Articles', icon: '📝', desc: 'Definite & indefinite articles' },
+      { id: 'modals', label: 'Modais', labelEn: 'Modals', icon: '🔧', desc: 'Modal verb conjugations' },
+      { id: 'serestar', label: 'Ser/Estar', labelEn: 'Ser/Estar', icon: '🔄', desc: 'Ser vs Estar distinction' },
     ],
   },
   {
     label: 'Vocabulary',
+    labelPt: 'Vocabulário',
     sections: [
-      { id: 'vocabulary', label: 'Vocabulário', icon: '📚', desc: '20 themed vocabulary sets' },
-      { id: 'verbos999', label: '999 Verbos', icon: '📕', desc: 'Complete verb reference' },
+      { id: 'vocabulary', label: 'Vocabulário', labelEn: 'Vocabulary', icon: '📚', desc: '20 themed vocabulary sets' },
+      { id: 'verbos999', label: '999 Verbos', labelEn: '999 Verbs', icon: '📕', desc: 'Complete verb reference' },
     ],
   },
   {
     label: 'Practice',
+    labelPt: 'Prática',
     sections: [
-      { id: 'idioms', label: 'Expressões', icon: '🇵🇹', desc: 'Portuguese idioms & phrases' },
-      { id: 'falsefriends', label: 'Falsos Amigos', icon: '⚠️', desc: 'False friends trap quiz' },
-      { id: 'structure', label: 'Frases', icon: '🧱', desc: 'Sentence structure patterns' },
-      { id: 'preterito', label: 'Pretéritos', icon: '⏱️', desc: 'Perfeito vs Imperfeito drill' },
+      { id: 'idioms', label: 'Expressões', labelEn: 'Expressions', icon: '🇵🇹', desc: 'Portuguese idioms & phrases' },
+      { id: 'falsefriends', label: 'Falsos Amigos', labelEn: 'False Friends', icon: '⚠️', desc: 'False friends trap quiz' },
+      { id: 'structure', label: 'Frases', labelEn: 'Phrases', icon: '🧱', desc: 'Sentence structure patterns' },
+      { id: 'preterito', label: 'Pretéritos', labelEn: 'Past Tense', icon: '⏱️', desc: 'Perfeito vs Imperfeito drill' },
     ],
   },
   {
     label: 'Communication',
+    labelPt: 'Comunicação',
     sections: [
-      { id: 'escrita', label: 'Escrita', icon: '✍️', desc: 'Writing tasks with model answers' },
-      { id: 'oral', label: 'Oral', icon: '🗣️', desc: 'Shadowing dialogues' },
-      { id: 'escuta', label: 'Escuta', icon: '🎧', desc: 'Listening resources' },
+      { id: 'escrita', label: 'Escrita', labelEn: 'Writing', icon: '✍️', desc: 'Writing tasks with model answers' },
+      { id: 'oral', label: 'Oral', labelEn: 'Speaking', icon: '🗣️', desc: 'Shadowing dialogues' },
+      { id: 'escuta', label: 'Escuta', labelEn: 'Listening', icon: '🎧', desc: 'Listening resources' },
     ],
   },
   {
     label: 'Tools',
+    labelPt: 'Ferramentas',
     sections: [
-      { id: 'glossary', label: 'Glossário', icon: '📖', desc: 'Grammar terms in plain English' },
-      { id: 'progresso', label: 'Progresso', icon: '📊', desc: 'Track your learning journey' },
+      { id: 'glossary', label: 'Glossário', labelEn: 'Glossary', icon: '📖', desc: 'Grammar terms in plain English' },
+      { id: 'progresso', label: 'Progresso', labelEn: 'Progress', icon: '📊', desc: 'Track your learning journey' },
     ],
   },
 ];
 
-function Sidebar({ section, onSelect, isOpen, onClose }) {
+function Sidebar({ section, onSelect, isOpen, onClose, showEnglish }) {
   return (
     <aside className={`sidebar ${isOpen ? 'sidebar-open' : ''}`}>
       <div className="sidebar-header">
         <div className="sidebar-header-row">
           <div>
-            <h1 className="sidebar-title">PT Learner</h1>
-            <p className="sidebar-subtitle">European Portuguese A2</p>
+            <h1 className="sidebar-title">Fluência</h1>
+            <p className="sidebar-subtitle">{showEnglish ? 'European Portuguese A2' : 'Português Europeu A2'}</p>
           </div>
           <button className="sidebar-close-btn" onClick={onClose}>✕</button>
         </div>
@@ -1322,16 +1328,16 @@ function Sidebar({ section, onSelect, isOpen, onClose }) {
       <nav className="sidebar-nav">
         {SECTION_GROUPS.map(group => (
           <div key={group.label} className="sidebar-group">
-            <div className="sidebar-group-label">{group.label}</div>
+            <div className="sidebar-group-label">{showEnglish ? group.label : group.labelPt}</div>
             {group.sections.map(s => (
               <button
                 key={s.id}
                 className={`sidebar-item ${section === s.id ? 'active' : ''}`}
-                data-group={group.label.toLowerCase()}
+                data-group={(showEnglish ? group.label : group.labelPt).toLowerCase()}
                 onClick={() => onSelect(s.id)}
               >
                 <span className="sidebar-item-icon">{s.icon}</span>
-                <span className="sidebar-item-label">{s.label}</span>
+                <span className="sidebar-item-label">{showEnglish ? s.labelEn : s.label}</span>
               </button>
             ))}
           </div>
@@ -1385,7 +1391,7 @@ export default function App() {
     <ErrorBoundary>
       <div className="app">
         <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');`}</style>
-        <Sidebar section={section} onSelect={handleSectionSelect} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+        <Sidebar section={section} onSelect={handleSectionSelect} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} showEnglish={showEnglish} />
         {sidebarOpen && <div className="sidebar-overlay" onClick={() => setSidebarOpen(false)} />}
         <main className="main-content">
           {section && (
@@ -1394,7 +1400,7 @@ export default function App() {
                 <span className="hamburger-icon">{sidebarOpen ? '✕' : '☰'}</span>
               </button>
               <div className="section-nav-title">
-                {SECTIONS.find(s => s.id === section)?.label || section}
+                {showEnglish ? (SECTIONS.find(s => s.id === section)?.labelEn || section) : (SECTIONS.find(s => s.id === section)?.label || section)}
               </div>
               <button className={showEnglish ? 'btn btn-primary' : 'btn btn-ghost'} onClick={() => setShowEnglish(!showEnglish)} style={{ fontSize: '12px', padding: '6px 12px' }}>
                 {showEnglish ? 'Hide English' : 'Show English'}
@@ -1404,8 +1410,8 @@ export default function App() {
           <div className="content">
             {section ? <SectionComp showEnglish={showEnglish} /> : (
               <div className="welcome-screen">
-                <h2 className="sec-title">Welcome to PT Learner</h2>
-                <p className="sec-desc">Select a section from the sidebar to begin learning European Portuguese.</p>
+                <h2 className="sec-title">{showEnglish ? 'Welcome to Fluência' : 'Bem-vindo à Fluência'}</h2>
+                <p className="sec-desc">{showEnglish ? 'Select a section from the sidebar to begin learning European Portuguese.' : 'Seleciona uma secção da barra lateral para começar a aprender Português Europeu.'}</p>
               </div>
             )}
           </div>
