@@ -1201,29 +1201,32 @@ const SECTION_GROUPS = [
   },
 ];
 
-function HomeScreen({ onSelect }) {
+function Sidebar({ section, onSelect }) {
   return (
-    <div className="home-grid">
-      {SECTION_GROUPS.map(group => (
-        <div key={group.label}>
-          <div className="home-group-label">{group.label}</div>
-          <div className="home-sections">
+    <aside className="sidebar">
+      <div className="sidebar-header">
+        <h1 className="sidebar-title">PT Learner</h1>
+        <p className="sidebar-subtitle">European Portuguese A2</p>
+      </div>
+      <nav className="sidebar-nav">
+        {SECTION_GROUPS.map(group => (
+          <div key={group.label} className="sidebar-group">
+            <div className="sidebar-group-label">{group.label}</div>
             {group.sections.map(s => (
               <button
                 key={s.id}
-                className="section-card"
+                className={`sidebar-item ${section === s.id ? 'active' : ''}`}
                 data-group={group.label.toLowerCase()}
                 onClick={() => onSelect(s.id)}
               >
-                <div className="section-card-icon">{s.icon}</div>
-                <div className="section-card-label">{s.label}</div>
-                <div className="section-card-desc">{s.desc}</div>
+                <span className="sidebar-item-icon">{s.icon}</span>
+                <span className="sidebar-item-label">{s.label}</span>
               </button>
             ))}
           </div>
-        </div>
-      ))}
-    </div>
+        ))}
+      </nav>
+    </aside>
   );
 }
 
@@ -1265,20 +1268,10 @@ export default function App() {
     <ErrorBoundary>
       <div className="app">
         <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');`}</style>
-        {!section ? (
-          <>
-            <header className="header">
-              <h1 className="header-title">PT Learner</h1>
-              <p className="header-subtitle">European Portuguese A2</p>
-            </header>
-            <HomeScreen onSelect={setSection} />
-          </>
-        ) : (
-          <>
+        <Sidebar section={section} onSelect={setSection} />
+        <main className="main-content">
+          {section && (
             <div className="section-nav">
-              <button className="home-btn" onClick={() => setSection(null)} aria-label="Back to home">
-                ⌂
-              </button>
               <div className="section-nav-title">
                 {SECTIONS.find(s => s.id === section)?.label || section}
               </div>
@@ -1286,11 +1279,16 @@ export default function App() {
                 {showEnglish ? 'Hide English' : 'Show English'}
               </button>
             </div>
-            <main className="content">
-              <SectionComp showEnglish={showEnglish} />
-            </main>
-          </>
-        )}
+          )}
+          <div className="content">
+            {section ? <SectionComp showEnglish={showEnglish} /> : (
+              <div className="welcome-screen">
+                <h2 className="sec-title">Welcome to PT Learner</h2>
+                <p className="sec-desc">Select a section from the sidebar to begin learning European Portuguese.</p>
+              </div>
+            )}
+          </div>
+        </main>
       </div>
     </ErrorBoundary>
   );
