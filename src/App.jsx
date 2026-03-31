@@ -561,16 +561,10 @@ function WritingTask({ task, showEnglish }) {
       {revealed && (
         <div style={{ marginTop: '14px', background: 'rgba(0,168,112,0.04)', border: '1px solid rgba(0,168,112,0.12)', borderRadius: '10px', padding: '14px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-            <div style={{ fontSize: '11px', color: '#7a8a80', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1px' }}>Model Answer</div>
-            <button onClick={() => setShowEn(!showEn)} style={{ fontSize: '10px', padding: '3px 8px', borderRadius: '5px', border: '1px solid rgba(0,138,138,0.3)', background: effectiveShowEn ? 'rgba(0,138,138,0.1)' : 'transparent', color: '#008a8a', cursor: 'pointer' }}>{effectiveShowEn ? 'Hide English' : 'Show English'}</button>
+            <div style={{ fontSize: '11px', color: '#7a8a80', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1px' }}>Model Answer {effectiveShowEn ? '(EN)' : '(PT)'}</div>
+            {task.englishAnswer && <button onClick={() => setShowEn(!showEn)} style={{ fontSize: '10px', padding: '3px 8px', borderRadius: '5px', border: '1px solid rgba(0,138,138,0.3)', background: effectiveShowEn ? 'rgba(0,138,138,0.1)' : 'transparent', color: '#008a8a', cursor: 'pointer' }}>{effectiveShowEn ? 'Show PT' : 'Show EN'}</button>}
           </div>
-          <div style={{ fontSize: '13px', color: '#c0b8a8', lineHeight: 1.7, fontFamily: 'monospace', whiteSpace: 'pre-wrap' }}>{task.modelAnswer}</div>
-          {effectiveShowEn && task.englishAnswer && (
-            <div style={{ marginTop: '14px', paddingTop: '12px', borderTop: '1px solid rgba(0,138,138,0.15)' }}>
-              <div style={{ fontSize: '11px', color: '#008a8a', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px' }}>English Translation</div>
-              <div style={{ fontSize: '13px', color: '#7a8a80', lineHeight: 1.7, fontFamily: 'monospace', whiteSpace: 'pre-wrap' }}>{task.englishAnswer}</div>
-            </div>
-          )}
+          <div style={{ fontSize: '13px', color: '#c0b8a8', lineHeight: 1.7, fontFamily: 'monospace', whiteSpace: 'pre-wrap' }}>{effectiveShowEn ? task.englishAnswer : task.modelAnswer}</div>
         </div>
       )}
     </div>
@@ -591,16 +585,9 @@ function OralDialogue({ dialogue, showEnglish }) {
       <button className="btn btn-primary" onClick={() => setExpanded(!expanded)}>{expanded ? 'Hide Dialogue' : 'Show Dialogue'}</button>
       {expanded && (
         <div style={{ marginTop: '12px' }}>
-          {dialogue.dialogue.map((line, i) => <div key={i} style={{ display: 'flex', gap: '10px', marginBottom: '8px', fontSize: '13px' }}><span style={{ fontWeight: 700, color: line.speaker === 'A' || line.speaker === 'Cliente' || line.speaker === 'Paciente' || line.speaker === 'Passageiro' ? '#00a870' : '#008a8a', minWidth: '80px' }}>{line.speaker}:</span><span style={{ color: '#1a1a1a' }}>{line.text}</span></div>)}
+          {(effectiveShowEn && dialogue.englishDialogue ? dialogue.englishDialogue : dialogue.dialogue).map((line, i) => <div key={i} style={{ display: 'flex', gap: '10px', marginBottom: '8px', fontSize: '13px' }}><span style={{ fontWeight: 700, color: line.speaker === 'A' || line.speaker === 'Cliente' || line.speaker === 'Paciente' || line.speaker === 'Passageiro' ? '#00a870' : '#008a8a', minWidth: '80px' }}>{line.speaker}:</span><span style={{ color: '#1a1a1a' }}>{line.text}</span></div>)}
           {dialogue.englishDialogue && (
-            <>
-              <button onClick={() => setShowEn(!showEn)} style={{ marginTop: '10px', fontSize: '11px', padding: '4px 10px', borderRadius: '6px', border: '1px solid rgba(0,138,138,0.3)', background: effectiveShowEn ? 'rgba(0,138,138,0.1)' : 'transparent', color: '#008a8a', cursor: 'pointer' }}>{effectiveShowEn ? 'Hide English' : 'Show English'}</button>
-              {effectiveShowEn && (
-                <div style={{ marginTop: '10px', paddingTop: '10px', borderTop: '1px solid rgba(0,138,138,0.1)' }}>
-                  {dialogue.englishDialogue.map((line, i) => <div key={i} style={{ display: 'flex', gap: '10px', marginBottom: '8px', fontSize: '13px' }}><span style={{ fontWeight: 700, color: '#008a8a', minWidth: '80px' }}>{line.speaker}:</span><span style={{ color: '#7a8a80', fontStyle: 'italic' }}>{line.text}</span></div>)}
-                </div>
-              )}
-            </>
+            <button onClick={() => setShowEn(!showEn)} style={{ marginTop: '10px', fontSize: '11px', padding: '4px 10px', borderRadius: '6px', border: '1px solid rgba(0,138,138,0.3)', background: effectiveShowEn ? 'rgba(0,138,138,0.1)' : 'transparent', color: '#008a8a', cursor: 'pointer' }}>{effectiveShowEn ? 'Show PT' : 'Show EN'}</button>
           )}
           <div style={{ marginTop: '14px' }}>
             <div style={{ fontSize: '10px', color: '#555', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '1px' }}>Key phrases</div>
@@ -627,13 +614,8 @@ function ListeningItem({ item, showEnglish }) {
       <button style={{ ...S.btn, marginTop: '8px', marginLeft: '7px', borderColor: '#008a8a', color: '#008a8a', background: 'rgba(0,138,138,0.08)' }} onClick={() => setShowTranscript(!showTranscript)}>{effectiveShowTranscript ? 'Hide Transcript' : 'Show Transcript'}</button>
       {effectiveShowTranscript && (
         <div style={{ marginTop: '10px', padding: '12px', background: 'rgba(0,138,138,0.04)', borderRadius: '8px' }}>
-          <div style={{ fontSize: '12px', color: '#1a1a1a', lineHeight: 1.7, fontFamily: 'monospace', marginBottom: item.englishTranscript ? '12px' : 0 }}>{item.transcript}</div>
-          {item.englishTranscript && (
-            <>
-              <div style={{ fontSize: '10px', color: '#008a8a', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '6px', fontWeight: 600 }}>English</div>
-              <div style={{ fontSize: '12px', color: '#7a8a80', lineHeight: 1.7, fontFamily: 'monospace', fontStyle: 'italic' }}>{item.englishTranscript}</div>
-            </>
-          )}
+          <div style={{ fontSize: '10px', color: '#008a8a', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '6px', fontWeight: 600 }}>{effectiveShowEn && item.englishTranscript ? 'English' : 'Portuguese'}</div>
+          <div style={{ fontSize: '12px', color: '#1a1a1a', lineHeight: 1.7, fontFamily: 'monospace' }}>{effectiveShowEn && item.englishTranscript ? item.englishTranscript : item.transcript}</div>
         </div>
       )}
     </div>
