@@ -101,7 +101,7 @@ const ALL_VERBS = [
 
 const VERB_LETTERS = [...new Set(ALL_VERBS.map(v => v[0][0].toUpperCase()))].sort();
 const VERB_TYPES = ["-ar", "-er", "-ir", "irr"];
-const VERB_TYPE_COLORS = { "-ar": "#00a870", "-er": "#008a8a", "-ir": "#c9963c", "irr": "#ff6b6b" };
+const VERB_TYPE_COLORS = { "-ar": "#00a870", "-er": "#008a8a", "-ir": "#c9963c", "irr": "#c0392b" };
 const VERB_TYPE_LABELS = { "-ar": "-AR", "-er": "-ER", "-ir": "-IR", "irr": "Irregular" };
 const A2_PRIORITY_VERBS = new Set([
 "ser","estar","ter","fazer","ir","poder","dizer","dar","saber","querer","ver","vir",
@@ -353,40 +353,39 @@ const SECTIONS = [
   { id: 'progresso', label: 'Progresso', icon: '📊' },
 ];
 
-// ─── STYLES ────────────────────────────────────────────────────────────────────
-
+// Styles are now in index.css — using CSS class names throughout
 const S = {
-  app: { fontFamily: "'DM Sans',sans-serif", minHeight: '100vh', background: '#060b14', color: '#e8e6e1' },
-  header: { padding: '24px 16px 12px', textAlign: 'center' },
-  title: { fontFamily: "'DM Serif Display',serif", fontSize: 'clamp(24px,5vw,36px)', color: '#00a870', margin: 0 },
-  subtitle: { fontSize: '11px', color: '#7a8a80', marginTop: 6, letterSpacing: '2px', textTransform: 'uppercase' },
-  nav: { display: 'flex', gap: '5px', padding: '10px 14px', overflowX: 'auto', position: 'sticky', top: 0, zIndex: 10, background: 'rgba(10,15,13,0.95)', borderBottom: '1px solid rgba(0,168,112,0.1)' },
-  navBtn: (a) => ({ padding: '7px 12px', borderRadius: '7px', border: a ? '1px solid #00a870' : '1px solid rgba(255,255,255,0.07)', background: a ? 'rgba(0,168,112,0.12)' : 'rgba(255,255,255,0.02)', color: a ? '#00a870' : '#7a8a80', fontSize: '11px', fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap', fontFamily: 'inherit' }),
-  content: { padding: '18px 14px 80px', maxWidth: '920px', margin: '0 auto' },
-  secTitle: { fontFamily: "'DM Serif Display',serif", fontSize: 'clamp(20px,4vw,28px)', color: '#00a870', marginBottom: 4 },
-  secDesc: { fontSize: '13px', color: '#7a8a80', marginBottom: 18, lineHeight: 1.5 },
-  card: { background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '12px', padding: '16px', marginBottom: '10px' },
-  grid2: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '8px' },
-  grid3: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '8px' },
-  verbH: { fontFamily: "'DM Serif Display',serif", fontSize: '18px', color: '#fff' },
-  verbM: { fontSize: '12px', color: '#00a870', fontWeight: 500 },
-  conjGrid: { display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '3px 14px', marginTop: '10px' },
-  pron: { fontSize: '11px', color: '#7a8a80', fontFamily: 'monospace', textAlign: 'right', padding: '2px 0' },
-  conjF: { fontSize: '13px', color: '#e8e6e1', fontFamily: 'monospace', fontWeight: 500, padding: '2px 0' },
-  tag: (c='#00a870') => ({ display: 'inline-block', padding: '2px 9px', borderRadius: '20px', fontSize: '10px', fontWeight: 600, background: c+'18', color: c, letterSpacing: '0.5px', textTransform: 'uppercase' }),
-  input: { background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '7px', padding: '7px 10px', color: '#e8e6e1', fontSize: '13px', fontFamily: 'monospace', outline: 'none', width: '90px', textAlign: 'center', transition: 'border-color 0.2s' },
-  inputC: { borderColor: '#00a870', background: 'rgba(0,168,112,0.08)' },
-  inputW: { borderColor: '#b82035', background: 'rgba(184,32,53,0.08)' },
-  btn: { padding: '9px 18px', borderRadius: '8px', border: '1px solid #00a870', background: 'rgba(0,168,112,0.1)', color: '#00a870', fontSize: '12px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.2s' },
-  toggleRow: { display: 'flex', gap: '7px', marginBottom: '18px', flexWrap: 'wrap' },
-  table: { width: '100%', borderCollapse: 'separate', borderSpacing: '0 4px' },
-  th: { textAlign: 'left', padding: '7px 11px', fontSize: '10px', color: '#7a8a80', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1px' },
-  td: { padding: '9px 11px', fontSize: '13px', background: 'rgba(255,255,255,0.02)' },
-  flashcard: { background: 'rgba(0,168,112,0.04)', border: '1px solid rgba(0,168,112,0.15)', borderRadius: '16px', padding: '36px 22px', textAlign: 'center', cursor: 'pointer', minHeight: '140px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', transition: 'all 0.3s' },
-  progressBar: { height: '3px', background: 'rgba(255,255,255,0.06)', borderRadius: '2px', overflow: 'hidden', marginBottom: '18px' },
-  progressFill: (p) => ({ height: '100%', width: p+'%', background: 'linear-gradient(90deg, #00a870, #007a55)', borderRadius: '2px', transition: 'width 0.4s ease' }),
-  badge: { display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '2px 8px', borderRadius: '6px', fontSize: '10px', fontWeight: 600, background: 'rgba(0,168,112,0.1)', color: '#00a870' },
-  badgeGray: { display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '2px 8px', borderRadius: '6px', fontSize: '10px', fontWeight: 600, background: 'rgba(255,255,255,0.06)', color: '#7a8a80' },
+  app: {},
+  header: {},
+  title: {},
+  subtitle: {},
+  nav: {},
+  navBtn: () => ({}),
+  content: {},
+  secTitle: {},
+  secDesc: {},
+  card: {},
+  grid2: {},
+  grid3: {},
+  verbH: {},
+  verbM: {},
+  conjGrid: {},
+  pron: {},
+  conjF: {},
+  tag: () => ({}),
+  input: {},
+  inputC: {},
+  inputW: {},
+  btn: {},
+  toggleRow: {},
+  table: {},
+  th: {},
+  td: {},
+  flashcard: {},
+  progressBar: {},
+  progressFill: () => ({}),
+  badge: {},
+  badgeGray: {},
 };
 
 // ─── UTILITY ───────────────────────────────────────────────────────────────────
@@ -406,14 +405,14 @@ function useLocal(key, def) {
 function VerbCard({ verb, meaning, conj }) {
   const [show, setShow] = useState(false);
   return (
-    <div style={S.card} onClick={() => setShow(!show)}>
+    <div className="card" onClick={() => setShow(!show)}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-        <span style={S.verbH}>{verb}</span>
-        <span style={S.verbM}>{meaning}</span>
+        <span className="verb-text">{verb}</span>
+        <span className="verb-meaning">{meaning}</span>
       </div>
       {show && (
-        <div style={S.conjGrid}>
-          {PRONOUNS.map((p, i) => <React.Fragment key={p}><span style={S.pron}>{p}</span><span style={S.conjF}>{conj[i]}</span></React.Fragment>)}
+        <div className="conj-grid">
+          {PRONOUNS.map((p, i) => <React.Fragment key={p}><span className="conj-pronoun">{p}</span><span className="conj-form">{conj[i]}</span></React.Fragment>)}
         </div>
       )}
       <div style={{ fontSize: '10px', color: '#444', marginTop: '8px', textAlign: 'center' }}>{show ? 'tap to hide' : 'tap to reveal'}</div>
@@ -455,15 +454,15 @@ function FlashcardDrill({ items, frontKey, backKey, title, sectionId }) {
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-        <span style={S.badge}>{Math.min(idx+1, items.length)} / {items.length}</span>
+        <span className="badge">{Math.min(idx+1, items.length)} / {items.length}</span>
         {score.total > 0 && <span style={{ fontSize: '12px', color: '#7a8a80' }}>{score.correct}/{score.total} correct</span>}
       </div>
-      <div style={S.progressBar}><div style={S.progressFill(((idx % items.length) / items.length) * 100)} /></div>
-      <div style={S.flashcard} onClick={() => setFlipped(!flipped)}>
+      <div className="progress-bar"><div className="progress-fill" style={{width: ((idx % items.length) / items.length) * 100 + "%"}} /></div>
+      <div className="flashcard" onClick={() => setFlipped(!flipped)}>
         {!flipped ? (
           <><div style={{ fontSize: '10px', color: '#7a8a80', marginBottom: '7px', textTransform: 'uppercase', letterSpacing: '1px' }}>{title || 'Português'}</div><div style={{ fontFamily: "'DM Serif Display',serif", fontSize: '26px', color: '#fff' }}>{typeof frontKey === 'function' ? frontKey(current) : current[frontKey]}</div><div style={{ fontSize: '11px', color: '#444', marginTop: '14px' }}>tap to flip</div></>
         ) : (
-          <><div style={{ fontSize: '10px', color: '#7a8a80', marginBottom: '7px', textTransform: 'uppercase', letterSpacing: '1px' }}>English</div><div style={{ fontSize: '20px', color: '#00a870', fontWeight: 500 }}>{typeof backKey === 'function' ? backKey(current) : current[backKey]}</div><div style={{ display: 'flex', gap: '10px', marginTop: '18px' }}><button style={{ ...S.btn, borderColor: '#b82035', color: '#b82035', background: 'rgba(184,32,53,0.1)', padding: '8px 16px' }} onClick={(e) => { e.stopPropagation(); next(false); }}>Again</button><button style={S.btn} onClick={(e) => { e.stopPropagation(); next(true); }}>Got it</button></div></>
+          <><div style={{ fontSize: '10px', color: '#7a8a80', marginBottom: '7px', textTransform: 'uppercase', letterSpacing: '1px' }}>English</div><div style={{ fontSize: '20px', color: '#00a870', fontWeight: 500 }}>{typeof backKey === 'function' ? backKey(current) : current[backKey]}</div><div style={{ display: 'flex', gap: '10px', marginTop: '18px' }}><button style={{ ...S.btn, borderColor: '#b82035', color: '#b82035', background: 'rgba(184,32,53,0.1)', padding: '8px 16px' }} onClick={(e) => { e.stopPropagation(); next(false); }}>Again</button><button className="btn btn-primary" onClick={(e) => { e.stopPropagation(); next(true); }}>Got it</button></div></>
         )}
       </div>
     </div>
@@ -490,9 +489,9 @@ function FillGap({ exercises }) {
   return (
     <div>
       <div style={{ display: 'flex', gap: '7px', marginBottom: '14px', flexWrap: 'wrap' }}>
-        <button style={S.btn} onClick={() => setShowHints(!showHints)}>{showHints ? 'Hide Hints' : 'Show Hints'}</button>
-        <button style={S.btn} onClick={checkAll}>Check All</button>
-        {attempted > 0 && <span style={S.badge}>{score}/{attempted} correct</span>}
+        <button className="btn btn-primary" onClick={() => setShowHints(!showHints)}>{showHints ? 'Hide Hints' : 'Show Hints'}</button>
+        <button className="btn btn-primary" onClick={checkAll}>Check All</button>
+        {attempted > 0 && <span className="badge">{score}/{attempted} correct</span>}
       </div>
       {exercises.map((ex, i) => {
         const parts = ex.sentence.split('___');
@@ -547,7 +546,7 @@ function WritingTask({ task }) {
   return (
     <div style={{ ...S.card, padding: '16px 18px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '10px', flexWrap: 'wrap', gap: '6px' }}>
-        <div><span style={S.tag('#008a8a')}>{task.type}</span><span style={{ ...S.tag(), marginLeft: '5px' }}>{task.targetWords} words</span></div>
+        <div><span className="tag tag-teal">{task.type}</span><span style={{ ...S.tag(), marginLeft: '5px' }}>{task.targetWords} words</span></div>
       </div>
       <div style={{ fontFamily: "'DM Serif Display',serif", fontSize: '17px', color: '#fff', marginBottom: '6px' }}>{task.title}</div>
       <div style={{ fontSize: '13px', color: '#7a8a80', marginBottom: '12px', lineHeight: 1.5 }}>{task.description}</div>
@@ -557,7 +556,7 @@ function WritingTask({ task }) {
           {task.keyVocab.map((v, i) => <span key={i} style={{ ...S.tag('#008a8a'), fontSize: '10px' }}>{v}</span>)}
         </div>
       </div>
-      <button style={S.btn} onClick={() => setRevealed(!revealed)}>{revealed ? 'Hide Model Answer' : 'Show Model Answer'}</button>
+      <button className="btn btn-primary" onClick={() => setRevealed(!revealed)}>{revealed ? 'Hide Model Answer' : 'Show Model Answer'}</button>
       {revealed && (
         <div style={{ marginTop: '14px', background: 'rgba(0,168,112,0.04)', border: '1px solid rgba(0,168,112,0.12)', borderRadius: '10px', padding: '14px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
@@ -587,7 +586,7 @@ function OralDialogue({ dialogue }) {
         <span style={{ ...S.tag(), background: dialogue.difficulty === 'Fácil' ? '#00a87018' : dialogue.difficulty === 'Médio' ? '#c9963c18' : '#b8203518', color: dialogue.difficulty === 'Fácil' ? '#00a870' : dialogue.difficulty === 'Médio' ? '#c9963c' : '#b82035' }}>{dialogue.difficulty}</span>
       </div>
       {dialogue.tip && <div style={{ fontSize: '11px', color: '#008a8a', fontStyle: 'italic', marginBottom: '12px', padding: '8px 10px', background: 'rgba(0,138,138,0.06)', borderRadius: '6px' }}>💡 {dialogue.tip}</div>}
-      <button style={S.btn} onClick={() => setExpanded(!expanded)}>{expanded ? 'Hide Dialogue' : 'Show Dialogue'}</button>
+      <button className="btn btn-primary" onClick={() => setExpanded(!expanded)}>{expanded ? 'Hide Dialogue' : 'Show Dialogue'}</button>
       {expanded && (
         <div style={{ marginTop: '12px' }}>
           {dialogue.dialogue.map((line, i) => <div key={i} style={{ display: 'flex', gap: '10px', marginBottom: '8px', fontSize: '13px' }}><span style={{ fontWeight: 700, color: line.speaker === 'A' || line.speaker === 'Cliente' || line.speaker === 'Paciente' || line.speaker === 'Passageiro' ? '#00a870' : '#008a8a', minWidth: '80px' }}>{line.speaker}:</span><span style={{ color: '#e8e6e1' }}>{line.text}</span></div>)}
@@ -645,7 +644,7 @@ function GlossaryEntry({ term }) {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <span style={{ fontFamily: "'DM Serif Display',serif", fontSize: '15px', color: '#00a870' }}>{term.term}</span>
-          <span style={S.badgeGray}>{term.category}</span>
+          <span className="badge badge-gray">{term.category}</span>
         </div>
         <span style={{ fontSize: '11px', color: '#444' }}>{expanded ? '▲' : '▼'}</span>
       </div>
@@ -661,9 +660,9 @@ function ProgressSection() {
   const uniqueWrong = Object.keys(wrongKey).length;
   return (
     <div>
-      <h2 style={S.secTitle}>O Teu Progresso</h2>
-      <p style={S.secDesc}>Acompanha o teu progresso de estudo. Os dados são guardados no teu navegador.</p>
-      <div style={S.grid2}>
+      <h2 className="sec-title">O Teu Progresso</h2>
+      <p className="sec-desc">Acompanha o teu progresso de estudo. Os dados são guardados no teu navegador.</p>
+      <div className="grid-2">
         <div style={{ ...S.card, background: 'rgba(0,168,112,0.05)', border: '1px solid rgba(0,168,112,0.15)' }}>
           <div style={{ fontSize: '32px', fontFamily: "'DM Serif Display',serif", color: '#00a870', marginBottom: '4px' }}>{totalSessions}</div>
           <div style={{ fontSize: '12px', color: '#7a8a80' }}>Sessões de estudo</div>
@@ -693,13 +692,13 @@ function Verbs25Section() {
   const [mode, setMode] = useState('grid');
   return (
     <div>
-      <h2 style={S.secTitle}>25 Verbos Mais Usados</h2>
-      <p style={S.secDesc}>Essential verbs for A2. Master these in present tense first, then expand to past and future.</p>
-      <div style={S.toggleRow}>
-        <button style={S.navBtn(mode === 'grid')} onClick={() => setMode('grid')}>Reference</button>
-        <button style={S.navBtn(mode === 'flash')} onClick={() => setMode('flash')}>Flashcards</button>
+      <h2 className="sec-title">25 Verbos Mais Usados</h2>
+      <p className="sec-desc">Essential verbs for A2. Master these in present tense first, then expand to past and future.</p>
+      <div className="toggle-row">
+        <button className={mode === 'grid' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('grid')}>Reference</button>
+        <button className={mode === 'flash' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('flash')}>Flashcards</button>
       </div>
-      {mode === 'grid' ? <div style={S.grid2}>{TOP_25_VERBS.map(v => <VerbCard key={v.verb} {...v} />)}</div> : <FlashcardDrill items={TOP_25_VERBS} frontKey="verb" backKey="meaning" title="Verbo" sectionId="verbs25" />}
+      {mode === 'grid' ? <div className="grid-2">{TOP_25_VERBS.map(v => <VerbCard key={v.verb} {...v} />)}</div> : <FlashcardDrill items={TOP_25_VERBS} frontKey="verb" backKey="meaning" title="Verbo" sectionId="verbs25" />}
     </div>
   );
 }
@@ -709,14 +708,14 @@ function ConjugationSection() {
   const data = CONJUGATION_PATTERNS[tense];
   return (
     <div>
-      <h2 style={S.secTitle}>Conjugação Regular</h2>
-      <p style={S.secDesc}>Regular verb endings for -AR, -ER, and -IR verbs. Learn the patterns and conjugate hundreds.</p>
-      <div style={S.toggleRow}>{Object.keys(CONJUGATION_PATTERNS).map(t => <button key={t} style={S.navBtn(tense === t)} onClick={() => setTense(t)}>{t}</button>)}</div>
-      <div style={S.grid3}>
+      <h2 className="sec-title">Conjugação Regular</h2>
+      <p className="sec-desc">Regular verb endings for -AR, -ER, and -IR verbs. Learn the patterns and conjugate hundreds.</p>
+      <div className="toggle-row">{Object.keys(CONJUGATION_PATTERNS).map(t => <button key={t} className={tense === t ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setTense(t)}>{t}</button>)}</div>
+      <div className="grid-3">
         {[['ar','#00a870'],['er','#008a8a'],['ir','#c9963c']].map(([type,col]) => (
           <div key={type} style={{ ...S.card, borderLeft: '3px solid '+col }}>
             <div style={{ ...S.tag(col), marginBottom: '10px' }}>-{type.toUpperCase()} verbs</div>
-            <div style={S.conjGrid}>{PRONOUNS.map((p, i) => <React.Fragment key={p}><span style={S.pron}>{p}</span><span style={{ ...S.conjF, color: col }}>stem {data[type][i]}</span></React.Fragment>)}</div>
+            <div className="conj-grid">{PRONOUNS.map((p, i) => <React.Fragment key={p}><span className="conj-pronoun">{p}</span><span style={{ ...S.conjF, color: col }}>stem {data[type][i]}</span></React.Fragment>)}</div>
             <div style={{ fontSize: '11px', color: '#7a8a80', marginTop: '10px', fontFamily: 'monospace', lineHeight: 1.6 }}>{data['example_'+type]}</div>
           </div>
         ))}
@@ -732,11 +731,11 @@ function PronounsSection() {
   const [cat, setCat] = useState(Object.keys(PRONOUNS_DATA)[0]);
   return (
     <div>
-      <h2 style={S.secTitle}>Pronomes Portugueses</h2>
-      <p style={S.secDesc}>European Portuguese pronoun system. Note: "tu" is widely used in EP, unlike Brazilian Portuguese where "você" dominates.</p>
-      <div style={S.toggleRow}>{Object.keys(PRONOUNS_DATA).map(c => <button key={c} style={S.navBtn(cat === c)} onClick={() => setCat(c)}>{c}</button>)}</div>
-      <div style={S.card}>
-        <table style={S.table}><thead><tr><th style={S.th}>Português</th><th style={S.th}>English</th></tr></thead>
+      <h2 className="sec-title">Pronomes Portugueses</h2>
+      <p className="sec-desc">European Portuguese pronoun system. Note: "tu" is widely used in EP, unlike Brazilian Portuguese where "você" dominates.</p>
+      <div className="toggle-row">{Object.keys(PRONOUNS_DATA).map(c => <button key={c} className={cat === c ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setCat(c)}>{c}</button>)}</div>
+      <div className="card">
+        <table className="conj-table"><thead><tr><th className="conj-th">Português</th><th className="conj-th">English</th></tr></thead>
           <tbody>{PRONOUNS_DATA[cat].map(([pt,en], i) => <tr key={i}><td style={{ ...S.td, fontFamily: 'monospace', fontWeight: 600, color: '#00a870' }}>{pt}</td><td style={{ ...S.td, color: '#c0b8a8' }}>{en}</td></tr>)}</tbody>
         </table>
       </div>
@@ -751,10 +750,10 @@ function AdjectivesSection() {
   const [mode, setMode] = useState('grid');
   return (
     <div>
-      <h2 style={S.secTitle}>40 Adjetivos Essenciais</h2>
-      <p style={S.secDesc}>Core adjectives for A2. Remember: most adjectives agree in gender and number.</p>
-      <div style={S.toggleRow}><button style={S.navBtn(mode === 'grid')} onClick={() => setMode('grid')}>Reference</button><button style={S.navBtn(mode === 'flash')} onClick={() => setMode('flash')}>Flashcards</button></div>
-      {mode === 'grid' ? <div style={S.grid2}>{ADJECTIVES.map(([pt,en], i) => <div key={i} style={{ ...S.card, padding: '10px 14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}><span style={{ fontFamily: 'monospace', fontWeight: 600, color: '#00a870' }}>{pt}</span><span style={{ fontSize: '12px', color: '#7a8a80' }}>{en}</span></div>)}</div> : <FlashcardDrill items={ADJECTIVES.map(([pt,en]) => ({ pt, en }))} frontKey="pt" backKey="en" title="Adjetivo" sectionId="adjectives" />}
+      <h2 className="sec-title">40 Adjetivos Essenciais</h2>
+      <p className="sec-desc">Core adjectives for A2. Remember: most adjectives agree in gender and number.</p>
+      <div className="toggle-row"><button className={mode === 'grid' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('grid')}>Reference</button><button className={mode === 'flash' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('flash')}>Flashcards</button></div>
+      {mode === 'grid' ? <div className="grid-2">{ADJECTIVES.map(([pt,en], i) => <div key={i} style={{ ...S.card, padding: '10px 14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}><span style={{ fontFamily: 'monospace', fontWeight: 600, color: '#00a870' }}>{pt}</span><span style={{ fontSize: '12px', color: '#7a8a80' }}>{en}</span></div>)}</div> : <FlashcardDrill items={ADJECTIVES.map(([pt,en]) => ({ pt, en }))} frontKey="pt" backKey="en" title="Adjetivo" sectionId="adjectives" />}
     </div>
   );
 }
@@ -762,8 +761,8 @@ function AdjectivesSection() {
 function PrepositionsSection() {
   return (
     <div>
-      <h2 style={S.secTitle}>Preposições — Preenche os espaços</h2>
-      <p style={S.secDesc}>Practice with: em, de, para, com, sem, entre, sobre, a, por, até — and their contracted forms (no, na, ao, à, do, da...)</p>
+      <h2 className="sec-title">Preposições — Preenche os espaços</h2>
+      <p className="sec-desc">Practice with: em, de, para, com, sem, entre, sobre, a, por, até — and their contracted forms (no, na, ao, à, do, da...)</p>
       <FillGap exercises={PREPOSITION_EXERCISES} />
     </div>
   );
@@ -773,18 +772,18 @@ function ArticlesSection() {
   const [view, setView] = useState('ref');
   return (
     <div>
-      <h2 style={S.secTitle}>Artigos e Contrações</h2>
-      <p style={S.secDesc}>Definite and indefinite articles, plus essential contractions with prepositions.</p>
-      <div style={S.toggleRow}><button style={S.navBtn(view === 'ref')} onClick={() => setView('ref')}>Reference</button><button style={S.navBtn(view === 'practice')} onClick={() => setView('practice')}>Practice</button></div>
+      <h2 className="sec-title">Artigos e Contrações</h2>
+      <p className="sec-desc">Definite and indefinite articles, plus essential contractions with prepositions.</p>
+      <div className="toggle-row"><button className={view === 'ref' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setView('ref')}>Reference</button><button className={view === 'practice' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setView('practice')}>Practice</button></div>
       {view === 'ref' ? (
         <>
           {['definite','indefinite'].map(type => (
             <div key={type} style={{ ...S.card, marginBottom: '14px' }}>
               <h3 style={{ fontFamily: "'DM Serif Display',serif", fontSize: '16px', color: '#fff', marginBottom: '10px' }}>{ARTICLES_DATA[type].title}</h3>
-              <div style={S.grid2}>{ARTICLES_DATA[type].forms.map((f, i) => <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '7px 0', borderBottom: '1px solid rgba(255,255,255,0.04)' }}><span style={{ fontSize: '11px', color: '#7a8a80' }}>{f.label}</span><span><strong style={{ color: '#00a870', fontSize: '15px' }}>{f.article}</strong> <span style={{ fontSize: '11px', color: '#444' }}>{f.example}</span></span></div>)}</div>
+              <div className="grid-2">{ARTICLES_DATA[type].forms.map((f, i) => <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '7px 0', borderBottom: '1px solid rgba(255,255,255,0.04)' }}><span style={{ fontSize: '11px', color: '#7a8a80' }}>{f.label}</span><span><strong style={{ color: '#00a870', fontSize: '15px' }}>{f.article}</strong> <span style={{ fontSize: '11px', color: '#444' }}>{f.example}</span></span></div>)}</div>
             </div>
           ))}
-          <div style={S.card}>
+          <div className="card">
             <h3 style={{ fontFamily: "'DM Serif Display',serif", fontSize: '16px', color: '#fff', marginBottom: '10px' }}>Contrações</h3>
             {ARTICLES_DATA.definite.contractions.map((row, i) => <div key={i} style={{ display: 'flex', flexWrap: 'wrap', gap: '7px', marginBottom: '7px' }}>{row.map((c, j) => <span key={j} style={{ ...S.tag('#008a8a'), fontSize: '11px', fontFamily: 'monospace' }}>{c}</span>)}</div>)}
           </div>
@@ -799,11 +798,11 @@ function VocabularySection() {
   const [mode, setMode] = useState('grid');
   return (
     <div>
-      <h2 style={S.secTitle}>Vocabulário por Tema</h2>
-      <p style={S.secDesc}>A2+ vocabulary organized by CIPLE exam topics. Learn with the articles!</p>
-      <div style={S.toggleRow}>{Object.keys(VOCABULARY).map(t => <button key={t} style={S.navBtn(topic === t)} onClick={() => { setTopic(t); setMode('grid'); }}>{t}</button>)}</div>
-      <div style={{ marginBottom: '10px' }}><button style={S.navBtn(mode === 'grid')} onClick={() => setMode('grid')}>Reference</button><button style={{ ...S.navBtn(mode === 'flash'), marginLeft: '5px' }} onClick={() => setMode('flash')}>Flashcards</button></div>
-      {mode === 'grid' ? <div style={S.grid2}>{VOCABULARY[topic].map(([pt,en], i) => <div key={i} style={{ ...S.card, padding: '9px 14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}><span style={{ fontFamily: 'monospace', fontWeight: 500, color: '#00a870', fontSize: '13px' }}>{pt}</span><span style={{ fontSize: '12px', color: '#7a8a80' }}>{en}</span></div>)}</div> : <FlashcardDrill items={VOCABULARY[topic].map(([pt,en]) => ({ pt, en }))} frontKey="pt" backKey="en" title={topic} sectionId={'vocab_'+topic} />}
+      <h2 className="sec-title">Vocabulário por Tema</h2>
+      <p className="sec-desc">A2+ vocabulary organized by CIPLE exam topics. Learn with the articles!</p>
+      <div className="toggle-row">{Object.keys(VOCABULARY).map(t => <button key={t} className={topic === t ? 'toggle-btn active' : 'toggle-btn'} onClick={() => { setTopic(t); setMode('grid'); }}>{t}</button>)}</div>
+      <div style={{ marginBottom: '10px' }}><button className={mode === 'grid' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('grid')}>Reference</button><button style={{ ...S.navBtn(mode === 'flash'), marginLeft: '5px' }} onClick={() => setMode('flash')}>Flashcards</button></div>
+      {mode === 'grid' ? <div className="grid-2">{VOCABULARY[topic].map(([pt,en], i) => <div key={i} style={{ ...S.card, padding: '9px 14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}><span style={{ fontFamily: 'monospace', fontWeight: 500, color: '#00a870', fontSize: '13px' }}>{pt}</span><span style={{ fontSize: '12px', color: '#7a8a80' }}>{en}</span></div>)}</div> : <FlashcardDrill items={VOCABULARY[topic].map(([pt,en]) => ({ pt, en }))} frontKey="pt" backKey="en" title={topic} sectionId={'vocab_'+topic} />}
     </div>
   );
 }
@@ -811,13 +810,13 @@ function VocabularySection() {
 function ModalsSection() {
   return (
     <div>
-      <h2 style={S.secTitle}>Verbos Modais</h2>
-      <p style={S.secDesc}>Modal verbs express ability, obligation, desire, and necessity. Critical for A2 communication.</p>
+      <h2 className="sec-title">Verbos Modais</h2>
+      <p className="sec-desc">Modal verbs express ability, obligation, desire, and necessity. Critical for A2 communication.</p>
       {MODAL_VERBS.map((m, i) => (
         <div key={i} style={{ ...S.card, borderLeft: '3px solid #00a870' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', flexWrap: 'wrap', gap: '7px' }}><span style={S.verbH}>{m.verb}</span><span style={S.verbM}>{m.meaning}</span></div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', flexWrap: 'wrap', gap: '7px' }}><span className="verb-text">{m.verb}</span><span className="verb-meaning">{m.meaning}</span></div>
           <div style={{ fontSize: '12px', color: '#c0b8a8', margin: '9px 0', lineHeight: 1.5 }}>{m.usage}</div>
-          <div style={S.conjGrid}>{PRONOUNS.map((p, j) => <React.Fragment key={p}><span style={S.pron}>{p}</span><span style={S.conjF}>{m.presente[j]}</span></React.Fragment>)}</div>
+          <div className="conj-grid">{PRONOUNS.map((p, j) => <React.Fragment key={p}><span className="conj-pronoun">{p}</span><span className="conj-form">{m.presente[j]}</span></React.Fragment>)}</div>
           <div style={{ marginTop: '10px' }}>{m.examples.map((ex, j) => <div key={j} style={{ fontSize: '12px', color: '#7a8a80', fontStyle: 'italic', padding: '2px 0', fontFamily: 'monospace' }}>{ex}</div>)}</div>
         </div>
       ))}
@@ -829,9 +828,9 @@ function IdiomsSection() {
   const [mode, setMode] = useState('list');
   return (
     <div>
-      <h2 style={S.secTitle}>Expressões Idiomáticas</h2>
-      <p style={S.secDesc}>Common Portuguese expressions. Knowing these will impress in conversation.</p>
-      <div style={S.toggleRow}><button style={S.navBtn(mode === 'list')} onClick={() => setMode('list')}>Reference</button><button style={S.navBtn(mode === 'flash')} onClick={() => setMode('flash')}>Flashcards</button></div>
+      <h2 className="sec-title">Expressões Idiomáticas</h2>
+      <p className="sec-desc">Common Portuguese expressions. Knowing these will impress in conversation.</p>
+      <div className="toggle-row"><button className={mode === 'list' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('list')}>Reference</button><button className={mode === 'flash' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('flash')}>Flashcards</button></div>
       {mode === 'list' ? IDIOMS.map((idiom, i) => <div key={i} style={{ ...S.card, padding: '12px 16px' }}><div style={{ fontFamily: "'DM Serif Display',serif", fontSize: '16px', color: '#fff' }}>"{idiom.pt}"</div><div style={{ fontSize: '13px', color: '#00a870', fontWeight: 500, marginTop: '3px' }}>{idiom.en}</div><div style={{ fontSize: '11px', color: '#444', marginTop: '3px' }}>Literal: {idiom.literal}</div></div>) : <FlashcardDrill items={IDIOMS} frontKey="pt" backKey={(item) => item.en+'\n(Literal: '+item.literal+')'} title="Expressão" sectionId="idioms" />}
     </div>
   );
@@ -841,10 +840,10 @@ function FalseFriendsSection() {
   const [mode, setMode] = useState('list');
   return (
     <div>
-      <h2 style={S.secTitle}>Falsos Amigos</h2>
-      <p style={S.secDesc}>Words that look like English but mean something different. Essential to avoid mistakes!</p>
-      <div style={S.toggleRow}><button style={S.navBtn(mode === 'list')} onClick={() => setMode('list')}>Reference</button><button style={S.navBtn(mode === 'flash')} onClick={() => setMode('flash')}>Flashcards</button></div>
-      {mode === 'list' ? <div style={S.grid2}>{FALSE_FRIENDS.map((ff, i) => <div key={i} style={S.card}><div style={{ fontFamily: 'monospace', fontSize: '15px', fontWeight: 600, color: '#fff' }}>{ff.pt}</div><div style={{ fontSize: '11px', color: '#b82035', marginTop: '5px' }}><span style={{ textDecoration: 'line-through' }}>✗ {ff.seems}</span></div><div style={{ fontSize: '13px', color: '#00a870', fontWeight: 500, marginTop: '3px' }}>✓ {ff.actually}</div></div>)}</div> : <FlashcardDrill items={FALSE_FRIENDS} frontKey="pt" backKey={(item) => 'NOT "'+item.seems+'" → '+item.actually} title="Falso Amigo" sectionId="falsefriends" />}
+      <h2 className="sec-title">Falsos Amigos</h2>
+      <p className="sec-desc">Words that look like English but mean something different. Essential to avoid mistakes!</p>
+      <div className="toggle-row"><button className={mode === 'list' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('list')}>Reference</button><button className={mode === 'flash' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('flash')}>Flashcards</button></div>
+      {mode === 'list' ? <div className="grid-2">{FALSE_FRIENDS.map((ff, i) => <div key={i} className="card"><div style={{ fontFamily: 'monospace', fontSize: '15px', fontWeight: 600, color: '#fff' }}>{ff.pt}</div><div style={{ fontSize: '11px', color: '#b82035', marginTop: '5px' }}><span style={{ textDecoration: 'line-through' }}>✗ {ff.seems}</span></div><div style={{ fontSize: '13px', color: '#00a870', fontWeight: 500, marginTop: '3px' }}>✓ {ff.actually}</div></div>)}</div> : <FlashcardDrill items={FALSE_FRIENDS} frontKey="pt" backKey={(item) => 'NOT "'+item.seems+'" → '+item.actually} title="Falso Amigo" sectionId="falsefriends" />}
     </div>
   );
 }
@@ -852,9 +851,9 @@ function FalseFriendsSection() {
 function StructureSection() {
   return (
     <div>
-      <h2 style={S.secTitle}>Estrutura das Frases</h2>
-      <p style={S.secDesc}>Core sentence patterns for A2. European Portuguese follows SVO order.</p>
-      {SENTENCE_STRUCTURE.map((s, i) => <div key={i} style={S.card}><div style={{ ...S.tag('#008a8a'), marginBottom: '9px' }}>{s.pattern}</div><div style={{ fontFamily: 'monospace', fontSize: '15px', color: '#fff', marginBottom: '3px' }}>{s.example}</div><div style={{ fontSize: '12px', color: '#7a8a80' }}>{s.translation}</div></div>)}
+      <h2 className="sec-title">Estrutura das Frases</h2>
+      <p className="sec-desc">Core sentence patterns for A2. European Portuguese follows SVO order.</p>
+      {SENTENCE_STRUCTURE.map((s, i) => <div key={i} className="card"><div style={{ ...S.tag('#008a8a'), marginBottom: '9px' }}>{s.pattern}</div><div style={{ fontFamily: 'monospace', fontSize: '15px', color: '#fff', marginBottom: '3px' }}>{s.example}</div><div style={{ fontSize: '12px', color: '#7a8a80' }}>{s.translation}</div></div>)}
       <div style={{ ...S.card, marginTop: '14px', background: 'rgba(0,168,112,0.04)' }}>
         <h3 style={{ fontFamily: "'DM Serif Display',serif", fontSize: '16px', color: '#fff', marginBottom: '9px' }}>EP-Specific Patterns</h3>
         <div style={{ fontSize: '13px', color: '#c0b8a8', lineHeight: 1.8 }}>
@@ -871,11 +870,11 @@ function PreteritoSection() {
   const [mode, setMode] = useState('explain');
   return (
     <div>
-      <h2 style={S.secTitle}>Pretérito Perfeito vs Imperfeito</h2>
-      <p style={S.secDesc}>The most important grammar distinction in Portuguese past tense. Most learners fail here at A2.</p>
-      <div style={S.toggleRow}>
-        <button style={S.navBtn(mode === 'explain')} onClick={() => setMode('explain')}>Explanation</button>
-        <button style={S.navBtn(mode === 'practice')} onClick={() => setMode('practice')}>Practice</button>
+      <h2 className="sec-title">Pretérito Perfeito vs Imperfeito</h2>
+      <p className="sec-desc">The most important grammar distinction in Portuguese past tense. Most learners fail here at A2.</p>
+      <div className="toggle-row">
+        <button className={mode === 'explain' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('explain')}>Explanation</button>
+        <button className={mode === 'practice' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('practice')}>Practice</button>
       </div>
       {mode === 'explain' ? (
         <>
@@ -930,8 +929,8 @@ function PreteritoSection() {
 function SerEstarSection() {
   return (
     <div>
-      <h2 style={S.secTitle}>Ser vs Estar</h2>
-      <p style={S.secDesc}>The most important distinction in Portuguese. Both mean "to be" but are used differently.</p>
+      <h2 className="sec-title">Ser vs Estar</h2>
+      <p className="sec-desc">The most important distinction in Portuguese. Both mean "to be" but are used differently.</p>
       <div style={{ ...S.card, background: 'rgba(0,168,112,0.04)', border: '1px solid rgba(0,168,112,0.15)', padding: '14px 16px', marginBottom: '14px' }}>
         <p style={{ fontSize: '13px', color: '#c0b8a8', lineHeight: 1.6, marginBottom: '10px' }}><strong style={{ color: '#00a870' }}>SER</strong> = permanent, identity, origin, time, profession, essential characteristics</p>
         <p style={{ fontSize: '13px', color: '#c0b8a8', lineHeight: 1.6 }}><strong style={{ color: '#008a8a' }}>ESTAR</strong> = temporary states, location, ongoing actions, conditions that can change</p>
@@ -944,8 +943,8 @@ function SerEstarSection() {
 function EscritaSection() {
   return (
     <div>
-      <h2 style={S.secTitle}>Escrita — Prática CIPLE</h2>
-      <p style={S.secDesc}>CIPLE-style writing tasks. Read the task, write your answer, then check the model.</p>
+      <h2 className="sec-title">Escrita — Prática CIPLE</h2>
+      <p className="sec-desc">CIPLE-style writing tasks. Read the task, write your answer, then check the model.</p>
       {WRITING_TASKS.map(t => <WritingTask key={t.id} task={t} />)}
     </div>
   );
@@ -954,8 +953,8 @@ function EscritaSection() {
 function OralSection() {
   return (
     <div>
-      <h2 style={S.secTitle}>Oral — Diálogos para Praticar</h2>
-      <p style={S.secDesc}>Read the dialogues aloud, then try to say the lines yourself. Shadowing is the fastest way to improve pronunciation.</p>
+      <h2 className="sec-title">Oral — Diálogos para Praticar</h2>
+      <p className="sec-desc">Read the dialogues aloud, then try to say the lines yourself. Shadowing is the fastest way to improve pronunciation.</p>
       {ORAL_DIALOGUES.map(d => <OralDialogue key={d.id} dialogue={d} />)}
     </div>
   );
@@ -964,8 +963,8 @@ function OralSection() {
 function EscutaSection() {
   return (
     <div>
-      <h2 style={S.secTitle}>Escuta — Recursos de Audio</h2>
-      <p style={S.secDesc}>Curated EP listening resources. Click to open and listen, then try the transcript toggle to check your understanding.</p>
+      <h2 className="sec-title">Escuta — Recursos de Audio</h2>
+      <p className="sec-desc">Curated EP listening resources. Click to open and listen, then try the transcript toggle to check your understanding.</p>
       {LISTENING_RESOURCES.map(item => <ListeningItem key={item.id} item={item} />)}
     </div>
   );
@@ -976,8 +975,8 @@ function GlossarySection() {
   const filtered = GLOSSARY_TERMS.filter(t => t.term.toLowerCase().includes(filter.toLowerCase()) || t.category.toLowerCase().includes(filter.toLowerCase()));
   return (
     <div>
-      <h2 style={S.secTitle}>Glossário — Grammar Terms</h2>
-      <p style={S.secDesc}>Plain-English explanations of Portuguese grammar terminology. Tap any term to expand.</p>
+      <h2 className="sec-title">Glossário — Grammar Terms</h2>
+      <p className="sec-desc">Plain-English explanations of Portuguese grammar terminology. Tap any term to expand.</p>
       <div style={{ marginBottom: '14px' }}>
         <input style={{ ...S.input, width: '100%', textAlign: 'left', padding: '10px 14px', borderRadius: '8px' }} placeholder="Search terms..." value={filter} onChange={e => setFilter(e.target.value)} />
       </div>
@@ -997,7 +996,7 @@ function Verbos999Section() {
   const [flipped, setFlipped] = useState(false);
   const [score, setScore] = useState({ correct: 0, total: 0 });
 
-  const filtered = useCallback(() => {
+  const filtered = useMemo(() => {
     return ALL_VERBS.filter(([verb, meaning, type]) => {
       if (search) {
         const q = search.toLowerCase();
@@ -1010,125 +1009,123 @@ function Verbos999Section() {
     });
   }, [search, letter, typeFilter, a2Only]);
 
-  const shuffled = useCallback(() => {
-    return [...filtered()].sort(() => Math.random() - 0.5);
-  }, [filtered]);
+  const shuffled = useMemo(() => {
+    return [...filtered].sort(() => Math.random() - 0.5);
+  }, [filtered, mode]);
 
   const clearFilters = () => {
     setSearch(""); setLetter(null); setTypeFilter(null); setA2Only(false);
   };
 
-  const typeCounts = useCallback(() => {
+  const typeCounts = useMemo(() => {
     const c = {};
-    filtered().forEach(([,,t]) => { c[t] = (c[t]||0) + 1; });
+    filtered.forEach(([,,t]) => { c[t] = (c[t]||0) + 1; });
     return c;
   }, [filtered]);
 
   const nextFlash = (correct) => {
     setScore(s => ({ correct: s.correct + (correct ? 1 : 0), total: s.total + 1 }));
     setFlipped(false);
-    setFlashIdx(i => (i + 1) % Math.max(shuffled().length, 1));
+    setFlashIdx(i => (i + 1) % Math.max(shuffled.length, 1));
   };
 
-  const currentFlash = shuffled()[flashIdx % Math.max(shuffled().length, 1)];
+  const currentFlash = shuffled[flashIdx % Math.max(shuffled.length, 1)];
 
-  const tc = typeCounts();
+  const tc = typeCounts;
 
   return (
     <div>
-      <h2 style={S.secTitle}>999 Verbos Portugueses</h2>
-      <p style={S.secDesc}>Complete searchable verb reference with ~1000 European Portuguese verbs. Use filters to narrow down or drill with flashcards.</p>
+      <div className="sec-header">
+        <h2 className="sec-title">999 Verbos Portugueses</h2>
+        <p className="sec-desc">Complete searchable verb reference with ~1000 European Portuguese verbs. Use filters or drill with flashcards.</p>
+      </div>
 
-      <div style={{ marginBottom: '12px' }}>
+      <div className="search-wrap">
         <input
+          className="input"
           value={search}
           onChange={e => setSearch(e.target.value)}
           placeholder="Search verbs or meanings..."
-          style={{ ...S.input, width: '100%', textAlign: 'left', padding: '10px 14px', borderRadius: '8px', fontSize: '14px' }}
         />
-      </div>
-
-      <div style={{ display: 'flex', gap: '6px', marginBottom: '10px', flexWrap: 'wrap', alignItems: 'center' }}>
-        {[['list','Reference'],['flash','Flashcards']].map(([m, label]) => (
-          <button key={m} onClick={() => { setMode(m); setFlashIdx(0); setFlipped(false); setScore({correct:0,total:0}); }}
-            style={{ ...S.navBtn(mode === m), padding: '6px 12px', fontSize: '11px' }}>{label}</button>
-        ))}
-        <button onClick={() => setA2Only(!a2Only)} style={{ ...S.navBtn(a2Only), padding: '6px 12px', fontSize: '11px' }}>
-          {a2Only ? '★ A2 Active' : '☆ A2 Filter'}
-        </button>
-        {(search || letter || typeFilter || a2Only) && (
-          <button onClick={clearFilters} style={{ ...S.navBtn(false), padding: '6px 12px', fontSize: '11px', borderColor: '#b82035', color: '#b82035' }}>Clear</button>
+        {search && (
+          <button className="search-clear" onClick={() => setSearch('')}>×</button>
         )}
       </div>
 
-      <div style={{ display: 'flex', gap: '5px', marginBottom: '10px', flexWrap: 'wrap' }}>
+      <div className="toggle-row">
+        {[['list','Reference'],['flash','Flashcards']].map(([m, label]) => (
+          <button key={m} className={mode === m ? 'toggle-btn active' : 'toggle-btn'} onClick={() => { setMode(m); setFlashIdx(0); setFlipped(false); setScore({correct:0,total:0}); }}>{label}</button>
+        ))}
+        <button className={a2Only ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setA2Only(!a2Only)}>
+          {a2Only ? '★ A2 Active' : '☆ A2 Filter'}
+        </button>
+        {(search || letter || typeFilter || a2Only) && (
+          <button className="toggle-btn" onClick={clearFilters}>Clear</button>
+        )}
+      </div>
+
+      <div className="type-pills">
         {VERB_TYPES.map(t => (
-          <button key={t} onClick={() => setTypeFilter(typeFilter === t ? null : t)}
-            style={{ ...S.navBtn(typeFilter === t), padding: '5px 10px', fontSize: '10px', borderColor: typeFilter === t ? VERB_TYPE_COLORS[t] : 'rgba(255,255,255,0.06)', color: typeFilter === t ? VERB_TYPE_COLORS[t] : '#555' }}>
+          <button key={t} className={typeFilter === t ? `type-pill active-${t.replace('-','')}` : 'type-pill'} onClick={() => setTypeFilter(typeFilter === t ? null : t)}>
             {VERB_TYPE_LABELS[t]} {tc[t] ? `(${tc[t]})` : ''}
           </button>
         ))}
       </div>
 
-      <div style={{ display: 'flex', gap: '3px', flexWrap: 'wrap', marginBottom: '12px' }}>
+      <div className="letter-bar">
         {VERB_LETTERS.map(l => (
-          <button key={l} onClick={() => setLetter(letter === l ? null : l)}
-            style={{ width: '26px', height: '26px', borderRadius: '5px', fontSize: '10px', fontWeight: 700, cursor: 'pointer', fontFamily: 'monospace',
-              border: letter === l ? '1px solid #00a870' : '1px solid rgba(255,255,255,0.04)',
-              background: letter === l ? 'rgba(0,168,112,0.15)' : 'rgba(255,255,255,0.02)',
-              color: letter === l ? '#00a870' : '#7a8a80', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            {l}
-          </button>
+          <button key={l} className={letter === l ? 'letter-btn active' : 'letter-btn'} onClick={() => setLetter(letter === l ? null : l)}>{l}</button>
         ))}
       </div>
 
-      <div style={{ fontSize: '11px', color: '#555', marginBottom: '10px' }}>
-        Showing {filtered().length} of {ALL_VERBS.length} verbs
+      <div className="filter-count">
+        Showing {filtered.length} of {ALL_VERBS.length} verbs
       </div>
 
       {mode === 'list' ? (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '5px' }}>
-          {filtered().map(([verb, meaning, type], i) => (
-            <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '9px 12px', borderRadius: '7px',
-              background: type === 'irr' ? 'rgba(255,107,107,0.04)' : 'rgba(255,255,255,0.02)',
-              border: `1px solid ${type === 'irr' ? 'rgba(255,107,107,0.1)' : 'rgba(255,255,255,0.04)'}` }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                {A2_PRIORITY_VERBS.has(verb.replace(/-se$/, "")) && <span style={{ color: '#c9963c', fontSize: '9px' }}>★</span>}
-                <span style={{ fontFamily: 'monospace', fontWeight: 600, color: VERB_TYPE_COLORS[type], fontSize: '13px' }}>{verb}</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{ fontSize: '11px', color: '#7a8a80', textAlign: 'right' }}>{meaning}</span>
-                <span style={{ fontSize: '8px', fontWeight: 700, padding: '2px 4px', borderRadius: '3px',
-                  background: `${VERB_TYPE_COLORS[type]}15`, color: VERB_TYPE_COLORS[type], fontFamily: 'monospace' }}>{type}</span>
+        <div className="grid-2">
+          {filtered.map(([verb, meaning, type], i) => (
+            <div key={i} className="card" style={{ padding: '10px 14px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  {A2_PRIORITY_VERBS.has(verb.replace(/-se$/, "")) && <span style={{ color: '#c9963c', fontSize: '10px' }}>★</span>}
+                  <span className="verb-text">{verb}</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span className="verb-meaning">{meaning}</span>
+                  <span className={`verb-type-badge verb-type-${type.replace('-','')}`}>{type}</span>
+                </div>
               </div>
             </div>
           ))}
         </div>
       ) : (
         <div>
-          {filtered().length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '40px', color: '#555' }}>No verbs match your filters</div>
+          {filtered.length === 0 ? (
+            <div className="empty-state">No verbs match your filters</div>
           ) : (
             <>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                <span style={S.badge}>{(flashIdx % shuffled().length) + 1} / {shuffled().length}</span>
-                {score.total > 0 && <span style={{ fontSize: '12px', color: '#7a8a80' }}>{score.correct}/{score.total} correct</span>}
+                <span className="badge">{(flashIdx % shuffled.length) + 1} / {shuffled.length}</span>
+                {score.total > 0 && <span style={{ fontSize: '12px', color: '#767676' }}>{score.correct}/{score.total} correct</span>}
               </div>
-              <div style={S.progressBar}><div style={S.progressFill((((flashIdx % shuffled().length)) / Math.max(shuffled().length, 1)) * 100)} /></div>
-              <div style={S.flashcard} onClick={() => setFlipped(!flipped)}>
+              <div className="progress-bar"><div className="progress-fill" style={{width: (flashIdx % shuffled.length) / Math.max(shuffled.length, 1) * 100 + '%'}} /></div>
+              <div className="flashcard" onClick={() => setFlipped(!flipped)}>
                 {!flipped ? (
-                  <><div style={{ fontSize: '10px', color: '#7a8a80', marginBottom: '7px', textTransform: 'uppercase', letterSpacing: '1px' }}>
-                    Verbo <span style={{ marginLeft: '8px', fontSize: '9px', padding: '2px 5px', borderRadius: '3px', background: `${VERB_TYPE_COLORS[currentFlash[2]]}15`, color: VERB_TYPE_COLORS[currentFlash[2]] }}>{currentFlash[2]}</span>
-                  </div>
-                  <div style={{ fontFamily: "'DM Serif Display',serif", fontSize: '28px', color: '#fff' }}>{currentFlash[0]}</div>
-                  <div style={{ fontSize: '11px', color: '#444', marginTop: '16px' }}>tap to flip</div></>
+                  <>
+                    <div className="flashcard-label">Verbo <span className={`verb-type-badge verb-type-${currentFlash[2].replace('-','')}`}>{currentFlash[2]}</span></div>
+                    <div className="flashcard-verb">{currentFlash[0]}</div>
+                    <div className="flashcard-hint">tap to flip</div>
+                  </>
                 ) : (
-                  <><div style={{ fontSize: '10px', color: '#7a8a80', marginBottom: '7px', textTransform: 'uppercase', letterSpacing: '1px' }}>English</div>
-                  <div style={{ fontSize: '22px', color: '#00a870', fontWeight: 500 }}>{currentFlash[1]}</div>
-                  <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
-                    <button style={{ ...S.btn, borderColor: '#b82035', color: '#b82035', background: 'rgba(184,32,53,0.1)', padding: '8px 16px' }} onClick={e => { e.stopPropagation(); nextFlash(false); }}>Again</button>
-                    <button style={S.btn} onClick={e => { e.stopPropagation(); nextFlash(true); }}>Got it</button>
-                  </div></>
+                  <>
+                    <div className="flashcard-label">English</div>
+                    <div className="flashcard-meaning">{currentFlash[1]}</div>
+                    <div className="flashcard-actions">
+                      <button className="btn btn-danger" onClick={e => { e.stopPropagation(); nextFlash(false); }}>Again</button>
+                      <button className="btn btn-primary" onClick={e => { e.stopPropagation(); nextFlash(true); }}>Got it</button>
+                    </div>
+                  </>
                 )}
               </div>
             </>
@@ -1155,6 +1152,76 @@ const SECTION_MAP = {
 window.onerror = (msg, src, line, col, err) => console.error('[Global Error]', msg, 'at', src + ':' + line + ':' + col, err);
 window.onunhandledrejection = e => console.error('[Unhandled Promise]', e.reason);
 
+// ─── HOME SCREEN ───────────────────────────────────────────────────────────────
+
+const SECTION_GROUPS = [
+  {
+    label: 'Reference',
+    sections: [
+      { id: 'verbs25', label: '25 Verbos', icon: '⚡', desc: 'Essential verbs for A2' },
+      { id: 'conjugation', label: 'Conjugação', icon: '📐', desc: 'Verb conjugation patterns' },
+      { id: 'pronouns', label: 'Pronomes', icon: '👤', desc: 'All Portuguese pronouns' },
+      { id: 'adjectives', label: 'Adjetivos', icon: '🎨', desc: 'Common adjectives' },
+      { id: 'prepositions', label: 'Preposições', icon: '📍', desc: 'Preposition usage drills' },
+      { id: 'articles', label: 'Artigos', icon: '📝', desc: 'Definite & indefinite articles' },
+      { id: 'vocabulary', label: 'Vocabulário', icon: '📚', desc: '20 themed vocabulary sets' },
+      { id: 'verbos999', label: '999 Verbos', icon: '📕', desc: 'Complete verb reference' },
+    ],
+  },
+  {
+    label: 'Practice',
+    sections: [
+      { id: 'modals', label: 'Modais', icon: '🔧', desc: 'Modal verb conjugations' },
+      { id: 'idioms', label: 'Expressões', icon: '🇵🇹', desc: 'Portuguese idioms & phrases' },
+      { id: 'falsefriends', label: 'Falsos Amigos', icon: '⚠️', desc: 'False friends trap quiz' },
+      { id: 'structure', label: 'Frases', icon: '🧱', desc: 'Sentence structure patterns' },
+      { id: 'preterito', label: 'Pretéritos', icon: '⏱️', desc: 'Perfeito vs Imperfeito drill' },
+      { id: 'serestar', label: 'Ser/Estar', icon: '🔄', desc: 'Ser vs Estar distinction' },
+    ],
+  },
+  {
+    label: 'Activities',
+    sections: [
+      { id: 'escrita', label: 'Escrita', icon: '✍️', desc: 'Writing tasks with model answers' },
+      { id: 'oral', label: 'Oral', icon: '🗣️', desc: 'Shadowing dialogues' },
+      { id: 'escuta', label: 'Escuta', icon: '🎧', desc: 'Listening resources' },
+    ],
+  },
+  {
+    label: 'Tools',
+    sections: [
+      { id: 'glossary', label: 'Glossário', icon: '📖', desc: 'Grammar terms in plain English' },
+      { id: 'progresso', label: 'Progresso', icon: '📊', desc: 'Track your learning journey' },
+    ],
+  },
+];
+
+function HomeScreen({ onSelect }) {
+  return (
+    <div className="home-grid">
+      {SECTION_GROUPS.map(group => (
+        <div key={group.label}>
+          <div className="home-group-label">{group.label}</div>
+          <div className="home-sections">
+            {group.sections.map(s => (
+              <button
+                key={s.id}
+                className="section-card"
+                data-group={group.label.toLowerCase()}
+                onClick={() => onSelect(s.id)}
+              >
+                <div className="section-card-icon">{s.icon}</div>
+                <div className="section-card-label">{s.label}</div>
+                <div className="section-card-desc">{s.desc}</div>
+              </button>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 // ─── APP ───────────────────────────────────────────────────────────────────────
 
 class ErrorBoundary extends React.Component {
@@ -1166,10 +1233,10 @@ class ErrorBoundary extends React.Component {
   render() {
     if (this.state.hasError) {
       return (
-        <div style={{ padding: '40px 20px', textAlign: 'center', color: '#b82035', background: '#060b14', minHeight: '100vh', fontFamily: 'monospace' }}>
-          <h2 style={{ marginBottom: '16px', color: '#fff' }}>App Error</h2>
-          <pre style={{ textAlign: 'left', fontSize: '12px', color: '#888', maxWidth: '600px', margin: '0 auto', border: '1px solid #333', padding: '12px', borderRadius: '8px' }}>{String(this.state.error?.message || this.state.error)}</pre>
-          <button onClick={() => this.setState({hasError: false})} style={{ marginTop: '20px', padding: '10px 20px', background: '#00a870', color: '#000', border: 'none', borderRadius: '8px', cursor: 'pointer' }}>Try Again</button>
+        <div style={{ padding: '40px 20px', textAlign: 'center', color: '#c0392b', background: '#f5f3f0', minHeight: '100vh', fontFamily: 'monospace' }}>
+          <h2 style={{ marginBottom: '16px', color: '#1c1c1c' }}>App Error</h2>
+          <pre style={{ textAlign: 'left', fontSize: '12px', color: '#767676', maxWidth: '600px', margin: '0 auto', border: '1px solid #e2e0dd', padding: '12px', borderRadius: '8px' }}>{String(this.state.error?.message || this.state.error)}</pre>
+          <button onClick={() => this.setState({hasError: false})} style={{ marginTop: '20px', padding: '10px 20px', background: '#00a870', color: '#fff', border: 'none', borderRadius: '8px', cursor: 'pointer' }}>Try Again</button>
         </div>
       );
     }
@@ -1178,8 +1245,8 @@ class ErrorBoundary extends React.Component {
 }
 
 export default function App() {
-  const [section, setSection] = useState('verbs25');
-  const SectionComp = SECTION_MAP[section] || Verbs25Section;
+  const [section, setSection] = useState(null);
+  const SectionComp = section ? (SECTION_MAP[section] || Verbs25Section) : null;
 
   useEffect(() => {
     try {
@@ -1190,20 +1257,31 @@ export default function App() {
 
   return (
     <ErrorBoundary>
-      <div style={S.app}>
-        <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap'); *{box-sizing:border-box;margin:0;padding:0}body{background:#060b14;min-height:100vh}::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-track{background:rgba(255,255,255,0.03)}::-webkit-scrollbar-thumb{background:rgba(0,168,112,0.2);border-radius:3px}::selection{background:rgba(0,168,112,0.3);color:#fff}`}</style>
-        <div style={{ position:'fixed', top:'-50%', left:'-20%', width:'80%', height:'100%', background:'radial-gradient(ellipse, rgba(0,168,112,0.03) 0%, transparent 60%)', pointerEvents:'none', zIndex:0 }} />
-        <div style={{ position:'fixed', bottom:'-40%', right:'-20%', width:'70%', height:'100%', background:'radial-gradient(ellipse, rgba(0,138,138,0.02) 0%, transparent 60%)', pointerEvents:'none', zIndex:0 }} />
-        <header style={S.header}>
-          <h1 style={S.title}>PT Learner</h1>
-          <p style={S.subtitle}>Português Europeu A2 · CIPLE Prep</p>
-        </header>
-        <nav style={S.nav}>
-          {SECTIONS.map(s => <button key={s.id} style={S.navBtn(section === s.id)} onClick={() => setSection(s.id)}><span>{s.icon}</span> {s.label}</button>)}
-        </nav>
-        <main style={S.content}>
-          <SectionComp />
-        </main>
+      <div className="app">
+        <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');`}</style>
+        {!section ? (
+          <>
+            <header className="header">
+              <h1 className="header-title">PT Learner</h1>
+              <p className="header-subtitle">European Portuguese A2</p>
+            </header>
+            <HomeScreen onSelect={setSection} />
+          </>
+        ) : (
+          <>
+            <div className="section-nav">
+              <button className="home-btn" onClick={() => setSection(null)} aria-label="Back to home">
+                ⌂
+              </button>
+              <div className="section-nav-title">
+                {SECTIONS.find(s => s.id === section)?.label || section}
+              </div>
+            </div>
+            <main className="content">
+              <SectionComp />
+            </main>
+          </>
+        )}
       </div>
     </ErrorBoundary>
   );
