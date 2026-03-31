@@ -736,6 +736,7 @@ function OralDialogue({ dialogue, showEnglish }) {
 
 function ListeningItem({ item, showEnglish }) {
   const [showTranscript, setShowTranscript] = useState(false);
+  const [showPlayer, setShowPlayer] = useState(false);
   const effectiveShowTranscript = showTranscript || showEnglish;
   const difficultyColor = item.difficulty === 'Fácil' ? 'var(--accent)' : item.difficulty === 'Médio' ? 'var(--warning)' : 'var(--error)';
   return (
@@ -747,9 +748,19 @@ function ListeningItem({ item, showEnglish }) {
         <div style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '12px', lineHeight: 1.5 }}>{item.description}</div>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '12px' }}>{item.topics.map((t, i) => <span key={i} style={{ background: 'rgba(0,138,138,0.08)', color: '#008a8a', padding: '4px 10px', borderRadius: '6px', fontSize: '11px' }}>{t}</span>)}</div>
         <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-          <a href={item.url} target="_blank" rel="noopener noreferrer" className="btn btn-primary">🔗 Open Resource</a>
+          <button className={showPlayer ? 'btn btn-primary' : 'btn btn-ghost'} onClick={() => setShowPlayer(!showPlayer)} style={{ fontSize: '13px', padding: '8px 16px' }}>{showPlayer ? 'Close Player' : '▶ Open Resource'}</button>
           <button style={{ border: '1px solid #008a8a', color: '#008a8a', background: effectiveShowTranscript ? 'rgba(0,138,138,0.1)' : 'transparent', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer', fontSize: '13px' }} onClick={() => setShowTranscript(!showTranscript)}>{effectiveShowTranscript ? 'Hide Transcript' : 'Show Transcript'}</button>
         </div>
+        {showPlayer && (
+          <div style={{ marginTop: '12px', borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--border)' }}>
+            <iframe 
+              src={item.url} 
+              style={{ width: '100%', height: '200px', border: 'none' }}
+              allow="autoplay; fullscreen"
+              title={item.title}
+            />
+          </div>
+        )}
         {effectiveShowTranscript && (
           <div style={{ marginTop: '12px', padding: '12px', background: 'rgba(0,138,138,0.04)', borderRadius: '8px' }}>
             <div style={{ fontSize: '11px', color: '#008a8a', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px', fontWeight: 600 }}>{effectiveShowTranscript && item.englishTranscript ? 'English' : 'Portuguese'}</div>
