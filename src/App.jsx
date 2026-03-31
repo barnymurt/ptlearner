@@ -1307,12 +1307,17 @@ const SECTION_GROUPS = [
   },
 ];
 
-function Sidebar({ section, onSelect }) {
+function Sidebar({ section, onSelect, isOpen, onClose }) {
   return (
-    <aside className="sidebar">
+    <aside className={`sidebar ${isOpen ? 'sidebar-open' : ''}`}>
       <div className="sidebar-header">
-        <h1 className="sidebar-title">PT Learner</h1>
-        <p className="sidebar-subtitle">European Portuguese A2</p>
+        <div className="sidebar-header-row">
+          <div>
+            <h1 className="sidebar-title">PT Learner</h1>
+            <p className="sidebar-subtitle">European Portuguese A2</p>
+          </div>
+          <button className="sidebar-close-btn" onClick={onClose}>✕</button>
+        </div>
       </div>
       <nav className="sidebar-nav">
         {SECTION_GROUPS.map(group => (
@@ -1361,6 +1366,7 @@ class ErrorBoundary extends React.Component {
 export default function App() {
   const [section, setSection] = useState(null);
   const [showEnglish, setShowEnglish] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const SectionComp = section ? (SECTION_MAP[section] || Verbs25Section) : null;
 
   useEffect(() => {
@@ -1370,14 +1376,23 @@ export default function App() {
     } catch {}
   }, []);
 
+  const handleSectionSelect = (id) => {
+    setSection(id);
+    setSidebarOpen(false);
+  };
+
   return (
     <ErrorBoundary>
       <div className="app">
         <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');`}</style>
-        <Sidebar section={section} onSelect={setSection} />
+        <Sidebar section={section} onSelect={handleSectionSelect} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+        {sidebarOpen && <div className="sidebar-overlay" onClick={() => setSidebarOpen(false)} />}
         <main className="main-content">
           {section && (
             <div className="section-nav">
+              <button className="hamburger-btn" onClick={() => setSidebarOpen(!sidebarOpen)}>
+                <span className="hamburger-icon">{sidebarOpen ? '✕' : '☰'}</span>
+              </button>
               <div className="section-nav-title">
                 {SECTIONS.find(s => s.id === section)?.label || section}
               </div>

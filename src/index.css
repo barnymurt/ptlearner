@@ -225,6 +225,51 @@ a:hover { text-decoration: underline; }
   gap: var(--space-3);
 }
 
+.hamburger-btn {
+  display: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 6px;
+}
+
+.hamburger-btn:hover {
+  background: var(--bg-hover);
+}
+
+.hamburger-icon {
+  font-size: 20px;
+  color: var(--text-primary);
+}
+
+.sidebar-close-btn {
+  display: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: var(--text-tertiary);
+  padding: 4px;
+}
+
+.sidebar-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 199;
+}
+
 /* ─── Section Header ─── */
 .sec-header {
   margin-bottom: var(--space-6);
@@ -1208,9 +1253,29 @@ a:hover { text-decoration: underline; }
 }
 
 /* ─── Mobile responsive ─── */
+@media (max-width: 768px) {
+  .hamburger-btn { display: block; }
+  .sidebar-overlay { display: block; }
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 200;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    width: 280px;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.15);
+  }
+  .sidebar.sidebar-open {
+    transform: translateX(0);
+  }
+  .sidebar-close-btn { display: block; }
+  .section-nav { gap: var(--space-2); }
+}
+
 @media (max-width: 480px) {
   .content { padding: var(--space-3); padding-bottom: var(--space-8); }
-  .sidebar { width: 200px; }
   .card { padding: var(--space-3); }
   .sec-title { font-size: 22px; }
   .flashcard { padding: var(--space-8) var(--space-4); }
