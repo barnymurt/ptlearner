@@ -501,7 +501,7 @@ function FillGap({ exercises }) {
 
   return (
     <div>
-      <div style={{ display: 'flex', gap: '7px', marginBottom: '14px', flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', gap: '10px', marginBottom: '16px', flexWrap: 'wrap' }}>
         <button className="btn btn-primary" onClick={() => setShowHints(!showHints)}>{showHints ? 'Hide Hints' : 'Show Hints'}</button>
         <button className="btn btn-primary" onClick={checkAll}>Check All</button>
         {attempted > 0 && <span className="badge">{score}/{attempted} correct</span>}
@@ -511,16 +511,16 @@ function FillGap({ exercises }) {
         const isChk = checked[i] !== undefined;
         const isCorr = checked[i];
         return (
-          <div key={i} style={{ ...S.card, display: 'flex', flexDirection: 'column', gap: '7px', padding: '13px 16px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '3px', fontSize: '14px' }}>
-              <span style={{ color: '#7a8a80', fontSize: '11px', fontWeight: 700, marginRight: '7px' }}>{i+1}.</span>
-              <span>{parts[0]}</span>
-              <input style={{ ...S.input, ...(isChk ? (isCorr ? S.inputC : S.inputW) : {}) }} value={answers[i] || ''} onChange={(e) => { setAnswers(a => ({ ...a, [i]: e.target.value })); setChecked(c => { const n = { ...c }; delete n[i]; return n; }); }} onKeyDown={(e) => e.key === 'Enter' && check(i)} placeholder="..." />
-              <span>{parts[1]}</span>
+          <div key={i} className="card" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '6px', fontSize: '15px' }}>
+              <span style={{ color: 'var(--text-tertiary)', fontSize: '12px', fontWeight: 600, minWidth: '24px' }}>{i+1}.</span>
+              <span style={{ color: 'var(--text-primary)' }}>{parts[0]}</span>
+              <input className="input" style={{ width: '120px', textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: '14px', fontWeight: 600 }} value={answers[i] || ''} onChange={(e) => { setAnswers(a => ({ ...a, [i]: e.target.value })); setChecked(c => { const n = { ...c }; delete n[i]; return n; }); }} onKeyDown={(e) => e.key === 'Enter' && check(i)} placeholder="..." />
+              <span style={{ color: 'var(--text-primary)' }}>{parts[1]}</span>
             </div>
-            <div style={{ display: 'flex', gap: '7px', alignItems: 'center', flexWrap: 'wrap' }}>
-              {showHints && <span style={{ fontSize: '11px', color: '#7a8a80', fontStyle: 'italic' }}>{ex.hint}</span>}
-              {isChk && !isCorr && <span style={{ fontSize: '11px', color: '#b82035' }}>→ {ex.answer}</span>}
+            <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
+              {showHints && <span style={{ fontSize: '12px', color: 'var(--text-tertiary)', fontStyle: 'italic' }}>{ex.hint}</span>}
+              {isChk && !isCorr && <span style={{ fontSize: '12px', color: 'var(--error)' }}>→ {ex.answer}</span>}
             </div>
           </div>
         );
@@ -534,22 +534,23 @@ function ScenarioCard({ scenario, question, correct, explanation, note }) {
   const [selected, setSelected] = useState(null);
   const handleSelect = (c) => { setSelected(c); setRevealed(true); };
   return (
-    <div style={{ ...S.card, padding: '16px 18px' }}>
-      <div style={{ fontSize: '15px', color: '#1a1a1a', marginBottom: '6px', fontFamily: 'monospace' }}>"{scenario}"</div>
-      <div style={{ fontSize: '12px', color: '#7a8a80', marginBottom: '14px' }}>{question}</div>
-      <div style={{ display: 'flex', gap: '8px', marginBottom: '10px' }}>
-        {['ser','estar'].map(c => (
-          <button key={c} onClick={() => handleSelect(c)} style={{ padding: '7px 16px', borderRadius: '7px', border: '1px solid ' + (selected === c ? (c === correct ? '#00a870' : '#b82035') : 'rgba(255,255,255,0.1)'), background: selected === c ? (c === correct ? 'rgba(0,168,112,0.12)' : 'rgba(184,32,53,0.1)') : 'rgba(255,255,255,0.03)', color: selected === c ? (c === correct ? '#00a870' : '#b82035') : '#7a8a80', fontSize: '13px', fontWeight: 600, textTransform: 'uppercase', cursor: 'pointer' }}>{c}</button>
-        ))}
-      </div>
-      {revealed && (
-        <div style={{ ...S.card, background: 'rgba(0,168,112,0.05)', border: '1px solid rgba(0,168,112,0.12)', padding: '12px 14px' }}>
-          <div style={{ fontSize: '12px', color: '#00a870', fontWeight: 600, marginBottom: '6px' }}>{selected === correct ? '✓ Correct!' : `✗ Wrong — answer is: ${correct}`}</div>
-          <div style={{ fontSize: '12px', color: '#c0b8a8', lineHeight: 1.6, marginBottom: note ? '6px' : 0 }}>{explanation}</div>
-          {note && <div style={{ fontSize: '11px', color: '#555', fontStyle: 'italic' }}>💡 {note}</div>}
+    <ExpandableCard title={`"${scenario}"`} accentColor="var(--border-strong)" defaultOpen>
+      <div style={{ marginTop: '8px' }}>
+        <div style={{ fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '12px' }}>{question}</div>
+        <div style={{ display: 'flex', gap: '10px', marginBottom: '12px' }}>
+          {['ser','estar'].map(c => (
+            <button key={c} onClick={() => handleSelect(c)} style={{ padding: '8px 20px', borderRadius: '8px', border: '2px solid ' + (selected === c ? (c === correct ? 'var(--accent)' : 'var(--error)') : 'var(--border)'), background: selected === c ? (c === correct ? 'var(--accent-light)' : 'var(--error-light)') : 'transparent', color: selected === c ? (c === correct ? 'var(--accent)' : 'var(--error)') : 'var(--text-secondary)', fontSize: '14px', fontWeight: 600, textTransform: 'uppercase', cursor: 'pointer' }}>{c}</button>
+          ))}
         </div>
-      )}
-    </div>
+        {revealed && (
+          <div style={{ padding: '12px', background: selected === correct ? 'var(--accent-light)' : 'var(--error-light)', borderRadius: '8px', border: '1px solid ' + (selected === correct ? 'var(--accent)' : 'var(--error)') }}>
+            <div style={{ fontSize: '13px', fontWeight: 600, color: selected === correct ? 'var(--accent)' : 'var(--error)', marginBottom: '6px' }}>{selected === correct ? '✓ Correct!' : `✗ Wrong — answer: ${correct}`}</div>
+            <div style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: 1.6 }}>{explanation}</div>
+            {note && <div style={{ fontSize: '12px', color: 'var(--text-tertiary)', marginTop: '8px', fontStyle: 'italic' }}>💡 {note}</div>}
+          </div>
+        )}
+      </div>
+    </ExpandableCard>
   );
 }
 
@@ -636,18 +637,14 @@ function ListeningItem({ item, showEnglish }) {
 }
 
 function GlossaryEntry({ term }) {
-  const [expanded, setExpanded] = useState(false);
   return (
-    <div style={{ ...S.card, padding: '14px 16px', cursor: 'pointer' }} onClick={() => setExpanded(!expanded)}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span style={{ fontFamily: "'DM Serif Display',serif", fontSize: '15px', color: '#00a870' }}>{term.term}</span>
-          <span className="badge badge-gray">{term.category}</span>
-        </div>
-        <span style={{ fontSize: '11px', color: '#444' }}>{expanded ? '▲' : '▼'}</span>
+    <ExpandableCard title={term.term} accentColor="var(--accent)">
+      <div style={{ marginTop: '8px' }}>
+        <span className="badge" style={{ marginBottom: '10px', display: 'inline-block' }}>{term.category}</span>
+        <div style={{ fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: '10px' }}>{term.explanation}</div>
+        <div style={{ fontSize: '13px', color: 'var(--text-tertiary)', fontStyle: 'italic' }}>Example: {term.example}</div>
       </div>
-      {expanded && <div style={{ marginTop: '10px' }}><div style={{ fontSize: '12px', color: '#c0b8a8', lineHeight: 1.6, marginBottom: '8px' }}>{term.explanation}</div><div style={{ fontSize: '11px', color: '#7a8a80', fontStyle: 'italic' }}>Example: {term.example}</div></div>}
-    </div>
+    </ExpandableCard>
   );
 }
 
@@ -709,17 +706,16 @@ function ConjugationSection() {
       <h2 className="sec-title">Conjugação Regular</h2>
       <p className="sec-desc">Regular verb endings for -AR, -ER, and -IR verbs. Learn the patterns and conjugate hundreds.</p>
       <div className="toggle-row">{Object.keys(CONJUGATION_PATTERNS).map(t => <button key={t} className={tense === t ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setTense(t)}>{t}</button>)}</div>
-      <div className="grid-3">
-        {[['ar','#00a870'],['er','#008a8a'],['ir','#c9963c']].map(([type,col]) => (
-          <div key={type} style={{ ...S.card, borderLeft: '3px solid '+col }}>
-            <div style={{ ...S.tag(col), marginBottom: '10px' }}>-{type.toUpperCase()} verbs</div>
-            <div className="conj-grid">{PRONOUNS.map((p, i) => <React.Fragment key={p}><span className="conj-pronoun">{p}</span><span style={{ ...S.conjF, color: col }}>stem {data[type][i]}</span></React.Fragment>)}</div>
-            <div style={{ fontSize: '11px', color: '#7a8a80', marginTop: '10px', fontFamily: 'monospace', lineHeight: 1.6 }}>{data['example_'+type]}</div>
+      {[['ar','var(--accent)'],['er','#008a8a'],['ir','var(--warning)']].map(([type,col]) => (
+        <ExpandableCard key={type} title={`-${type.toUpperCase()} verbs`} accentColor={col}>
+          <div style={{ marginTop: '12px' }}>
+            <div className="conj-grid">{PRONOUNS.map((p, i) => <React.Fragment key={p}><span className="conj-pronoun">{p}</span><span style={{ color: col, fontWeight: 600 }}>{data[type][i]}</span></React.Fragment>)}</div>
+            <div style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '12px', fontFamily: 'var(--font-mono)', paddingTop: '12px', borderTop: '1px solid var(--border)' }}>{data['example_'+type]}</div>
           </div>
-        ))}
-      </div>
-      <div style={{ ...S.card, marginTop: '14px', background: 'rgba(0,168,112,0.04)' }}>
-        <div style={{ fontSize: '12px', color: '#7a8a80', lineHeight: 1.6 }}><strong style={{ color: '#00a870' }}>EP Note:</strong> In European Portuguese, present continuous uses <strong>estar + a + infinitive</strong>: "Estou a falar" (I am speaking), not "Estou falando" (BP).</div>
+        </ExpandableCard>
+      ))}
+      <div className="card" style={{ marginTop: '16px', background: 'rgba(0,168,112,0.06)', border: '1px solid rgba(0,168,112,0.15)' }}>
+        <strong style={{ color: 'var(--accent)' }}>EP Note:</strong> In European Portuguese, present continuous uses <strong>estar + a + infinitive</strong>: "Estou a falar" (I am speaking), not "Estou falando" (BP).
       </div>
     </div>
   );
@@ -776,15 +772,18 @@ function ArticlesSection() {
       {view === 'ref' ? (
         <>
           {['definite','indefinite'].map(type => (
-            <div key={type} style={{ ...S.card, marginBottom: '14px' }}>
-              <h3 style={{ fontFamily: "'DM Serif Display',serif", fontSize: '16px', color: '#1a1a1a', marginBottom: '10px' }}>{ARTICLES_DATA[type].title}</h3>
-              <div className="grid-2">{ARTICLES_DATA[type].forms.map((f, i) => <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '7px 0', borderBottom: '1px solid rgba(255,255,255,0.04)' }}><span style={{ fontSize: '11px', color: '#7a8a80' }}>{f.label}</span><span><strong style={{ color: '#00a870', fontSize: '15px' }}>{f.article}</strong> <span style={{ fontSize: '11px', color: '#444' }}>{f.example}</span></span></div>)}</div>
+            <div key={type} className="card">
+              <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '16px', color: 'var(--text-primary)', marginBottom: '12px' }}>{ARTICLES_DATA[type].title}</h3>
+              <table className="data-table"><thead><tr><th>Usage</th><th>Article</th><th>Example</th></tr></thead>
+                <tbody>{ARTICLES_DATA[type].forms.map((f, i) => <tr key={i}><td style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{f.label}</td><td className="col-pt" style={{ fontSize: '15px' }}>{f.article}</td><td style={{ fontSize: '12px', color: 'var(--text-tertiary)' }}>{f.example}</td></tr>)}</tbody>
+              </table>
             </div>
           ))}
-          <div className="card">
-            <h3 style={{ fontFamily: "'DM Serif Display',serif", fontSize: '16px', color: '#1a1a1a', marginBottom: '10px' }}>Contrações</h3>
-            {ARTICLES_DATA.definite.contractions.map((row, i) => <div key={i} style={{ display: 'flex', flexWrap: 'wrap', gap: '7px', marginBottom: '7px' }}>{row.map((c, j) => <span key={j} style={{ ...S.tag('#008a8a'), fontSize: '11px', fontFamily: 'monospace' }}>{c}</span>)}</div>)}
-          </div>
+          <ExpandableCard title="Contrações" accentColor="#008a8a">
+            <div style={{ marginTop: '12px', display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+              {ARTICLES_DATA.definite.contractions.map((row, i) => <div key={i} style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '6px' }}>{row.map((c, j) => <span key={j} style={{ background: 'rgba(0,138,138,0.08)', color: '#008a8a', padding: '4px 8px', borderRadius: '4px', fontSize: '12px', fontFamily: 'var(--font-mono)', fontWeight: 600 }}>{c}</span>)}</div>)}
+            </div>
+          </ExpandableCard>
         </>
       ) : <FillGap exercises={ARTICLES_EXERCISES} />}
     </div>
@@ -868,15 +867,21 @@ function StructureSection() {
     <div>
       <h2 className="sec-title">Estrutura das Frases</h2>
       <p className="sec-desc">Core sentence patterns for A2. European Portuguese follows SVO order.</p>
-      {SENTENCE_STRUCTURE.map((s, i) => <div key={i} className="card"><div style={{ ...S.tag('#008a8a'), marginBottom: '9px' }}>{s.pattern}</div><div style={{ fontFamily: 'monospace', fontSize: '15px', color: '#1a1a1a', marginBottom: '3px' }}>{s.example}</div><div style={{ fontSize: '12px', color: '#7a8a80' }}>{s.translation}</div></div>)}
-      <div style={{ ...S.card, marginTop: '14px', background: 'rgba(0,168,112,0.04)' }}>
-        <h3 style={{ fontFamily: "'DM Serif Display',serif", fontSize: '16px', color: '#1a1a1a', marginBottom: '9px' }}>EP-Specific Patterns</h3>
-        <div style={{ fontSize: '13px', color: '#c0b8a8', lineHeight: 1.8 }}>
-          <div><strong style={{ color: '#00a870' }}>Continuous:</strong> estar + a + infinitive → "Estou a comer" (not "Estou comendo")</div>
-          <div><strong style={{ color: '#00a870' }}>Clitic placement:</strong> After verb: "Ele deu-me" / Before with negation: "Ele não me deu"</div>
-          <div><strong style={{ color: '#00a870' }}>Mesoclisis (future):</strong> "Dir-lhe-ei amanhã" — unique to EP</div>
+      {SENTENCE_STRUCTURE.map((s, i) => (
+        <ExpandableCard key={i} title={s.pattern} accentColor="#008a8a">
+          <div style={{ marginTop: '8px' }}>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '15px', color: 'var(--text-primary)', marginBottom: '6px' }}>{s.example}</div>
+            <div style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>{s.translation}</div>
+          </div>
+        </ExpandableCard>
+      ))}
+      <ExpandableCard title="EP-Specific Patterns" accentColor="var(--accent)" defaultOpen>
+        <div style={{ marginTop: '8px', fontSize: '14px', lineHeight: 1.8 }}>
+          <div style={{ marginBottom: '8px' }}><strong style={{ color: 'var(--accent)' }}>Continuous:</strong> estar + a + infinitive → "Estou a comer" (not "Estou comendo")</div>
+          <div style={{ marginBottom: '8px' }}><strong style={{ color: 'var(--accent)' }}>Clitic placement:</strong> After verb: "Ele deu-me" / Before with negation: "Ele não me deu"</div>
+          <div><strong style={{ color: 'var(--accent)' }}>Mesoclisis (future):</strong> "Dir-lhe-ei amanhã" — unique to EP</div>
         </div>
-      </div>
+      </ExpandableCard>
     </div>
   );
 }
@@ -893,47 +898,49 @@ function PreteritoSection() {
       </div>
       {mode === 'explain' ? (
         <>
-          <div style={{ ...S.card, background: 'rgba(0,168,112,0.04)', border: '1px solid rgba(0,168,112,0.15)', padding: '16px 18px', marginBottom: '14px' }}>
-            <h3 style={{ fontFamily: "'DM Serif Display',serif", fontSize: '17px', color: '#00a870', marginBottom: '10px' }}>Perfeito = Specific, Completed</h3>
-            <p style={{ fontSize: '13px', color: '#c0b8a8', lineHeight: 1.6, marginBottom: '8px' }}>Use the <strong style={{ color: '#1a1a1a' }}>Pretérito Perfeito</strong> when:</p>
-            <ul style={{ fontSize: '12px', color: '#7a8a80', lineHeight: 1.8, paddingLeft: '18px' }}>
-              <li>The action happened at a <strong style={{ color: '#1a1a1a' }}>specific time</strong> (ontem, às três horas, no verão passado)</li>
-              <li>The action is <strong style={{ color: '#1a1a1a' }}>completed</strong> — it has a clear beginning and end</li>
-              <li>You're describing a <strong style={{ color: '#1a1a1a' }}>one-time event</strong></li>
-            </ul>
-            <p style={{ fontSize: '13px', color: '#00a870', fontFamily: 'monospace', marginTop: '10px' }}>Falei com ele ontem. (I spoke with him yesterday.)</p>
-          </div>
-          <div style={{ ...S.card, background: 'rgba(0,138,138,0.04)', border: '1px solid rgba(0,138,138,0.15)', padding: '16px 18px', marginBottom: '14px' }}>
-            <h3 style={{ fontFamily: "'DM Serif Display',serif", fontSize: '17px', color: '#008a8a', marginBottom: '10px' }}>Imperfeito = Ongoing, Habitual, Descriptive</h3>
-            <p style={{ fontSize: '13px', color: '#c0b8a8', lineHeight: 1.6, marginBottom: '8px' }}>Use the <strong style={{ color: '#1a1a1a' }}>Pretérito Imperfeito</strong> when:</p>
-            <ul style={{ fontSize: '12px', color: '#7a8a80', lineHeight: 1.8, paddingLeft: '18px' }}>
-              <li>The action was <strong style={{ color: '#1a1a1a' }}>habitual</strong> or repeated (todos os dias, sempre)</li>
-              <li>You're <strong style={{ color: '#1a1a1a' }}>describing</strong> what something was like in the past</li>
-              <li>There's <strong style={{ color: '#1a1a1a' }}>no specific time</strong> mentioned</li>
-              <li>Describing someone's <strong style={{ color: '#1a1a1a' }}>age, personality, or physical state</strong> in the past</li>
-            </ul>
-            <p style={{ fontSize: '13px', color: '#008a8a', fontFamily: 'monospace', marginTop: '10px' }}>Falava português todos os dias. (I used to speak Portuguese every day.)</p>
-          </div>
-          <div style={{ ...S.card, background: 'rgba(201,150,60,0.04)', border: '1px solid rgba(201,150,60,0.15)', padding: '16px 18px' }}>
-            <h3 style={{ fontFamily: "'DM Serif Display',serif", fontSize: '17px', color: '#c9963c', marginBottom: '10px' }}>Key Signal Words</h3>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '7px' }}>
-              <span style={{ ...S.tag('#c9963c') }}>Perfeito: ontem, às 3h, no verão passado, já, uma vez</span>
-              <span style={{ ...S.tag('#008a8a') }}>Imperfeito: sempre, todos os dias, frequentemente, quando era novo</span>
+          <ExpandableCard title="Pretérito Perfeito — Specific, Completed" accentColor="var(--accent)" defaultOpen>
+            <div style={{ marginTop: '12px', fontSize: '14px', lineHeight: 1.7 }}>
+              <p style={{ marginBottom: '8px' }}>Use <strong>Perfeito</strong> when:</p>
+              <ul style={{ paddingLeft: '20px', marginBottom: '12px' }}>
+                <li>The action happened at a <strong>specific time</strong> (ontem, às três horas, no verão passado)</li>
+                <li>The action is <strong>completed</strong> — it has a clear beginning and end</li>
+                <li>You're describing a <strong>one-time event</strong></li>
+              </ul>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '14px', color: 'var(--accent)', padding: '8px 12px', background: 'var(--accent-light)', borderRadius: '6px' }}>Falei com ele ontem. (I spoke with him yesterday.)</div>
             </div>
-          </div>
+          </ExpandableCard>
+          <ExpandableCard title="Pretérito Imperfeito — Ongoing, Habitual, Descriptive" accentColor="#008a8a">
+            <div style={{ marginTop: '12px', fontSize: '14px', lineHeight: 1.7 }}>
+              <p style={{ marginBottom: '8px' }}>Use <strong>Imperfeito</strong> when:</p>
+              <ul style={{ paddingLeft: '20px', marginBottom: '12px' }}>
+                <li>The action was <strong>habitual</strong> or repeated (todos os dias, sempre)</li>
+                <li>You're <strong>describing</strong> what something was like in the past</li>
+                <li>There's <strong>no specific time</strong> mentioned</li>
+                <li>Describing someone's <strong>age, personality, or physical state</strong> in the past</li>
+              </ul>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '14px', color: '#008a8a', padding: '8px 12px', background: 'rgba(0,138,138,0.06)', borderRadius: '6px' }}>Falava português todos os dias. (I used to speak Portuguese every day.)</div>
+            </div>
+          </ExpandableCard>
+          <ExpandableCard title="Key Signal Words" accentColor="var(--warning)">
+            <div style={{ marginTop: '8px', display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+              <span style={{ background: 'var(--warning-light)', color: 'var(--warning)', padding: '4px 10px', borderRadius: '6px', fontSize: '12px', fontWeight: 600 }}>Perfeito: ontem, às 3h, no verão passado, já, uma vez</span>
+              <span style={{ background: 'rgba(0,138,138,0.08)', color: '#008a8a', padding: '4px 10px', borderRadius: '6px', fontSize: '12px', fontWeight: 600 }}>Imperfeito: sempre, todos os dias, frequentemente, quando era novo</span>
+            </div>
+          </ExpandableCard>
         </>
       ) : (
         <div>
           {PRETERITO_EXERCISES.map(ex => (
-            <div key={ex.id} style={{ ...S.card, padding: '14px 16px', marginBottom: '12px' }}>
-              <div style={{ fontSize: '14px', color: '#1a1a1a', marginBottom: '8px', fontFamily: 'monospace' }}>{ex.sentence}</div>
-              <div style={{ fontSize: '11px', color: '#7a8a80', fontStyle: 'italic', marginBottom: '8px' }}>Hint: {ex.hint}</div>
-              <div style={{ display: 'flex', gap: '7px', flexWrap: 'wrap' }}>
-                <span style={{ fontSize: '12px', color: '#00a870' }}>✓ Perfeito: <strong>{ex.correct_perfeito}</strong></span>
-                <span style={{ fontSize: '12px', color: '#008a8a' }}>✓ Imperfeito: <strong>{ex.correct_imperfeito}</strong></span>
+            <ExpandableCard key={ex.id} title={ex.sentence} accentColor="var(--border-strong)">
+              <div style={{ marginTop: '8px' }}>
+                <div style={{ fontSize: '12px', color: 'var(--text-tertiary)', fontStyle: 'italic', marginBottom: '8px' }}>Hint: {ex.hint}</div>
+                <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginBottom: '8px' }}>
+                  <span style={{ fontSize: '13px', color: 'var(--accent)' }}>✓ Perfeito: <strong>{ex.correct_perfeito}</strong></span>
+                  <span style={{ fontSize: '13px', color: '#008a8a' }}>✓ Imperfeito: <strong>{ex.correct_imperfeito}</strong></span>
+                </div>
+                <div style={{ fontSize: '12px', color: 'var(--text-secondary)', fontStyle: 'italic', lineHeight: 1.5 }}>{ex.explanation}</div>
               </div>
-              <div style={{ fontSize: '11px', color: '#555', marginTop: '8px', fontStyle: 'italic', lineHeight: 1.5 }}>{ex.explanation}</div>
-            </div>
+            </ExpandableCard>
           ))}
         </div>
       )}
@@ -946,9 +953,9 @@ function SerEstarSection() {
     <div>
       <h2 className="sec-title">Ser vs Estar</h2>
       <p className="sec-desc">The most important distinction in Portuguese. Both mean "to be" but are used differently.</p>
-      <div style={{ ...S.card, background: 'rgba(0,168,112,0.04)', border: '1px solid rgba(0,168,112,0.15)', padding: '14px 16px', marginBottom: '14px' }}>
-        <p style={{ fontSize: '13px', color: '#c0b8a8', lineHeight: 1.6, marginBottom: '10px' }}><strong style={{ color: '#00a870' }}>SER</strong> = permanent, identity, origin, time, profession, essential characteristics</p>
-        <p style={{ fontSize: '13px', color: '#c0b8a8', lineHeight: 1.6 }}><strong style={{ color: '#008a8a' }}>ESTAR</strong> = temporary states, location, ongoing actions, conditions that can change</p>
+      <div className="card" style={{ marginBottom: '16px', background: 'rgba(0,168,112,0.04)', border: '1px solid rgba(0,168,112,0.15)' }}>
+        <p style={{ fontSize: '14px', color: 'var(--accent)', fontWeight: 600, marginBottom: '8px' }}>SER = permanent, identity, origin, time, profession, essential characteristics</p>
+        <p style={{ fontSize: '14px', color: '#008a8a', fontWeight: 600 }}>ESTAR = temporary states, location, ongoing actions, conditions that can change</p>
       </div>
       {SER_ESTAR_SCENARIOS.map(s => <ScenarioCard key={s.id} {...s} />)}
     </div>
@@ -992,11 +999,12 @@ function GlossarySection() {
     <div>
       <h2 className="sec-title">Glossário — Grammar Terms</h2>
       <p className="sec-desc">Plain-English explanations of Portuguese grammar terminology. Tap any term to expand.</p>
-      <div style={{ marginBottom: '14px' }}>
-        <input style={{ ...S.input, width: '100%', textAlign: 'left', padding: '10px 14px', borderRadius: '8px' }} placeholder="Search terms..." value={filter} onChange={e => setFilter(e.target.value)} />
+      <div className="search-wrap" style={{ marginBottom: '16px' }}>
+        <input className="input" style={{ width: '100%' }} placeholder="Search terms..." value={filter} onChange={e => setFilter(e.target.value)} />
+        {filter && <button className="search-clear" onClick={() => setFilter('')}>×</button>}
       </div>
       {filtered.map((t, i) => <GlossaryEntry key={i} term={t} />)}
-      {filtered.length === 0 && <div style={{ ...S.card, textAlign: 'center', color: '#7a8a80' }}>No terms match your search.</div>}
+      {filtered.length === 0 && <div className="card" style={{ textAlign: 'center', color: 'var(--text-secondary)' }}>No terms match your search.</div>}
     </div>
   );
 }
