@@ -405,8 +405,8 @@ function useLocal(key, def) {
 function VerbCard({ verb, meaning, conj }) {
   const [show, setShow] = useState(false);
   return (
-    <div className="card" onClick={() => setShow(!show)}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+    <div className="card verb-card" onClick={() => setShow(!show)}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px' }}>
         <span className="verb-text">{verb}</span>
         <span className="verb-meaning">{meaning}</span>
       </div>
@@ -415,7 +415,7 @@ function VerbCard({ verb, meaning, conj }) {
           {PRONOUNS.map((p, i) => <React.Fragment key={p}><span className="conj-pronoun">{p}</span><span className="conj-form">{conj[i]}</span></React.Fragment>)}
         </div>
       )}
-      <div style={{ fontSize: '10px', color: '#444', marginTop: '8px', textAlign: 'center' }}>{show ? 'tap to hide' : 'tap to reveal'}</div>
+      <div style={{ fontSize: '10px', color: 'var(--text-tertiary)', marginTop: '8px', textAlign: 'center' }}>{show ? '▲ hide' : '▼ reveal'}</div>
     </div>
   );
 }
