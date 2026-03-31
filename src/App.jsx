@@ -430,137 +430,162 @@ function speakPortuguese(text) {
 }
 
 const SECTIONS_MAP = {
-  'verbs25': { label: '25 Verbos', labelEn: '25 Most Used Verbs', icon: '⚡', keywords: ['beginner', 'essential', 'basic', 'common', 'most used', 'core', 'fundamental', 'starter'] },
-  'conjugation': { label: 'Conjugação', labelEn: 'Conjugation', icon: '📐', keywords: ['grammar', 'verbs', 'endings', 'patterns', 'tenses', 'present', 'past', 'future'] },
-  'pronouns': { label: 'Pronomes', labelEn: 'Pronouns', icon: '👤', keywords: ['pronouns', 'subject', 'object', 'possessive', 'demonstrative', 'personal'] },
-  'adjectives': { label: 'Adjetivos', labelEn: 'Adjectives', icon: '🎨', keywords: ['describing', 'descriptions', 'appearance', 'personality', 'character'] },
-  'prepositions': { label: 'Preposições', labelEn: 'Prepositions', icon: '📍', keywords: ['location', 'movement', 'prepositions', 'place', 'position', 'direction'] },
-  'articles': { label: 'Artigos', labelEn: 'Articles', icon: '📝', keywords: ['articles', 'definite', 'indefinite', 'the', 'a', 'an', 'gender'] },
-  'vocabulary': { label: 'Vocabulário', labelEn: 'Vocabulary', icon: '📚', keywords: ['vocabulary', 'words', 'topics', 'themes', 'daily', 'everyday', 'topics'] },
-  'verbos999': { label: '999 Verbos', labelEn: '999 Verbs', icon: '📕', keywords: ['verbs', 'complete', 'reference', 'all', 'extensive', 'comprehensive'] },
-  'modals': { label: 'Modais', labelEn: 'Modals', icon: '🔧', keywords: ['ability', 'permission', 'obligation', 'modals', 'can', 'must', 'should', 'want', 'need'] },
-  'idioms': { label: 'Expressões', labelEn: 'Expressions', icon: '🇵🇹', keywords: ['idioms', 'natural', 'native', 'speaking', 'expressions', 'slang', 'informal', 'fluency'] },
-  'falsefriends': { label: 'Falsos Amigos', labelEn: 'False Friends', icon: '⚠️', keywords: ['traps', 'mistakes', 'confusing', 'similar', 'english', 'cognates'] },
-  'structure': { label: 'Frases', labelEn: 'Phrases', icon: '🧱', keywords: ['sentence', 'structure', 'word order', 'patterns', 'svo', 'construction'] },
-  'preterito': { label: 'Pretéritos', labelEn: 'Past Tense', icon: '⏱️', keywords: ['past', 'history', 'yesterday', 'completed', 'imperfect', 'perfect', 'telling stories'] },
-  'serestar': { label: 'Ser/Estar', labelEn: 'Ser/Estar', icon: '🔄', keywords: ['be', 'being', 'identity', 'states', 'permanent', 'temporary', 'characteristics'] },
-  'escrita': { label: 'Escrita', labelEn: 'Writing', icon: '✍️', keywords: ['writing', 'exam', 'cile', 'practice', 'essay', 'formal'] },
-  'oral': { label: 'Oral', labelEn: 'Speaking', icon: '🗣️', keywords: ['speaking', 'conversation', 'dialogue', 'listening', 'pronunciation', 'shadowing'] },
-  'escuta': { label: 'Escuta', labelEn: 'Listening', icon: '🎧', keywords: ['listening', 'comprehension', 'audio', 'media', 'youtube', 'tv', 'movies'] },
-  'glossary': { label: 'Glossário', labelEn: 'Glossary', icon: '📖', keywords: ['grammar', 'terms', 'definitions', 'reference', 'help', 'explanations'] },
+  'verbs25': { label: '25 Verbos', labelEn: '25 Most Used Verbs', icon: '⚡', desc: 'Essential verbs for everyday conversation', keywords: ['beginner', 'essential', 'basic', 'common', 'most used', 'core', 'fundamental', 'starter'] },
+  'conjugation': { label: 'Conjugação', labelEn: 'Conjugation', icon: '📐', desc: 'Learn how verbs change form', keywords: ['grammar', 'verbs', 'endings', 'patterns', 'tenses', 'present', 'past', 'future'] },
+  'pronouns': { label: 'Pronomes', labelEn: 'Pronouns', icon: '👤', desc: 'I, you, he, she - who is doing it', keywords: ['pronouns', 'subject', 'object', 'possessive', 'demonstrative', 'personal'] },
+  'adjectives': { label: 'Adjetivos', labelEn: 'Adjectives', icon: '🎨', desc: 'Words to describe people and things', keywords: ['describing', 'descriptions', 'appearance', 'personality', 'character'] },
+  'prepositions': { label: 'Preposições', labelEn: 'Prepositions', icon: '📍', desc: 'Words like in, on, with, from', keywords: ['location', 'movement', 'prepositions', 'place', 'position', 'direction'] },
+  'articles': { label: 'Artigos', labelEn: 'Articles', icon: '📝', desc: 'The, a, an - and gender in Portuguese', keywords: ['articles', 'definite', 'indefinite', 'the', 'a', 'an', 'gender'] },
+  'vocabulary': { label: 'Vocabulário', labelEn: 'Vocabulary', icon: '📚', desc: '20 themed word sets for daily life', keywords: ['vocabulary', 'words', 'topics', 'themes', 'daily', 'everyday', 'topics'] },
+  'verbos999': { label: '999 Verbos', labelEn: '999 Verbs', icon: '📕', desc: 'Complete verb reference dictionary', keywords: ['verbs', 'complete', 'reference', 'all', 'extensive', 'comprehensive'] },
+  'modals': { label: 'Modais', labelEn: 'Modals', icon: '🔧', desc: 'Can, must, should, want, need', keywords: ['ability', 'permission', 'obligation', 'modals', 'can', 'must', 'should', 'want', 'need'] },
+  'idioms': { label: 'Expressões', labelEn: 'Expressions', icon: '🇵🇹', desc: 'Sound like a native speaker', keywords: ['idioms', 'natural', 'native', 'speaking', 'expressions', 'slang', 'informal', 'fluency'] },
+  'falsefriends': { label: 'Falsos Amigos', labelEn: 'False Friends', icon: '⚠️', desc: 'Words that trick English speakers', keywords: ['traps', 'mistakes', 'confusing', 'similar', 'english', 'cognates'] },
+  'structure': { label: 'Frases', labelEn: 'Phrases', icon: '🧱', desc: 'How to build sentences correctly', keywords: ['sentence', 'structure', 'word order', 'patterns', 'svo', 'construction'] },
+  'preterito': { label: 'Pretéritos', labelEn: 'Past Tense', icon: '⏱️', desc: 'Talking about the past', keywords: ['past', 'history', 'yesterday', 'completed', 'imperfect', 'perfect', 'telling stories'] },
+  'serestar': { label: 'Ser/Estar', labelEn: 'Ser/Estar', icon: '🔄', desc: 'Two ways to say "to be"', keywords: ['be', 'being', 'identity', 'states', 'permanent', 'temporary', 'characteristics'] },
+  'escrita': { label: 'Escrita', labelEn: 'Writing', icon: '✍️', desc: 'Practice writing for exams', keywords: ['writing', 'exam', 'cile', 'practice', 'essay', 'formal'] },
+  'oral': { label: 'Oral', labelEn: 'Speaking', icon: '🗣️', desc: 'Shadow dialogues to improve pronunciation', keywords: ['speaking', 'conversation', 'dialogue', 'listening', 'pronunciation', 'shadowing'] },
+  'escuta': { label: 'Escuta', labelEn: 'Listening', icon: '🎧', desc: 'Watch and listen to real Portuguese', keywords: ['listening', 'comprehension', 'audio', 'media', 'youtube', 'tv', 'movies'] },
+  'glossary': { label: 'Glossário', labelEn: 'Glossary', icon: '📖', desc: 'Grammar terms explained simply', keywords: ['grammar', 'terms', 'definitions', 'reference', 'help', 'explanations'] },
 };
 
-function generateLessonPlan(answers) {
-  const text = Object.values(answers).join(' ').toLowerCase();
+function generateLessonPlan(text) {
   const recommendations = [];
   
-  const levelPatterns = { beginner: ['verbs25', 'conjugation', 'pronouns', 'vocabulary'], intermediate: ['adjectives', 'prepositions', 'articles', 'modals', 'structure'], advanced: ['preterito', 'serestar', 'idioms', 'falsefriends', 'escrita', 'oral'] };
-  if (text.includes('beginner') || text.includes('new') || text.includes('starting') || text.includes('never') || text.includes('zero')) {
-    recommendations.push(...levelPatterns.beginner);
-  }
-  if (text.includes('intermediate') || text.includes('some') || text.includes('basic') || text.includes('a1') || text.includes('a2')) {
-    recommendations.push(...levelPatterns.beginner, ...levelPatterns.intermediate);
-  }
-  if (text.includes('advanced') || text.includes('fluent') || text.includes('b1') || text.includes('b2') || text.includes('c1')) {
-    recommendations.push(...Object.keys(SECTIONS_MAP));
+  if (text.includes('beginner') || text.includes('new') || text.includes('starting') || text.includes('never') || text.includes('zero') || text.includes('a1')) {
+    recommendations.push('verbs25', 'conjugation', 'pronouns', 'vocabulary');
+  } else if (text.includes('intermediate') || text.includes('some') || text.includes('basic') || text.includes('a2')) {
+    recommendations.push('verbs25', 'conjugation', 'vocabulary', 'prepositions', 'articles', 'modals', 'structure');
+  } else if (text.includes('advanced') || text.includes('fluent') || text.includes('b1') || text.includes('b2') || text.includes('c1')) {
+    recommendations.push('preterito', 'serestar', 'idioms', 'falsefriends', 'escrita', 'oral');
   }
   
-  if (text.includes('grammar') || text.includes('rules') || text.includes('structure')) recommendations.push('conjugation', 'pronouns', 'articles', 'prepositions');
-  if (text.includes('speak') || text.includes('talk') || text.includes('conversation') || text.includes('pronunciation')) recommendations.push('oral', 'vocabulary', 'modals');
-  if (text.includes('listen') || text.includes('audio') || text.includes('video') || text.includes('movie')) recommendations.push('escuta');
-  if (text.includes('write') || text.includes('essay') || text.includes('exam') || text.includes('cile')) recommendations.push('escrita');
-  if (text.includes('travel') || text.includes('vacation') || text.includes('portugal')) recommendations.push('vocabulary', 'oral', 'prepositions');
-  if (text.includes('work') || text.includes('business') || text.includes('job')) recommendations.push('escrita', 'modals', 'vocabulary');
-  if (text.includes('friend') || text.includes('family') || text.includes('relationship')) recommendations.push('oral', 'vocabulary', 'idioms');
-  if (text.includes('study') || text.includes('study')) recommendations.push('verbs25', 'conjugation', 'vocabulary');
+  if (text.includes('speak') || text.includes('talk') || text.includes('conversation')) recommendations.push('oral', 'vocabulary', 'modals');
+  if (text.includes('listen') || text.includes('audio') || text.includes('video')) recommendations.push('escuta', 'oral');
+  if (text.includes('write') || text.includes('essay') || text.includes('exam')) recommendations.push('escrita', 'structure', 'vocabulary');
+  if (text.includes('travel') || text.includes('vacation') || text.includes('portugal')) recommendations.push('vocabulary', 'oral', 'prepositions', 'articles');
+  if (text.includes('work') || text.includes('business') || text.includes('job')) recommendations.push('escrita', 'modals', 'vocabulary', 'structure');
+  if (text.includes('family') || text.includes('friend')) recommendations.push('oral', 'vocabulary', 'idioms');
+  if (text.includes('grammar')) recommendations.push('conjugation', 'pronouns', 'articles', 'prepositions');
   
   const unique = [...new Set(recommendations)];
+  if (unique.length === 0) unique.push('verbs25', 'vocabulary', 'conjugation', 'oral', 'prepositions');
   return unique.slice(0, 5);
 }
 
-function OnboardingChat({ onComplete }) {
-  const [step, setStep] = useState(0);
-  const [answers, setAnswers] = useState({});
+function OnboardingChat({ onComplete, recommendedSections = [] }) {
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState([]);
-  const [isTyping, setIsTyping] = useState(false);
-  
-  const questions = [
-    { id: 'level', question: 'What is your current Portuguese level?', questionPt: 'Qual é o teu nível atual de português?', placeholder: 'e.g., Complete beginner, A1, A2, some basics...' },
-    { id: 'learning', question: 'How do you like to learn?', questionPt: 'Como gosta de aprender?', placeholder: 'e.g., Grammar rules, speaking practice, flashcards, watching shows...' },
-    { id: 'personality', question: 'How would a close friend describe your personality?', questionPt: 'Como é que um amigo próximo descreveria a tua personalidade?', placeholder: 'e.g., Extroverted, introverted, analytical, creative...' },
-    { id: 'goal', question: 'What is your main goal for learning Portuguese?', questionPt: 'Qual é o teu objetivo principal para aprender português?', placeholder: 'e.g., Travel to Portugal, speak with family, pass an exam, work...' },
-  ];
+  const [isListening, setIsListening] = useState(false);
+  const [lessonPlan, setLessonPlan] = useState(recommendedSections);
+  const [transcript, setTranscript] = useState('');
+  const [recognition, setRecognition] = useState(null);
   
   const addMessage = (text, isUser = false) => {
-    setMessages(prev => [...prev, { text, isUser, id: Date.now() }]);
+    setMessages(prev => [...prev, { text, isUser, id: Date.now() + Math.random() }]);
   };
   
-  const simulateTyping = (callback) => {
-    setIsTyping(true);
-    setTimeout(() => {
-      setIsTyping(false);
-      callback();
-    }, 1000);
+  const initRecognition = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) return null;
+    const rec = new SpeechRecognition();
+    rec.lang = 'en-US';
+    rec.continuous = false;
+    rec.interimResults = true;
+    return rec;
   };
   
-  const handleAnswer = () => {
-    if (!input.trim()) return;
-    const currentQ = questions[step];
-    const newAnswers = { ...answers, [currentQ.id]: input };
-    setAnswers(newAnswers);
-    addMessage(input, true);
-    setInput('');
+  const startVoice = () => {
+    if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
+      addMessage("Voice recording isn't supported. Try Chrome on desktop or mobile!");
+      return;
+    }
     
-    simulateTyping(() => {
-      if (step < questions.length - 1) {
-        addMessage('Got it! Let me ask you another question...');
-        setTimeout(() => {
-          setStep(step + 1);
-        }, 800);
-      } else {
-        addMessage('Excellent! Based on your answers, I\'ll create your personalized lesson plan...');
-        setTimeout(() => {
-          const recommendations = generateLessonPlan(newAnswers);
-          const planMessage = recommendations.map(id => {
-            const section = SECTIONS_MAP[id];
-            return section ? `${section.icon} ${section.labelEn}` : id;
-          }).join('\n');
-          addMessage(`Here's your custom learning path:\n\n${planMessage}\n\nVamos lá! Click on a section above to start learning! 🚀`);
-          setTimeout(() => {
-            onComplete(recommendations);
-          }, 1500);
-        }, 1000);
+    const rec = initRecognition();
+    if (!rec) return;
+    
+    setRecognition(rec);
+    setIsListening(true);
+    setTranscript('');
+    
+    rec.onstart = () => setIsListening(true);
+    
+    rec.onresult = (event) => {
+      const results = Array.from(event.results);
+      const transcriptText = results.map(r => r[0].transcript).join('');
+      setTranscript(transcriptText);
+      
+      if (event.results[event.results.length - 1].isFinal) {
+        const finalTranscript = event.results[event.results.length - 1][0].transcript;
+        setInput(finalTranscript);
+        setIsListening(false);
+        handleSubmit(finalTranscript);
       }
-    });
+    };
+    
+    rec.onerror = (event) => {
+      setIsListening(false);
+      if (event.error === 'not-allowed') {
+        addMessage("Microphone access denied. Please allow mic permissions in your browser settings.");
+      } else {
+        addMessage("Couldn't hear that. Try typing or tap the mic again!");
+      }
+    };
+    
+    rec.onend = () => {
+      if (isListening) {
+        setIsListening(false);
+        if (transcript) {
+          handleSubmit(transcript);
+        }
+      }
+    };
+    
+    try {
+      rec.start();
+    } catch (e) {
+      setIsListening(false);
+      addMessage("Couldn't start recording. Try refreshing the page!");
+    }
+  };
+  
+  const stopVoice = () => {
+    if (recognition) {
+      recognition.stop();
+    }
+    setIsListening(false);
+  };
+  
+  const handleSubmit = (text) => {
+    if (!text.trim()) return;
+    setTranscript('');
+    addMessage(text, true);
+    const plan = generateLessonPlan(text);
+    setLessonPlan(plan);
+    const planWithDescriptions = plan.map(id => `${SECTIONS_MAP[id]?.icon} ${SECTIONS_MAP[id]?.labelEn}: ${SECTIONS_MAP[id]?.desc}`).join('\n');
+    addMessage(`Great! Here's your personalized plan:\n\n${planWithDescriptions}\n\nClick "Let's Go!" to start learning! 🚀`);
   };
   
   useEffect(() => {
-    if (messages.length === 0) {
-      setTimeout(() => {
-        addMessage("Hello! I'm Patrick, your Portuguese learning assistant. 💬 I'm here to help create your personalized learning journey.");
-        setTimeout(() => {
-          addMessage(questions[0].question);
-        }, 800);
-      }, 300);
-    }
+    setTimeout(() => {
+      addMessage("Hey! I'm Patrick 👋 I'll create a personalized lesson plan for you.\n\nWhat brings you to learn Portuguese? (e.g., upcoming trip to Portugal, exam prep, or just for fun)");
+    }, 200);
   }, []);
-  
-  const currentQuestion = questions[step];
   
   return (
     <div style={{ maxWidth: '500px', margin: '0 auto', padding: '20px' }}>
       <div style={{ background: 'var(--bg-card)', borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', overflow: 'hidden' }}>
         <div style={{ background: 'linear-gradient(135deg, #00a870, #008a5a)', padding: '20px', color: 'white' }}>
           <h3 style={{ margin: 0, fontSize: '18px' }}>💬 Chat with Patrick</h3>
-          <p style={{ margin: '8px 0 0', opacity: 0.9, fontSize: '13px' }}>Answer a few questions to get a personalized plan</p>
+          <p style={{ margin: '8px 0 0', opacity: 0.9, fontSize: '13px' }}>Your personal Portuguese guide</p>
         </div>
         
-        <div style={{ height: '300px', overflowY: 'auto', padding: '20px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        <div style={{ height: '320px', overflowY: 'auto', padding: '20px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
           {messages.map(msg => (
             <div key={msg.id} style={{ display: 'flex', justifyContent: msg.isUser ? 'flex-end' : 'flex-start' }}>
               <div style={{ 
-                maxWidth: '75%', 
+                maxWidth: '85%', 
                 padding: '12px 16px', 
                 borderRadius: msg.isUser ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
                 background: msg.isUser ? 'var(--accent)' : 'var(--bg-secondary)',
@@ -573,38 +598,251 @@ function OnboardingChat({ onComplete }) {
               </div>
             </div>
           ))}
-          {isTyping && (
+          {isListening && transcript && (
             <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
-              <div style={{ padding: '12px 16px', borderRadius: '16px 16px 16px 4px', background: 'var(--bg-secondary)', color: 'var(--text-tertiary)', fontSize: '14px' }}>
-                typing...
+              <div style={{ padding: '12px 16px', borderRadius: '16px 16px 16px 4px', background: 'var(--bg-secondary)', color: 'var(--text-secondary)', fontSize: '14px', fontStyle: 'italic' }}>
+                {transcript}...
+              </div>
+            </div>
+          )}
+          {isListening && (
+            <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+              <div style={{ padding: '12px 16px', borderRadius: '16px 16px 16px 4px', background: 'var(--accent)', color: 'white', fontSize: '14px', animation: 'pulse 1s infinite', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#ff4444', animation: 'recording 1s infinite' }}></span>
+                Tap mic again to stop & send
               </div>
             </div>
           )}
         </div>
         
-        {step < questions.length && (
+        {lessonPlan.length === 0 && (
           <div style={{ padding: '16px', borderTop: '1px solid var(--border)', background: 'var(--bg)' }}>
-            <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '8px' }}>{currentQuestion.question}</p>
-            <div style={{ display: 'flex', gap: '8px' }}>
+            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
               <input 
                 type="text" 
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleAnswer()}
-                placeholder={currentQuestion.placeholder}
-                style={{ flex: 1, padding: '12px 16px', borderRadius: '12px', border: '1px solid var(--border)', fontSize: '14px', outline: 'none' }}
+                onKeyDown={(e) => e.key === 'Enter' && handleSubmit(input)}
+                placeholder={isListening ? "Listening..." : "Type or tap mic to record..."}
+                style={{ flex: 1, padding: '14px 16px', borderRadius: '12px', border: '1px solid var(--border)', fontSize: '16px', outline: 'none' }}
               />
-              <button onClick={handleAnswer} style={{ padding: '12px 20px', background: 'var(--accent)', color: 'white', border: 'none', borderRadius: '12px', cursor: 'pointer', fontWeight: 600 }}>→</button>
+              <button 
+                onClick={isListening ? stopVoice : startVoice} 
+                style={{ 
+                  padding: '14px 18px', 
+                  background: isListening ? '#ff4444' : 'var(--accent)', 
+                  border: 'none', 
+                  borderRadius: '12px', 
+                  cursor: 'pointer', 
+                  fontSize: '20px',
+                  transition: 'all 0.2s',
+                  boxShadow: isListening ? '0 4px 12px rgba(255,68,68,0.4)' : '0 4px 12px rgba(0,168,112,0.3)'
+                }}
+              >
+                🎙️
+              </button>
+              <button onClick={() => handleSubmit(input)} style={{ padding: '14px 20px', background: 'var(--accent)', color: 'white', border: 'none', borderRadius: '12px', cursor: 'pointer', fontWeight: 600 }}>→</button>
             </div>
           </div>
         )}
       </div>
       
-      {messages.length > 3 && (
-        <button onClick={() => onComplete([])} style={{ display: 'block', margin: '16px auto 0', padding: '10px 20px', background: 'transparent', border: '1px solid var(--border)', borderRadius: '8px', cursor: 'pointer', color: 'var(--text-secondary)', fontSize: '13px' }}>
-          Skip & Browse All Sections →
-        </button>
+      {lessonPlan.length > 0 && (
+        <div style={{ marginTop: '16px', textAlign: 'center' }}>
+          <button onClick={() => onComplete(lessonPlan)} style={{ padding: '14px 32px', background: 'var(--accent)', color: 'white', border: 'none', borderRadius: '12px', cursor: 'pointer', fontSize: '16px', fontWeight: 600 }}>
+            Let's Go! 🚀
+          </button>
+          <button onClick={() => { setLessonPlan([]); setMessages([]); setTimeout(() => addMessage("What brings you to learn Portuguese? (e.g., upcoming trip to Portugal, exam prep, or just for fun)"), 100); }} style={{ display: 'block', margin: '12px auto 0', padding: '8px 16px', background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--text-secondary)', fontSize: '13px' }}>
+            Start over ↺
+          </button>
+        </div>
       )}
+      
+      <button onClick={() => onComplete([])} style={{ display: 'block', margin: '16px auto 0', padding: '10px 20px', background: 'transparent', border: '1px solid var(--border)', borderRadius: '8px', cursor: 'pointer', color: 'var(--text-secondary)', fontSize: '13px' }}>
+        Browse all sections →
+      </button>
+    </div>
+  );
+}
+
+function FloatingChatButton({ onClick }) {
+  return (
+    <button 
+      onClick={onClick}
+      style={{
+        position: 'fixed',
+        bottom: '24px',
+        right: '24px',
+        width: '60px',
+        height: '60px',
+        borderRadius: '50%',
+        background: 'linear-gradient(135deg, #00a870, #008a5a)',
+        border: 'none',
+        boxShadow: '0 4px 20px rgba(0,168,112,0.4)',
+        cursor: 'pointer',
+        fontSize: '24px',
+        zIndex: 999,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}
+    >
+      💬
+    </button>
+  );
+}
+
+function ChatModal({ isOpen, onClose }) {
+  const [chatHistory, setChatHistory] = useState([]);
+  const [input, setInput] = useState('');
+  const [isListening, setIsListening] = useState(false);
+  const [transcript, setTranscript] = useState('');
+  const [recognition, setRecognition] = useState(null);
+  
+  const addMessage = (text, isUser = false) => {
+    setChatHistory(prev => [...prev, { text, isUser, id: Date.now() + Math.random() }]);
+  };
+  
+  const initRecognition = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) return null;
+    const rec = new SpeechRecognition();
+    rec.lang = 'en-US';
+    rec.continuous = false;
+    rec.interimResults = true;
+    return rec;
+  };
+  
+  const startVoice = () => {
+    if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
+      addMessage("Voice recording isn't supported. Try Chrome!");
+      return;
+    }
+    
+    const rec = initRecognition();
+    if (!rec) return;
+    
+    setRecognition(rec);
+    setIsListening(true);
+    setTranscript('');
+    
+    rec.onstart = () => setIsListening(true);
+    
+    rec.onresult = (event) => {
+      const results = Array.from(event.results);
+      const transcriptText = results.map(r => r[0].transcript).join('');
+      setTranscript(transcriptText);
+      
+      if (event.results[event.results.length - 1].isFinal) {
+        const finalTranscript = event.results[event.results.length - 1][0].transcript;
+        setInput(finalTranscript);
+        setIsListening(false);
+        handleSubmit(finalTranscript);
+      }
+    };
+    
+    rec.onerror = (event) => {
+      setIsListening(false);
+      if (event.error === 'not-allowed') {
+        addMessage("Microphone access denied. Please allow mic permissions.");
+      }
+    };
+    
+    rec.onend = () => {
+      if (isListening && transcript) {
+        handleSubmit(transcript);
+      }
+      setIsListening(false);
+    };
+    
+    try {
+      rec.start();
+    } catch (e) {
+      setIsListening(false);
+    }
+  };
+  
+  const stopVoice = () => {
+    if (recognition) recognition.stop();
+    setIsListening(false);
+  };
+  
+  const handleSubmit = (text) => {
+    if (!text.trim()) return;
+    setTranscript('');
+    addMessage(text, true);
+    const plan = generateLessonPlan(text);
+    addMessage(`Based on your goals: ${plan.map(id => SECTIONS_MAP[id]?.icon + ' ' + SECTIONS_MAP[id]?.labelEn).join(', ')}`);
+  };
+  
+  if (!isOpen) return null;
+  
+  return (
+    <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', padding: '20px' }} onClick={onClose}>
+      <div style={{ width: '100%', maxWidth: '400px', background: 'var(--bg-card)', borderRadius: '16px 16px 0 0', maxHeight: '80vh', display: 'flex', flexDirection: 'column' }} onClick={e => e.stopPropagation()}>
+        <div style={{ padding: '16px', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div>
+            <h3 style={{ margin: 0, fontSize: '16px' }}>💬 Patrick</h3>
+            <p style={{ margin: '4px 0 0', fontSize: '12px', color: 'var(--text-secondary)' }}>Ask me anything about learning Portuguese</p>
+          </div>
+          <button onClick={onClose} style={{ background: 'transparent', border: 'none', fontSize: '20px', cursor: 'pointer' }}>✕</button>
+        </div>
+        
+        <div style={{ flex: 1, overflowY: 'auto', padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          {chatHistory.length === 0 && (
+            <div style={{ textAlign: 'center', color: 'var(--text-secondary)', fontSize: '14px', padding: '20px' }}>
+              <p>👋 Hi! I'm Patrick. Ask me anything about Portuguese learning!</p>
+              <p style={{ fontSize: '13px', marginTop: '8px' }}>Or tell me your goals and I'll suggest sections.</p>
+            </div>
+          )}
+          {chatHistory.map(msg => (
+            <div key={msg.id} style={{ display: 'flex', justifyContent: msg.isUser ? 'flex-end' : 'flex-start' }}>
+              <div style={{ 
+                maxWidth: '80%', 
+                padding: '10px 14px', 
+                borderRadius: msg.isUser ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
+                background: msg.isUser ? 'var(--accent)' : 'var(--bg-secondary)',
+                color: msg.isUser ? 'white' : 'var(--text-primary)',
+                fontSize: '14px',
+                lineHeight: 1.5
+              }}>
+                {msg.text}
+              </div>
+            </div>
+          ))}
+          {isListening && transcript && (
+            <div style={{ padding: '10px 14px', borderRadius: '16px 16px 16px 4px', background: 'var(--bg-secondary)', color: 'var(--text-secondary)', fontSize: '14px', fontStyle: 'italic' }}>
+              {transcript}...
+            </div>
+          )}
+        </div>
+        
+        <div style={{ padding: '12px', borderTop: '1px solid var(--border)', display: 'flex', gap: '8px', alignItems: 'center' }}>
+          <input 
+            type="text" 
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && handleSubmit(input)}
+            placeholder={isListening ? "Listening..." : "Ask Patrick..."}
+            style={{ flex: 1, padding: '12px 14px', borderRadius: '10px', border: '1px solid var(--border)', fontSize: '14px', outline: 'none' }}
+          />
+          <button 
+            onClick={isListening ? stopVoice : startVoice} 
+            style={{ 
+              padding: '12px', 
+              background: isListening ? '#ff4444' : 'transparent', 
+              border: '1px solid var(--border)', 
+              borderRadius: '10px', 
+              cursor: 'pointer', 
+              fontSize: '16px',
+              transition: 'all 0.2s'
+            }}
+          >
+            🎙️
+          </button>
+          <button onClick={() => handleSubmit(input)} style={{ padding: '12px 16px', background: 'var(--accent)', color: 'white', border: 'none', borderRadius: '10px', cursor: 'pointer' }}>→</button>
+        </div>
+      </div>
     </div>
   );
 }
