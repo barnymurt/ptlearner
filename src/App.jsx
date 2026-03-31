@@ -1262,8 +1262,8 @@ export default function App() {
               <div className="section-nav-title">
                 {SECTIONS.find(s => s.id === section)?.label || section}
               </div>
-              <button className={showEnglish ? 'btn btn-primary' : 'btn btn-ghost'} onClick={() => setShowEnglish(!showEnglish)} style={{ fontSize: '11px', padding: '5px 10px' }}>
-                EN {showEnglish ? '✓' : ''}
+              <button className={showEnglish ? 'btn btn-primary' : 'btn btn-ghost'} onClick={() => setShowEnglish(!showEnglish)} style={{ fontSize: '12px', padding: '6px 12px' }}>
+                {showEnglish ? 'Hide English' : 'Show English'}
               </button>
             </div>
             <main className="content">
