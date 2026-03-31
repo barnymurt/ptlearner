@@ -2,17 +2,32 @@
   <!-- Background -->
   <rect width="200" height="200" rx="30" fill="#00a870"/>
   
-  <!-- F letter -->
-  <text x="100" y="145" 
+  <!-- F with accent -->
+  <text x="70" y="130" 
         font-family="Georgia, serif" 
-        font-size="120" 
+        font-size="85" 
         font-weight="bold" 
         fill="white" 
         text-anchor="middle">F</text>
   
-  <!-- Green accent bar -->
-  <rect x="45" y="45" width="50" height="12" rx="6" fill="#008a5a"/>
+  <!-- Acute accent -->
+  <text x="125" y="115" 
+        font-family="Georgia, serif" 
+        font-size="45" 
+        font-weight="bold" 
+        fill="white" 
+        text-anchor="middle">ú</text>
+  
+  <!-- lência -->
+  <text x="122" y="150" 
+        font-family="Georgia, serif" 
+        font-size="45" 
+        fill="white" 
+        text-anchor="middle">ência</text>
+  
+  <!-- Gold accent bar -->
+  <rect x="40" y="40" width="45" height="10" rx="5" fill="#008a5a"/>
   
   <!-- Gold dot -->
-  <circle cx="150" cy="50" r="14" fill="#c9963c"/>
+  <circle cx="150" cy="45" r="12" fill="#c9963c"/>
 </svg>
