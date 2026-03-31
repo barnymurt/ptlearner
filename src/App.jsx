@@ -555,84 +555,87 @@ function ScenarioCard({ scenario, question, correct, explanation, note }) {
 }
 
 function WritingTask({ task, showEnglish }) {
-  const [revealed, setRevealed] = useState(false);
   const [showEn, setShowEn] = useState(false);
   const effectiveShowEn = showEnglish || showEn;
   return (
-    <div style={{ ...S.card, padding: '16px 18px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '10px', flexWrap: 'wrap', gap: '6px' }}>
-        <div><span className="tag tag-teal">{task.type}</span><span style={{ ...S.tag(), marginLeft: '5px' }}>{task.targetWords} words</span></div>
-      </div>
-      <div style={{ fontFamily: "'DM Serif Display',serif", fontSize: '17px', color: '#1a1a1a', marginBottom: '6px' }}>{task.title}</div>
-      <div style={{ fontSize: '13px', color: '#7a8a80', marginBottom: '12px', lineHeight: 1.5 }}>{task.description}</div>
-      <div style={{ marginBottom: '14px' }}>
-        <div style={{ fontSize: '11px', color: '#555', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '1px' }}>Key vocabulary</div>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
-          {task.keyVocab.map((v, i) => <span key={i} style={{ ...S.tag('#008a8a'), fontSize: '10px' }}>{v}</span>)}
+    <ExpandableCard
+      title={task.title}
+      accentColor="var(--accent)"
+    >
+      <div style={{ marginTop: '12px' }}>
+        <div style={{ display: 'flex', gap: '8px', marginBottom: '12px', flexWrap: 'wrap' }}>
+          <span className="tag tag-teal">{task.type}</span>
+          <span className="tag">{task.targetWords} words</span>
         </div>
-      </div>
-      <button className="btn btn-primary" onClick={() => setRevealed(!revealed)}>{revealed ? 'Hide Model Answer' : 'Show Model Answer'}</button>
-      {revealed && (
-        <div style={{ marginTop: '14px', background: 'rgba(0,168,112,0.04)', border: '1px solid rgba(0,168,112,0.12)', borderRadius: '10px', padding: '14px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-            <div style={{ fontSize: '11px', color: '#7a8a80', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1px' }}>Model Answer {effectiveShowEn ? '(EN)' : '(PT)'}</div>
-            {task.englishAnswer && <button onClick={() => setShowEn(!showEn)} style={{ fontSize: '10px', padding: '3px 8px', borderRadius: '5px', border: '1px solid rgba(0,138,138,0.3)', background: effectiveShowEn ? 'rgba(0,138,138,0.1)' : 'transparent', color: '#008a8a', cursor: 'pointer' }}>{effectiveShowEn ? 'Show PT' : 'Show EN'}</button>}
+        <div style={{ fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '12px', lineHeight: 1.5 }}>{task.description}</div>
+        <div style={{ marginBottom: '12px' }}>
+          <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 600 }}>Key vocabulary</div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+            {task.keyVocab.map((v, i) => <span key={i} style={{ background: 'rgba(0,138,138,0.08)', color: '#008a8a', padding: '4px 10px', borderRadius: '6px', fontSize: '12px' }}>{v}</span>)}
           </div>
-          <div style={{ fontSize: '13px', color: '#c0b8a8', lineHeight: 1.7, fontFamily: 'monospace', whiteSpace: 'pre-wrap' }}>{effectiveShowEn ? task.englishAnswer : task.modelAnswer}</div>
         </div>
-      )}
-    </div>
+        <div style={{ background: 'rgba(0,168,112,0.04)', border: '1px solid rgba(0,168,112,0.12)', borderRadius: '8px', padding: '14px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+            <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1px' }}>Model Answer {effectiveShowEn ? '(EN)' : '(PT)'}</div>
+            {task.englishAnswer && <button onClick={() => setShowEn(!showEn)} style={{ fontSize: '11px', padding: '4px 10px', borderRadius: '6px', border: '1px solid rgba(0,138,138,0.3)', background: effectiveShowEn ? 'rgba(0,138,138,0.1)' : 'transparent', color: '#008a8a', cursor: 'pointer' }}>{effectiveShowEn ? 'Show PT' : 'Show EN'}</button>}
+          </div>
+          <div style={{ fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 1.7, fontFamily: 'var(--font-mono)', whiteSpace: 'pre-wrap' }}>{effectiveShowEn ? task.englishAnswer : task.modelAnswer}</div>
+        </div>
+      </div>
+    </ExpandableCard>
   );
 }
 
 function OralDialogue({ dialogue, showEnglish }) {
-  const [expanded, setExpanded] = useState(false);
   const [showEn, setShowEn] = useState(false);
   const effectiveShowEn = showEnglish || showEn;
+  const difficultyColor = dialogue.difficulty === 'Fácil' ? 'var(--accent)' : dialogue.difficulty === 'Médio' ? 'var(--warning)' : 'var(--error)';
   return (
-    <div style={{ ...S.card, padding: '16px 18px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', flexWrap: 'wrap', gap: '6px' }}>
-        <div><span style={{ fontFamily: "'DM Serif Display',serif", fontSize: '16px', color: '#1a1a1a' }}>{dialogue.title}</span></div>
-        <span style={{ ...S.tag(), background: dialogue.difficulty === 'Fácil' ? '#00a87018' : dialogue.difficulty === 'Médio' ? '#c9963c18' : '#b8203518', color: dialogue.difficulty === 'Fácil' ? '#00a870' : dialogue.difficulty === 'Médio' ? '#c9963c' : '#b82035' }}>{dialogue.difficulty}</span>
-      </div>
-      {dialogue.tip && <div style={{ fontSize: '11px', color: '#008a8a', fontStyle: 'italic', marginBottom: '12px', padding: '8px 10px', background: 'rgba(0,138,138,0.06)', borderRadius: '6px' }}>💡 {dialogue.tip}</div>}
-      <button className="btn btn-primary" onClick={() => setExpanded(!expanded)}>{expanded ? 'Hide Dialogue' : 'Show Dialogue'}</button>
-      {expanded && (
-        <div style={{ marginTop: '12px' }}>
-          {(effectiveShowEn && dialogue.englishDialogue ? dialogue.englishDialogue : dialogue.dialogue).map((line, i) => <div key={i} style={{ display: 'flex', gap: '10px', marginBottom: '8px', fontSize: '13px' }}><span style={{ fontWeight: 700, color: line.speaker === 'A' || line.speaker === 'Cliente' || line.speaker === 'Paciente' || line.speaker === 'Passageiro' ? '#00a870' : '#008a8a', minWidth: '80px' }}>{line.speaker}:</span><span style={{ color: '#1a1a1a' }}>{line.text}</span></div>)}
-          {dialogue.englishDialogue && (
-            <button onClick={() => setShowEn(!showEn)} style={{ marginTop: '10px', fontSize: '11px', padding: '4px 10px', borderRadius: '6px', border: '1px solid rgba(0,138,138,0.3)', background: effectiveShowEn ? 'rgba(0,138,138,0.1)' : 'transparent', color: '#008a8a', cursor: 'pointer' }}>{effectiveShowEn ? 'Show PT' : 'Show EN'}</button>
-          )}
-          <div style={{ marginTop: '14px' }}>
-            <div style={{ fontSize: '10px', color: '#555', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '1px' }}>Key phrases</div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>{dialogue.keyPhrases.map((p, i) => <span key={i} style={{ ...S.tag('#008a8a'), fontSize: '10px' }}>{p}</span>)}</div>
-          </div>
+    <ExpandableCard
+      title={dialogue.title}
+      accentColor={difficultyColor}
+    >
+      <div style={{ marginTop: '12px' }}>
+        {dialogue.tip && <div style={{ fontSize: '12px', color: '#008a8a', fontStyle: 'italic', marginBottom: '12px', padding: '8px 12px', background: 'rgba(0,138,138,0.06)', borderRadius: '6px' }}>💡 {dialogue.tip}</div>}
+        <div style={{ marginBottom: '12px' }}>
+          {(effectiveShowEn && dialogue.englishDialogue ? dialogue.englishDialogue : dialogue.dialogue).map((line, i) => <div key={i} style={{ display: 'flex', gap: '10px', marginBottom: '10px', fontSize: '14px' }}><span style={{ fontWeight: 700, color: line.speaker === 'A' || line.speaker === 'Cliente' || line.speaker === 'Paciente' || line.speaker === 'Passageiro' ? 'var(--accent)' : '#008a8a', minWidth: '80px' }}>{line.speaker}:</span><span style={{ color: 'var(--text-primary)' }}>{line.text}</span></div>)}
         </div>
-      )}
-    </div>
+        {dialogue.englishDialogue && (
+          <button onClick={() => setShowEn(!showEn)} style={{ marginBottom: '12px', fontSize: '12px', padding: '6px 12px', borderRadius: '6px', border: '1px solid rgba(0,138,138,0.3)', background: effectiveShowEn ? 'rgba(0,138,138,0.1)' : 'transparent', color: '#008a8a', cursor: 'pointer' }}>{effectiveShowEn ? 'Show PT' : 'Show EN'}</button>
+        )}
+        <div style={{ borderTop: '1px solid var(--border)', paddingTop: '12px' }}>
+          <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 600 }}>Key phrases</div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>{dialogue.keyPhrases.map((p, i) => <span key={i} style={{ background: 'rgba(0,138,138,0.08)', color: '#008a8a', padding: '4px 10px', borderRadius: '6px', fontSize: '12px' }}>{p}</span>)}</div>
+        </div>
+      </div>
+    </ExpandableCard>
   );
 }
 
 function ListeningItem({ item, showEnglish }) {
   const [showTranscript, setShowTranscript] = useState(false);
   const effectiveShowTranscript = showTranscript || showEnglish;
+  const difficultyColor = item.difficulty === 'Fácil' ? 'var(--accent)' : item.difficulty === 'Médio' ? 'var(--warning)' : 'var(--error)';
   return (
-    <div style={{ ...S.card, padding: '16px 18px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px', flexWrap: 'wrap', gap: '6px' }}>
-        <div style={{ fontFamily: "'DM Serif Display',serif", fontSize: '16px', color: '#1a1a1a' }}>{item.title}</div>
-        <span style={{ ...S.tag(), background: item.difficulty === 'Fácil' ? '#00a87018' : item.difficulty === 'Médio' ? '#c9963c18' : '#b8203518', color: item.difficulty === 'Fácil' ? '#00a870' : item.difficulty === 'Médio' ? '#c9963c' : '#b82035' }}>{item.difficulty}</span>
-      </div>
-      <div style={{ fontSize: '12px', color: '#7a8a80', marginBottom: '10px', lineHeight: 1.5 }}>{item.description}</div>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginBottom: '12px' }}>{item.topics.map((t, i) => <span key={i} style={{ ...S.tag('#008a8a'), fontSize: '9px' }}>{t}</span>)}</div>
-      <a href={item.url} target="_blank" rel="noopener noreferrer" style={{ ...S.btn, display: 'inline-block', textDecoration: 'none' }}>🔗 Open Resource</a>
-      <button style={{ ...S.btn, marginTop: '8px', marginLeft: '7px', borderColor: '#008a8a', color: '#008a8a', background: 'rgba(0,138,138,0.08)' }} onClick={() => setShowTranscript(!showTranscript)}>{effectiveShowTranscript ? 'Hide Transcript' : 'Show Transcript'}</button>
-      {effectiveShowTranscript && (
-        <div style={{ marginTop: '10px', padding: '12px', background: 'rgba(0,138,138,0.04)', borderRadius: '8px' }}>
-          <div style={{ fontSize: '10px', color: '#008a8a', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '6px', fontWeight: 600 }}>{effectiveShowTranscript && item.englishTranscript ? 'English' : 'Portuguese'}</div>
-          <div style={{ fontSize: '12px', color: '#1a1a1a', lineHeight: 1.7, fontFamily: 'monospace' }}>{effectiveShowTranscript && item.englishTranscript ? item.englishTranscript : item.transcript}</div>
+    <ExpandableCard
+      title={item.title}
+      accentColor={difficultyColor}
+    >
+      <div style={{ marginTop: '12px' }}>
+        <div style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '12px', lineHeight: 1.5 }}>{item.description}</div>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '12px' }}>{item.topics.map((t, i) => <span key={i} style={{ background: 'rgba(0,138,138,0.08)', color: '#008a8a', padding: '4px 10px', borderRadius: '6px', fontSize: '11px' }}>{t}</span>)}</div>
+        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+          <a href={item.url} target="_blank" rel="noopener noreferrer" className="btn btn-primary">🔗 Open Resource</a>
+          <button style={{ border: '1px solid #008a8a', color: '#008a8a', background: effectiveShowTranscript ? 'rgba(0,138,138,0.1)' : 'transparent', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer', fontSize: '13px' }} onClick={() => setShowTranscript(!showTranscript)}>{effectiveShowTranscript ? 'Hide Transcript' : 'Show Transcript'}</button>
         </div>
-      )}
-    </div>
+        {effectiveShowTranscript && (
+          <div style={{ marginTop: '12px', padding: '12px', background: 'rgba(0,138,138,0.04)', borderRadius: '8px' }}>
+            <div style={{ fontSize: '11px', color: '#008a8a', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px', fontWeight: 600 }}>{effectiveShowTranscript && item.englishTranscript ? 'English' : 'Portuguese'}</div>
+            <div style={{ fontSize: '13px', color: 'var(--text-primary)', lineHeight: 1.7, fontFamily: 'var(--font-mono)' }}>{effectiveShowTranscript && item.englishTranscript ? item.englishTranscript : item.transcript}</div>
+          </div>
+        )}
+      </div>
+    </ExpandableCard>
   );
 }
 
@@ -866,20 +869,39 @@ function StructureSection() {
   return (
     <div>
       <h2 className="sec-title">Estrutura das Frases</h2>
-      <p className="sec-desc">Core sentence patterns for A2. European Portuguese follows SVO order.</p>
+      <p className="sec-desc">Core sentence patterns for A2. European Portuguese follows SVO order. Tap each pattern to see examples and usage tips.</p>
       {SENTENCE_STRUCTURE.map((s, i) => (
         <ExpandableCard key={i} title={s.pattern} accentColor="#008a8a">
           <div style={{ marginTop: '8px' }}>
             <div style={{ fontFamily: 'var(--font-mono)', fontSize: '15px', color: 'var(--text-primary)', marginBottom: '6px' }}>{s.example}</div>
-            <div style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>{s.translation}</div>
+            <div style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '8px' }}>{s.translation}</div>
+            <div style={{ fontSize: '12px', color: 'var(--text-tertiary)', fontStyle: 'italic' }}>Usage: Replace the highlighted words with your own vocabulary to create sentences.</div>
           </div>
         </ExpandableCard>
       ))}
-      <ExpandableCard title="EP-Specific Patterns" accentColor="var(--accent)" defaultOpen>
+      <div className="card" style={{ marginTop: '16px', background: 'rgba(0,168,112,0.04)', border: '1px solid rgba(0,168,112,0.15)' }}>
+        <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--accent)', marginBottom: '10px' }}>How to Use These Patterns</div>
+        <div style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: 1.7 }}>
+          <p style={{ marginBottom: '8px' }}>1. <strong>Identify the pattern type</strong> — statement, question, negation, etc.</p>
+          <p style={{ marginBottom: '8px' }}>2. <strong>Replace the placeholder words</strong> with your own vocabulary while keeping the structure.</p>
+          <p style={{ marginBottom: '8px' }}>3. <strong>Notice the word order</strong> — EP uses SVO (Subject-Verb-Object) like English.</p>
+          <p>4. <strong>Practice aloud</strong> — shadow the examples to improve pronunciation.</p>
+        </div>
+      </div>
+      <ExpandableCard title="EP-Specific Patterns" accentColor="var(--accent)">
         <div style={{ marginTop: '8px', fontSize: '14px', lineHeight: 1.8 }}>
-          <div style={{ marginBottom: '8px' }}><strong style={{ color: 'var(--accent)' }}>Continuous:</strong> estar + a + infinitive → "Estou a comer" (not "Estou comendo")</div>
-          <div style={{ marginBottom: '8px' }}><strong style={{ color: 'var(--accent)' }}>Clitic placement:</strong> After verb: "Ele deu-me" / Before with negation: "Ele não me deu"</div>
-          <div><strong style={{ color: 'var(--accent)' }}>Mesoclisis (future):</strong> "Dir-lhe-ei amanhã" — unique to EP</div>
+          <div style={{ marginBottom: '10px' }}>
+            <strong style={{ color: 'var(--accent)' }}>Continuous:</strong> Use <strong>estar + a + infinitive</strong> for ongoing actions<br/>
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'var(--text-secondary)' }}>→ "Estou a comer" (I am eating) — not "Estou comendo" (BP)</span>
+          </div>
+          <div style={{ marginBottom: '10px' }}>
+            <strong style={{ color: 'var(--accent)' }}>Clitic placement:</strong> Pronouns come after the verb, joined by hyphen<br/>
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'var(--text-secondary)' }}>→ "Ele deu-me o livro" (He gave me the book)</span>
+          </div>
+          <div>
+            <strong style={{ color: 'var(--accent)' }}>Mesoclisis:</strong> Pronouns insert into the future/past verb<br/>
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'var(--text-secondary)' }}>→ "Dir-lhe-ei amanhã" (I will tell him tomorrow) — unique to EP</span>
+          </div>
         </div>
       </ExpandableCard>
     </div>
