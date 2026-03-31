@@ -477,11 +477,14 @@ function generateLessonPlan(text) {
 function OnboardingChat({ onComplete, recommendedSections = [] }) {
   const [answers, setAnswers] = useState({ level: '', goal: '', context: '', time: '' });
   const [currentAnswer, setCurrentAnswer] = useState('');
-  const [activeQuestion, setActiveQuestion] = useState(0);
+  const [activeQuestion, setActiveQuestion] = useState(null);
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState('');
   const [recognition, setRecognition] = useState(null);
   const [lessonPlan, setLessonPlan] = useState(recommendedSections);
+  const [pauseTimer, setPauseTimer] = useState(null);
+  const [recordingDuration, setRecordingDuration] = useState(0);
+  const [durationInterval, setDurationInterval] = useState(null);
 
   const questions = [
     { id: 'level', label: "What's your current level in Portuguese?", hint: 'Complete beginner, some basics, or intermediate' },
@@ -489,6 +492,8 @@ function OnboardingChat({ onComplete, recommendedSections = [] }) {
     { id: 'context', label: "Where will you use Portuguese most?", hint: 'Portugal, Brazil, business, daily life, or social' },
     { id: 'time', label: "How much time can you study each week?", hint: 'A few hours, 30 minutes daily, or intensive' }
   ];
+
+  const allAnswered = Object.values(answers).every(a => a.trim());
 
   const initRecognition = () => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -500,7 +505,7 @@ function OnboardingChat({ onComplete, recommendedSections = [] }) {
     return rec;
   };
 
-  const startVoice = () => {
+  const startVoice = (questionId) => {
     if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
       return;
     }
@@ -511,86 +516,122 @@ function OnboardingChat({ onComplete, recommendedSections = [] }) {
     setRecognition(rec);
     setIsListening(true);
     setTranscript('');
+    setActiveQuestion(questionId);
+    setCurrentAnswer('');
 
-    rec.onstart = () => setIsListening(true);
+    const durInterval = setInterval(() => {
+      setRecordingDuration(prev => prev + 1);
+    }, 1000);
+    setDurationInterval(durInterval);
+
+    const resetPauseTimer = () => {
+      if (pauseTimer) clearTimeout(pauseTimer);
+      const timer = setTimeout(() => {
+        if (recordingDuration > 2) {
+          stopVoice();
+        }
+      }, 8000);
+      setPauseTimer(timer);
+    };
+
+    rec.onstart = () => {
+      setIsListening(true);
+      setRecordingDuration(0);
+      resetPauseTimer();
+    };
 
     rec.onresult = (event) => {
       const results = Array.from(event.results);
       const transcriptText = results.map(r => r[0].transcript).join('');
       setTranscript(transcriptText);
+      resetPauseTimer();
 
       if (event.results[event.results.length - 1].isFinal) {
         const finalTranscript = event.results[event.results.length - 1][0].transcript;
         setCurrentAnswer(finalTranscript);
-        setIsListening(false);
+        handleAnswerSelect(questionId, finalTranscript);
+        stopVoice();
       }
     };
 
     rec.onerror = () => {
-      setIsListening(false);
+      stopVoice();
     };
 
     rec.onend = () => {
-      setIsListening(false);
+      stopVoice();
     };
 
     try {
       rec.start();
     } catch (e) {
-      setIsListening(false);
+      stopVoice();
     }
   };
 
   const stopVoice = () => {
     if (recognition) recognition.stop();
+    if (pauseTimer) clearTimeout(pauseTimer);
+    if (durationInterval) clearInterval(durationInterval);
     setIsListening(false);
+    setRecognition(null);
+    setPauseTimer(null);
+    if (durationInterval) clearInterval(durationInterval);
   };
 
-  const handleNext = () => {
-    const question = questions[activeQuestion];
-    setAnswers(prev => ({ ...prev, [question.id]: currentAnswer }));
-    setCurrentAnswer('');
-    setTranscript('');
-
-    if (activeQuestion < questions.length - 1) {
-      setActiveQuestion(prev => prev + 1);
+  const handleAnswerSelect = (questionId, text) => {
+    if (text) {
+      setAnswers(prev => ({ ...prev, [questionId]: text }));
     }
+    setActiveQuestion(questionId);
+    setCurrentAnswer(text || answers[questionId] || '');
+    setTranscript(text || '');
   };
 
-  const handleSubmit = () => {
-    const allAnswers = { ...answers, [questions[activeQuestion].id]: currentAnswer };
-    const combinedText = `level: ${allAnswers.level}. goal: ${allAnswers.goal}. context: ${allAnswers.context}. time: ${allAnswers.time}`;
+  const handleInputChange = (text) => {
+    setCurrentAnswer(text);
+    setTranscript(text);
+  };
+
+  const handleFinish = () => {
+    const combinedText = `level: ${answers.level}. goal: ${answers.goal}. context: ${answers.context}. time: ${answers.time}`;
     const plan = generateLessonPlan(combinedText);
     setLessonPlan(plan);
+  };
+
+  const formatDuration = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
   if (lessonPlan.length > 0) {
     const planWithDescriptions = lessonPlan.map(id => `${SECTIONS_MAP[id]?.icon} ${SECTIONS_MAP[id]?.labelEn}: ${SECTIONS_MAP[id]?.desc}`).join('\n');
     return (
-      <div style={{ maxWidth: '500px', margin: '0 auto', padding: '20px' }}>
-        <div style={{ background: 'var(--bg-card)', borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', padding: '24px' }}>
-          <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-            <div style={{ fontSize: '48px', marginBottom: '12px' }}>🎯</div>
-            <h3 style={{ margin: 0, fontSize: '20px', color: 'var(--text-primary)' }}>Your Personalized Plan</h3>
-            <p style={{ margin: '8px 0 0', fontSize: '14px', color: 'var(--text-secondary)' }}>Based on your goals, here's what to study:</p>
+      <div style={{ maxWidth: '700px', margin: '0 auto', padding: '24px' }}>
+        <div style={{ background: 'var(--bg-card)', borderRadius: '20px', boxShadow: '0 8px 32px rgba(0,0,0,0.12)', padding: '32px' }}>
+          <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+            <div style={{ fontSize: '56px', marginBottom: '16px' }}>🎯</div>
+            <h3 style={{ margin: 0, fontSize: '24px', color: 'var(--text-primary)', fontWeight: 700 }}>Your Personalized Plan</h3>
+            <p style={{ margin: '8px 0 0', fontSize: '15px', color: 'var(--text-secondary)' }}>Based on your goals, here's what to study:</p>
           </div>
-          <div style={{ background: 'var(--bg)', borderRadius: '12px', padding: '16px', marginBottom: '20px' }}>
-            <pre style={{ margin: 0, fontSize: '14px', lineHeight: 1.8, whiteSpace: 'pre-wrap' }}>{planWithDescriptions}</pre>
+          <div style={{ background: 'var(--bg)', borderRadius: '16px', padding: '20px', marginBottom: '24px' }}>
+            <pre style={{ margin: 0, fontSize: '15px', lineHeight: 1.9, whiteSpace: 'pre-wrap', fontFamily: 'var(--font-body)' }}>{planWithDescriptions}</pre>
           </div>
           <button 
             onClick={() => onComplete(lessonPlan)} 
-            style={{ width: '100%', padding: '16px', background: 'var(--accent)', color: 'white', border: 'none', borderRadius: '12px', cursor: 'pointer', fontSize: '16px', fontWeight: 600 }}
+            style={{ width: '100%', padding: '18px', background: 'var(--accent)', color: 'white', border: 'none', borderRadius: '14px', cursor: 'pointer', fontSize: '17px', fontWeight: 600, boxShadow: '0 4px 16px rgba(0,168,112,0.3)' }}
           >
             Let's Go! 🚀
           </button>
           <button 
-            onClick={() => { setLessonPlan([]); setAnswers({}); setActiveQuestion(0); setCurrentAnswer(''); }} 
-            style={{ width: '100%', marginTop: '12px', padding: '12px', background: 'transparent', border: '1px solid var(--border)', borderRadius: '12px', cursor: 'pointer', color: 'var(--text-secondary)', fontSize: '14px' }}
+            onClick={() => { setLessonPlan([]); setAnswers({}); setActiveQuestion(null); setCurrentAnswer(''); }} 
+            style={{ width: '100%', marginTop: '12px', padding: '14px', background: 'transparent', border: '1px solid var(--border)', borderRadius: '12px', cursor: 'pointer', color: 'var(--text-secondary)', fontSize: '15px' }}
           >
             Start over ↺
           </button>
         </div>
-        <button onClick={() => onComplete([])} style={{ display: 'block', margin: '16px auto 0', padding: '10px 20px', background: 'transparent', border: '1px solid var(--border)', borderRadius: '8px', cursor: 'pointer', color: 'var(--text-secondary)', fontSize: '13px' }}>
+        <button onClick={() => onComplete([])} style={{ display: 'block', margin: '20px auto 0', padding: '12px 24px', background: 'transparent', border: '1px solid var(--border)', borderRadius: '10px', cursor: 'pointer', color: 'var(--text-secondary)', fontSize: '14px' }}>
           Browse all sections →
         </button>
       </div>
@@ -598,114 +639,147 @@ function OnboardingChat({ onComplete, recommendedSections = [] }) {
   }
 
   return (
-    <div style={{ maxWidth: '500px', margin: '0 auto', padding: '20px' }}>
-      <div style={{ background: 'var(--bg-card)', borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', overflow: 'hidden' }}>
-        <div style={{ background: 'linear-gradient(135deg, #00a870, #008a5a)', padding: '20px', color: 'white' }}>
-          <h3 style={{ margin: 0, fontSize: '18px' }}>💬 Tell me about yourself</h3>
-          <p style={{ margin: '8px 0 0', opacity: 0.9, fontSize: '13px' }}>Answer all questions for the best plan</p>
-        </div>
+    <div style={{ maxWidth: '800px', margin: '0 auto', padding: '24px' }}>
+      <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+        <h2 style={{ fontSize: '28px', fontWeight: 700, margin: '0 0 8px', color: 'var(--text-primary)' }}>💬 Tell me about yourself</h2>
+        <p style={{ margin: 0, fontSize: '15px', color: 'var(--text-secondary)' }}>Click any question to answer. All questions help create your perfect plan.</p>
+      </div>
 
-        <div style={{ padding: '20px', maxHeight: '400px', overflowY: 'auto' }}>
-          {questions.map((q, idx) => {
-            const isAnswered = answers[q.id];
-            const isActive = idx === activeQuestion;
-            
-            return (
-              <div 
-                key={q.id}
-                style={{ 
-                  marginBottom: idx < questions.length - 1 ? '20px' : 0,
-                  padding: '16px',
-                  borderRadius: '12px',
-                  background: isActive ? 'var(--bg)' : isAnswered ? 'var(--accent-light)' : 'transparent',
-                  border: isActive ? '2px solid var(--accent)' : '2px solid transparent',
-                  opacity: idx <= activeQuestion ? 1 : 0.5,
-                  transition: 'all 0.3s ease'
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                  <span style={{ 
-                    width: '24px', 
-                    height: '24px', 
-                    borderRadius: '50%', 
-                    background: isAnswered ? 'var(--accent)' : isActive ? 'var(--accent)' : 'var(--border)',
-                    color: 'white',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '12px',
-                    fontWeight: 600
-                  }}>
-                    {isAnswered ? '✓' : idx + 1}
-                  </span>
-                  <span style={{ fontSize: '15px', fontWeight: 600, color: 'var(--text-primary)' }}>{q.label}</span>
-                </div>
-                {isAnswered && !isActive && (
-                  <p style={{ margin: 0, paddingLeft: '32px', fontSize: '14px', color: 'var(--text-secondary)' }}>{answers[q.id]}</p>
-                )}
-                {isActive && (
-                  <div style={{ paddingLeft: '32px' }}>
-                    <p style={{ margin: '0 0 12px', fontSize: '13px', color: 'var(--text-tertiary)' }}>{q.hint}</p>
-                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                      <input 
-                        type="text" 
-                        value={currentAnswer}
-                        onChange={(e) => setCurrentAnswer(e.target.value)}
-                        onKeyDown={(e) => e.key === 'Enter' && handleNext()}
-                        placeholder="Type or tap mic to record..."
-                        style={{ flex: 1, padding: '14px 16px', borderRadius: '12px', border: '1px solid var(--border)', fontSize: '15px', outline: 'none' }}
-                      />
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '16px' }}>
+        {questions.map((q, idx) => {
+          const isAnswered = answers[q.id]?.trim();
+          const isActive = activeQuestion === q.id;
+          const isCurrentlyListening = isListening && isActive;
+          
+          return (
+            <div 
+              key={q.id}
+              onClick={() => !isListening && handleAnswerSelect(q.id, '')}
+              style={{ 
+                padding: '20px',
+                borderRadius: '16px',
+                background: 'var(--bg-card)',
+                border: isActive ? '2px solid var(--accent)' : '2px solid transparent',
+                boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
+                cursor: isListening ? 'default' : 'pointer',
+                transition: 'all 0.3s ease',
+                opacity: activeQuestion && !isActive ? 0.7 : 1
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: isActive ? '12px' : '8px' }}>
+                <span style={{ 
+                  width: '32px', 
+                  height: '32px', 
+                  borderRadius: '50%', 
+                  background: isAnswered ? 'var(--accent)' : 'var(--bg-muted)',
+                  color: isAnswered ? 'white' : 'var(--text-secondary)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '14px',
+                  fontWeight: 700,
+                  flexShrink: 0
+                }}>
+                  {isAnswered ? '✓' : idx + 1}
+                </span>
+                <span style={{ fontSize: '15px', fontWeight: 600, color: 'var(--text-primary)', lineHeight: 1.3 }}>{q.label}</span>
+              </div>
+              
+              {isAnswered && !isActive && (
+                <p style={{ margin: 0, paddingLeft: '44px', fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 1.5 }}>{answers[q.id]}</p>
+              )}
+              
+              {isActive && (
+                <div style={{ paddingLeft: '44px' }}>
+                  <p style={{ margin: '0 0 14px', fontSize: '13px', color: 'var(--text-tertiary)' }}>{q.hint}</p>
+                  
+                  <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginBottom: '12px' }}>
+                    <input 
+                      type="text" 
+                      value={currentAnswer}
+                      onChange={(e) => handleInputChange(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && currentAnswer.trim()) {
+                          handleAnswerSelect(q.id, currentAnswer);
+                        }
+                      }}
+                      placeholder="Type or tap mic to record..."
+                      style={{ flex: 1, padding: '14px 16px', borderRadius: '12px', border: '1px solid var(--border)', fontSize: '15px', outline: 'none', background: 'var(--bg)' }}
+                    />
+                  </div>
+                  
+                  <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                    <button 
+                      onClick={(e) => { e.stopPropagation(); isCurrentlyListening ? stopVoice() : startVoice(q.id); }} 
+                      style={{ 
+                        padding: '14px 20px', 
+                        background: isCurrentlyListening ? '#ff4444' : 'var(--accent)', 
+                        border: 'none', 
+                        borderRadius: '12px', 
+                        cursor: 'pointer', 
+                        fontSize: '16px',
+                        transition: 'all 0.2s',
+                        boxShadow: isCurrentlyListening ? '0 4px 16px rgba(255,68,68,0.4)' : '0 4px 12px rgba(0,168,112,0.3)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        color: 'white',
+                        fontWeight: 600
+                      }}
+                    >
+                      {isCurrentlyListening ? '⏹️' : '🎙️'} {isCurrentlyListening ? 'Stop' : 'Record'}
+                      {isCurrentlyListening && (
+                        <span style={{ fontSize: '13px', opacity: 0.9 }}>({formatDuration(recordingDuration)})</span>
+                      )}
+                    </button>
+                    
+                    {currentAnswer.trim() && (
                       <button 
-                        onClick={isListening ? stopVoice : startVoice} 
-                        style={{ 
-                          padding: '14px', 
-                          background: isListening ? '#ff4444' : 'var(--accent)', 
-                          border: 'none', 
-                          borderRadius: '12px', 
-                          cursor: 'pointer', 
-                          fontSize: '18px',
-                          transition: 'all 0.2s',
-                          boxShadow: isListening ? '0 4px 12px rgba(255,68,68,0.4)' : '0 4px 12px rgba(0,168,112,0.3)'
-                        }}
+                        onClick={(e) => { e.stopPropagation(); handleAnswerSelect(q.id, currentAnswer); }}
+                        style={{ padding: '14px 20px', background: 'var(--accent)', color: 'white', border: 'none', borderRadius: '12px', cursor: 'pointer', fontWeight: 600, fontSize: '15px' }}
                       >
-                        🎙️
+                        Save ✓
                       </button>
-                      <button onClick={handleNext} style={{ padding: '14px 20px', background: 'var(--accent)', color: 'white', border: 'none', borderRadius: '12px', cursor: 'pointer', fontWeight: 600 }}>→</button>
-                    </div>
-                    {isListening && transcript && (
-                      <p style={{ margin: '8px 0 0', fontSize: '13px', color: 'var(--accent)', fontStyle: 'italic' }}>{transcript}</p>
                     )}
                   </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
+                  
+                  {isCurrentlyListening && transcript && (
+                    <p style={{ margin: '12px 0 0', fontSize: '13px', color: 'var(--accent)', fontStyle: 'italic', background: 'var(--accent-light)', padding: '10px 12px', borderRadius: '8px' }}>
+                      {transcript}
+                    </p>
+                  )}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
 
-        <div style={{ padding: '16px', borderTop: '1px solid var(--border)', background: 'var(--bg)' }}>
-          <button 
-            onClick={handleSubmit} 
-            disabled={Object.values(answers).some(a => !a) || currentAnswer}
-            style={{ 
-              width: '100%', 
-              padding: '14px', 
-              background: (Object.values(answers).every(a => a) && !currentAnswer) ? 'var(--accent)' : 'var(--border)',
-              color: 'white', 
-              border: 'none', 
-              borderRadius: '12px', 
-              cursor: (Object.values(answers).every(a => a) && !currentAnswer) ? 'pointer' : 'not-allowed',
-              fontSize: '15px',
-              fontWeight: 600
-            }}
-          >
-            Get My Plan →
+      <div style={{ marginTop: '32px', textAlign: 'center' }}>
+        <button 
+          onClick={handleFinish} 
+          disabled={!allAnswered}
+          style={{ 
+            padding: '18px 48px', 
+            background: allAnswered ? 'var(--accent)' : 'var(--border)',
+            color: 'white', 
+            border: 'none', 
+            borderRadius: '14px', 
+            cursor: allAnswered ? 'pointer' : 'not-allowed',
+            fontSize: '17px',
+            fontWeight: 600,
+            boxShadow: allAnswered ? '0 4px 20px rgba(0,168,112,0.4)' : 'none',
+            transition: 'all 0.3s ease'
+          }}
+        >
+          {allAnswered ? '✨ Generate My Plan' : `Answer all questions (${Object.values(answers).filter(a => a.trim()).length}/4)`}
+        </button>
+        <div style={{ marginTop: '16px' }}>
+          <button onClick={() => onComplete([])} style={{ padding: '12px 24px', background: 'transparent', border: '1px solid var(--border)', borderRadius: '10px', cursor: 'pointer', color: 'var(--text-secondary)', fontSize: '14px' }}>
+            Browse all sections →
           </button>
         </div>
       </div>
-      
-      <button onClick={() => onComplete([])} style={{ display: 'block', margin: '16px auto 0', padding: '10px 20px', background: 'transparent', border: '1px solid var(--border)', borderRadius: '8px', cursor: 'pointer', color: 'var(--text-secondary)', fontSize: '13px' }}>
-        Browse all sections →
-      </button>
     </div>
   );
 }
@@ -1874,7 +1948,106 @@ const SECTION_GROUPS = [
   },
 ];
 
-function Sidebar({ section, onSelect, isOpen, onClose, showEnglish }) {
+function LandingPage({ onStartChat, onSelectSection }) {
+  return (
+    <div style={{ padding: '24px', maxWidth: '900px', margin: '0 auto' }}>
+      <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+        <h1 style={{ fontSize: '42px', fontWeight: 700, margin: '0 0 12px', color: 'var(--text-primary)', fontFamily: 'var(--font-display)' }}>Fluência</h1>
+        <p style={{ fontSize: '18px', color: 'var(--text-secondary)', margin: '0 0 24px' }}>Master European Portuguese for your CIPLE A2 exam</p>
+        <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
+          <button 
+            onClick={onStartChat}
+            style={{ 
+              padding: '16px 32px', 
+              background: 'linear-gradient(135deg, #00a870, #008a5a)', 
+              color: 'white', 
+              border: 'none', 
+              borderRadius: '12px', 
+              cursor: 'pointer', 
+              fontSize: '16px', 
+              fontWeight: 600,
+              boxShadow: '0 4px 16px rgba(0,168,112,0.3)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px'
+            }}
+          >
+            💬 Chat with Patrick
+          </button>
+          <a 
+            href="https://ko-fi.com/fluencia" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            style={{ 
+              padding: '16px 32px', 
+              background: '#13c3ba', 
+              color: 'white', 
+              border: 'none', 
+              borderRadius: '12px', 
+              cursor: 'pointer', 
+              fontSize: '16px', 
+              fontWeight: 600,
+              textDecoration: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              boxShadow: '0 4px 16px rgba(19,195,186,0.3)'
+            }}
+          >
+            ☕ Support Fluência
+          </a>
+        </div>
+      </div>
+
+      <div style={{ marginBottom: '40px' }}>
+        <h2 style={{ fontSize: '20px', fontWeight: 600, margin: '0 0 16px', color: 'var(--text-primary)' }}>Popular Sections</h2>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '12px' }}>
+          {SECTION_GROUPS.flatMap(g => g.sections).slice(0, 8).map(s => (
+            <button
+              key={s.id}
+              onClick={() => onSelectSection(s.id)}
+              style={{
+                padding: '16px',
+                background: 'var(--bg-card)',
+                border: '1px solid var(--border)',
+                borderRadius: '12px',
+                cursor: 'pointer',
+                textAlign: 'left',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              <span style={{ fontSize: '24px', marginBottom: '8px', display: 'block' }}>{s.icon}</span>
+              <span style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)', display: 'block' }}>{s.labelEn}</span>
+              <span style={{ fontSize: '12px', color: 'var(--text-tertiary)', display: 'block', marginTop: '4px' }}>{s.desc}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div style={{ background: 'var(--bg-card)', borderRadius: '16px', padding: '24px', textAlign: 'center' }}>
+        <h3 style={{ fontSize: '18px', fontWeight: 600, margin: '0 0 8px', color: 'var(--text-primary)' }}>Not sure where to start?</h3>
+        <p style={{ fontSize: '14px', color: 'var(--text-secondary)', margin: '0 0 16px' }}>Chat with Patrick and get a personalized learning plan in under 2 minutes!</p>
+        <button 
+          onClick={onStartChat}
+          style={{ 
+            padding: '14px 28px', 
+            background: 'var(--accent)', 
+            color: 'white', 
+            border: 'none', 
+            borderRadius: '10px', 
+            cursor: 'pointer', 
+            fontSize: '15px', 
+            fontWeight: 600
+          }}
+        >
+          Get Started with Patrick →
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function Sidebar({ section, onSelect, isOpen, onClose, showEnglish, onOpenChat }) {
   return (
     <aside className={`sidebar ${isOpen ? 'sidebar-open' : ''}`}>
       <div className="sidebar-header">
@@ -1904,7 +2077,28 @@ function Sidebar({ section, onSelect, isOpen, onClose, showEnglish }) {
           </div>
         ))}
       </nav>
-      <div style={{ padding: '16px', borderTop: '1px solid var(--border)', marginTop: 'auto' }}>
+      <div style={{ padding: '16px', borderTop: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: '10px', marginTop: 'auto' }}>
+        <button 
+          onClick={() => { onClose(); onOpenChat(); }}
+          style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center', 
+            gap: '8px',
+            background: 'linear-gradient(135deg, #00a870, #008a5a)', 
+            color: '#fff', 
+            padding: '12px 16px', 
+            borderRadius: '8px', 
+            border: 'none',
+            cursor: 'pointer',
+            fontFamily: 'var(--font-sans)',
+            fontWeight: 600,
+            fontSize: '14px',
+            boxShadow: '0 4px 12px rgba(0,168,112,0.3)'
+          }}
+        >
+          💬 Chat with Patrick
+        </button>
         <a 
           href="https://ko-fi.com/fluencia" 
           target="_blank" 
@@ -1957,6 +2151,7 @@ export default function App() {
   const [section, setSection] = useState(null);
   const [showEnglish, setShowEnglish] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [chatOpen, setChatOpen] = useState(false);
   const SectionComp = section ? (SECTION_MAP[section] || Verbs25Section) : null;
 
   useEffect(() => {
@@ -1971,24 +2166,33 @@ export default function App() {
     setSidebarOpen(false);
   };
 
+  const handleBackToHome = () => {
+    setSection(null);
+    setSidebarOpen(false);
+  };
+
   return (
     <ErrorBoundary>
       <div className="app">
         <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');`}</style>
-        <Sidebar section={section} onSelect={handleSectionSelect} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} showEnglish={showEnglish} />
+        <Sidebar section={section} onSelect={handleSectionSelect} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} showEnglish={showEnglish} onOpenChat={() => setChatOpen(true)} />
         {sidebarOpen && <div className="sidebar-overlay" onClick={() => setSidebarOpen(false)} />}
         <main className="main-content">
           <div className="section-nav">
             <button className="hamburger-btn" onClick={() => setSidebarOpen(!sidebarOpen)}>
               <span className="hamburger-icon">{sidebarOpen ? '✕' : '☰'}</span>
             </button>
-            {section && (
-              <div className="section-nav-title">
-                {showEnglish ? (SECTIONS.find(s => s.id === section)?.labelEn || section) : (SECTIONS.find(s => s.id === section)?.label || section)}
-              </div>
-            )}
-            {!section && (
-              <div className="section-nav-title" style={{ fontFamily: 'var(--font-display)', fontSize: '18px' }}>Fluência</div>
+            {section ? (
+              <>
+                <button onClick={handleBackToHome} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '8px', marginRight: '8px', display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--text-secondary)', fontSize: '14px' }}>
+                  ← <span style={{ fontFamily: 'var(--font-display)', fontSize: '18px', color: 'var(--text-primary)' }}>Fluência</span>
+                </button>
+                <div className="section-nav-title">
+                  {showEnglish ? (SECTIONS.find(s => s.id === section)?.labelEn || section) : (SECTIONS.find(s => s.id === section)?.label || section)}
+                </div>
+              </>
+            ) : (
+              <div className="section-nav-title" style={{ fontFamily: 'var(--font-display)', fontSize: '18px', cursor: 'pointer' }} onClick={handleBackToHome}>Fluência</div>
             )}
             {section && (
               <button className={showEnglish ? 'btn btn-primary' : 'btn btn-ghost'} onClick={() => setShowEnglish(!showEnglish)} style={{ fontSize: '12px', padding: '6px 12px', marginLeft: 'auto' }}>
@@ -1999,15 +2203,13 @@ export default function App() {
           <div className="content">
             {section ? <SectionComp showEnglish={showEnglish} /> : (
               <div className="welcome-screen">
-                <OnboardingChat onComplete={(recommendedSections) => {
-                  if (recommendedSections.length > 0) {
-                    setSection(recommendedSections[0]);
-                  }
-                }} />
+                <LandingPage onStartChat={() => setChatOpen(true)} onSelectSection={(id) => setSection(id)} />
               </div>
             )}
           </div>
         </main>
+        <ChatModal isOpen={chatOpen} onClose={() => setChatOpen(false)} />
+        <FloatingChatButton onClick={() => setChatOpen(true)} />
       </div>
     </ErrorBoundary>
   );
