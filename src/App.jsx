@@ -400,8 +400,15 @@ function useLocal(key, def) {
   return [v, setAndStore];
 }
 
+let currentUtterance = null;
+
 function speakPortuguese(text) {
   if (!window.speechSynthesis) return;
+  if (window.speechSynthesis.speaking) {
+    window.speechSynthesis.cancel();
+    currentUtterance = null;
+    return;
+  }
   window.speechSynthesis.cancel();
   const utterance = new SpeechSynthesisUtterance(text);
   const voices = window.speechSynthesis.getVoices();
@@ -417,6 +424,8 @@ function speakPortuguese(text) {
   }
   utterance.rate = 0.85;
   utterance.pitch = 1;
+  currentUtterance = utterance;
+  utterance.onend = () => { currentUtterance = null; };
   window.speechSynthesis.speak(utterance);
 }
 
