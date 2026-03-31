@@ -676,32 +676,32 @@ function GlossaryEntry({ term }) {
   );
 }
 
-function ProgressSection() {
+function ProgressSection({ showEnglish }) {
   const [wrongKey] = useLocal('wrong', {});
   const [totalSessions] = useLocal('sessions', 0);
   const wrongCount = Object.values(wrongKey).reduce((a, b) => a + b, 0);
   const uniqueWrong = Object.keys(wrongKey).length;
   return (
     <div>
-      <h2 className="sec-title">O Teu Progresso</h2>
-      <p className="sec-desc">Acompanha o teu progresso de estudo. Os dados são guardados no teu navegador.</p>
+      <h2 className="sec-title">{showEnglish ? 'Your Progress' : 'O Teu Progresso'}</h2>
+      <p className="sec-desc">{showEnglish ? 'Track your study progress. Data is stored locally in your browser.' : 'Acompanha o teu progresso de estudo. Os dados são guardados no teu navegador.'}</p>
       <div className="grid-2">
         <div style={{ ...S.card, background: 'rgba(0,168,112,0.05)', border: '1px solid rgba(0,168,112,0.15)' }}>
           <div style={{ fontSize: '32px', fontFamily: "'DM Serif Display',serif", color: '#00a870', marginBottom: '4px' }}>{totalSessions}</div>
-          <div style={{ fontSize: '12px', color: '#7a8a80' }}>Sessões de estudo</div>
+          <div style={{ fontSize: '12px', color: '#7a8a80' }}>{showEnglish ? 'Study sessions' : 'Sessões de estudo'}</div>
         </div>
         <div style={{ ...S.card, background: 'rgba(184,32,53,0.05)', border: '1px solid rgba(184,32,53,0.15)' }}>
           <div style={{ fontSize: '32px', fontFamily: "'DM Serif Display',serif", color: '#b82035', marginBottom: '4px' }}>{wrongCount}</div>
-          <div style={{ fontSize: '12px', color: '#7a8a80' }}>Respostas erradas</div>
+          <div style={{ fontSize: '12px', color: '#7a8a80' }}>{showEnglish ? 'Wrong answers' : 'Respostas erradas'}</div>
         </div>
         <div style={{ ...S.card, background: 'rgba(0,138,138,0.05)', border: '1px solid rgba(0,138,138,0.15)' }}>
           <div style={{ fontSize: '32px', fontFamily: "'DM Serif Display',serif", color: '#008a8a', marginBottom: '4px' }}>{uniqueWrong}</div>
-          <div style={{ fontSize: '12px', color: '#7a8a80' }}>Palavras a rever</div>
+          <div style={{ fontSize: '12px', color: '#7a8a80' }}>{showEnglish ? 'Words to review' : 'Palavras a rever'}</div>
         </div>
         <div style={{ ...S.card }}>
           <div style={{ fontSize: '13px', color: '#7a8a80', lineHeight: 1.6 }}>
-            <p style={{ marginBottom: '8px' }}>💡 <strong style={{ color: '#1a1a1a' }}>Dica:</strong> Usa os flashcards regularmente para memorizar vocabulário.</p>
-            <p>❌ As palavras erradas aparecem com mais frequência nos flashcards.</p>
+            <p style={{ marginBottom: '8px' }}>💡 <strong style={{ color: '#1a1a1a' }}>{showEnglish ? 'Tip' : 'Dica'}:</strong> {showEnglish ? 'Use flashcards regularly to memorize vocabulary.' : 'Usa os flashcards regularmente para memorizar vocabulário.'}</p>
+            <p>{showEnglish ? '❌ Wrong words appear more frequently in flashcards.' : '❌ As palavras erradas aparecem com mais frequência nos flashcards.'}</p>
           </div>
         </div>
       </div>
@@ -711,31 +711,32 @@ function ProgressSection() {
 
 // ─── SECTION VIEWS ─────────────────────────────────────────────────────────────
 
-function Verbs25Section() {
+function Verbs25Section({ showEnglish }) {
   const [mode, setMode] = useState('grid');
   return (
     <div>
-      <h2 className="sec-title">25 Verbos Mais Usados</h2>
-      <p className="sec-desc">Essential verbs for A2. Master these in present tense first, then expand to past and future.</p>
+      <h2 className="sec-title">{showEnglish ? '25 Most Used Verbs' : '25 Verbos Mais Usados'}</h2>
+      <p className="sec-desc">{showEnglish ? 'Essential verbs for A2. Master these in present tense first, then expand to past and future.' : 'Essential verbs for A2. Master these in present tense first, then expand to past and future.'}</p>
       <div className="toggle-row">
-        <button className={mode === 'grid' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('grid')}>Reference</button>
-        <button className={mode === 'flash' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('flash')}>Flashcards</button>
+        <button className={mode === 'grid' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('grid')}>{showEnglish ? 'Reference' : 'Reference'}</button>
+        <button className={mode === 'flash' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('flash')}>{showEnglish ? 'Flashcards' : 'Flashcards'}</button>
       </div>
       {mode === 'grid' ? <div className="grid-2">{TOP_25_VERBS.map(v => <VerbCard key={v.verb} {...v} />)}</div> : <FlashcardDrill items={TOP_25_VERBS} frontKey="verb" backKey="meaning" title="Verbo" sectionId="verbs25" />}
     </div>
   );
 }
 
-function ConjugationSection() {
+function ConjugationSection({ showEnglish }) {
   const [tense, setTense] = useState('Presente');
   const data = CONJUGATION_PATTERNS[tense];
+  const tenseLabels = showEnglish ? { 'Presente': 'Present', 'Pretérito Perfeito': 'Perfect', 'Pretérito Imperfeito': 'Imperfect', 'Futuro': 'Future', 'Condicional': 'Conditional' } : {};
   return (
     <div>
-      <h2 className="sec-title">Conjugação Regular</h2>
-      <p className="sec-desc">Regular verb endings for -AR, -ER, and -IR verbs. Learn the patterns and conjugate hundreds.</p>
-      <div className="toggle-row">{Object.keys(CONJUGATION_PATTERNS).map(t => <button key={t} className={tense === t ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setTense(t)}>{t}</button>)}</div>
+      <h2 className="sec-title">{showEnglish ? 'Regular Conjugation' : 'Conjugação Regular'}</h2>
+      <p className="sec-desc">{showEnglish ? 'Regular verb endings for -AR, -ER, and -IR verbs. Learn the patterns and conjugate hundreds.' : 'Regular verb endings for -AR, -ER, and -IR verbs. Learn the patterns and conjugate hundreds.'}</p>
+      <div className="toggle-row">{Object.keys(CONJUGATION_PATTERNS).map(t => <button key={t} className={tense === t ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setTense(t)}>{tenseLabels[t] || t}</button>)}</div>
       {[['ar','var(--accent)'],['er','#008a8a'],['ir','var(--warning)']].map(([type,col]) => (
-        <ExpandableCard key={type} title={`-${type.toUpperCase()} verbs`} accentColor={col}>
+        <ExpandableCard key={type} title={showEnglish ? `-${type.toUpperCase()} verbs` : `-${type.toUpperCase()} verbs`} accentColor={col}>
           <div style={{ marginTop: '12px' }}>
             <div className="conj-grid">{PRONOUNS.map((p, i) => <React.Fragment key={p}><span className="conj-pronoun">{p}</span><span style={{ color: col, fontWeight: 600 }}>{data[type][i]}</span></React.Fragment>)}</div>
             <div style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '12px', fontFamily: 'var(--font-mono)', paddingTop: '12px', borderTop: '1px solid var(--border)' }}>{data['example_'+type]}</div>
@@ -743,71 +744,73 @@ function ConjugationSection() {
         </ExpandableCard>
       ))}
       <div className="card" style={{ marginTop: '16px', background: 'rgba(0,168,112,0.06)', border: '1px solid rgba(0,168,112,0.15)' }}>
-        <strong style={{ color: 'var(--accent)' }}>EP Note:</strong> In European Portuguese, present continuous uses <strong>estar + a + infinitive</strong>: "Estou a falar" (I am speaking), not "Estou falando" (BP).
+        <strong style={{ color: 'var(--accent)' }}>EP Note:</strong> {showEnglish ? 'In European Portuguese, present continuous uses' : 'In European Portuguese, present continuous uses'} <strong>estar + a + infinitive</strong>: "Estou a falar" (I am speaking), not "Estou falando" (BP).
       </div>
     </div>
   );
 }
 
-function PronounsSection() {
+function PronounsSection({ showEnglish }) {
   const [cat, setCat] = useState(Object.keys(PRONOUNS_DATA)[0]);
+  const catLabels = showEnglish ? { 'Pessoais': 'Personal', 'Demonstrativos': 'Demonstrative', 'Possessivos': 'Possessive', 'Relativos': 'Relative', 'Indefinidos': 'Indefinite' } : {};
   return (
     <div>
-      <h2 className="sec-title">Pronomes Portugueses</h2>
-      <p className="sec-desc">European Portuguese pronoun system. Note: "tu" is widely used in EP, unlike Brazilian Portuguese where "você" dominates.</p>
-      <div className="toggle-row">{Object.keys(PRONOUNS_DATA).map(c => <button key={c} className={cat === c ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setCat(c)}>{c}</button>)}</div>
+      <h2 className="sec-title">{showEnglish ? 'Portuguese Pronouns' : 'Pronomes Portugueses'}</h2>
+      <p className="sec-desc">{showEnglish ? 'European Portuguese pronoun system. Note: "tu" is widely used in EP, unlike Brazilian Portuguese where "você" dominates.' : 'European Portuguese pronoun system. Note: "tu" is widely used in EP, unlike Brazilian Portuguese where "você" dominates.'}</p>
+      <div className="toggle-row">{Object.keys(PRONOUNS_DATA).map(c => <button key={c} className={cat === c ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setCat(c)}>{catLabels[c] || c}</button>)}</div>
       <div className="card">
         <table className="data-table"><thead><tr><th>Português</th><th>English</th></tr></thead>
           <tbody>{PRONOUNS_DATA[cat].map(([pt,en], i) => <tr key={i}><td className="col-pt">{pt}</td><td className="col-en">{en}</td></tr>)}</tbody>
         </table>
       </div>
       <div className="card" style={{ marginTop: '12px', background: 'rgba(0,168,112,0.04)', border: '1px solid rgba(0,168,112,0.15)' }}>
-        <strong style={{ color: 'var(--accent)' }}>EP Tip:</strong> In EP, object pronouns come <em>after</em> the verb with a hyphen: "Ele deu-<strong>me</strong> o livro" (He gave me the book).
+        <strong style={{ color: 'var(--accent)' }}>EP Tip:</strong> {showEnglish ? 'In EP, object pronouns come after the verb with a hyphen:' : 'In EP, object pronouns come after the verb with a hyphen:'} "Ele deu-<strong>me</strong> o livro" (He gave me the book).
       </div>
     </div>
   );
 }
 
-function AdjectivesSection() {
+function AdjectivesSection({ showEnglish }) {
   const [mode, setMode] = useState('grid');
   return (
     <div>
-      <h2 className="sec-title">40 Adjetivos Essenciais</h2>
-      <p className="sec-desc">Core adjectives for A2. Remember: most adjectives agree in gender and number. Tap any adjective to see masculine, feminine, and plural forms.</p>
-      <div className="toggle-row"><button className={mode === 'grid' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('grid')}>Reference</button><button className={mode === 'flash' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('flash')}>Flashcards</button></div>
+      <h2 className="sec-title">{showEnglish ? '40 Essential Adjectives' : '40 Adjetivos Essenciais'}</h2>
+      <p className="sec-desc">{showEnglish ? 'Core adjectives for A2. Remember: most adjectives agree in gender and number. Tap any adjective to see masculine, feminine, and plural forms.' : 'Core adjectives for A2. Remember: most adjectives agree in gender and number. Tap any adjective to see masculine, feminine, and plural forms.'}</p>
+      <div className="toggle-row"><button className={mode === 'grid' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('grid')}>{showEnglish ? 'Reference' : 'Reference'}</button><button className={mode === 'flash' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('flash')}>{showEnglish ? 'Flashcards' : 'Flashcards'}</button></div>
       {mode === 'grid' ? <div className="grid-2">{ADJECTIVES.map(([pt,en], i) => <AdjectiveCard key={i} pt={pt} en={en} />)}</div> : <FlashcardDrill items={ADJECTIVES.map(([pt,en]) => ({ pt, en }))} frontKey="pt" backKey="en" title="Adjetivo" sectionId="adjectives" />}
     </div>
   );
 }
 
-function PrepositionsSection() {
+function PrepositionsSection({ showEnglish }) {
   return (
     <div>
-      <h2 className="sec-title">Preposições — Preenche os espaços</h2>
-      <p className="sec-desc">Practice with: em, de, para, com, sem, entre, sobre, a, por, até — and their contracted forms (no, na, ao, à, do, da...)</p>
+      <h2 className="sec-title">{showEnglish ? 'Prepositions — Fill in the blanks' : 'Preposições — Preenche os espaços'}</h2>
+      <p className="sec-desc">{showEnglish ? 'Practice with: em, de, para, com, sem, entre, sobre, a, por, até — and their contracted forms (no, na, ao, à, do, da...)' : 'Practice with: em, de, para, com, sem, entre, sobre, a, por, até — and their contracted forms (no, na, ao, à, do, da...)'}</p>
       <FillGap exercises={PREPOSITION_EXERCISES} />
     </div>
   );
 }
 
-function ArticlesSection() {
+function ArticlesSection({ showEnglish }) {
   const [view, setView] = useState('ref');
+  const articleTitles = showEnglish ? { 'definite': 'Definite Articles', 'indefinite': 'Indefinite Articles' } : {};
   return (
     <div>
-      <h2 className="sec-title">Artigos e Contrações</h2>
-      <p className="sec-desc">Definite and indefinite articles, plus essential contractions with prepositions.</p>
-      <div className="toggle-row"><button className={view === 'ref' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setView('ref')}>Reference</button><button className={view === 'practice' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setView('practice')}>Practice</button></div>
+      <h2 className="sec-title">{showEnglish ? 'Articles & Contractions' : 'Artigos e Contrações'}</h2>
+      <p className="sec-desc">{showEnglish ? 'Definite and indefinite articles, plus essential contractions with prepositions.' : 'Definite and indefinite articles, plus essential contractions with prepositions.'}</p>
+      <div className="toggle-row"><button className={view === 'ref' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setView('ref')}>{showEnglish ? 'Reference' : 'Reference'}</button><button className={view === 'practice' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setView('practice')}>{showEnglish ? 'Practice' : 'Practice'}</button></div>
       {view === 'ref' ? (
         <>
           {['definite','indefinite'].map(type => (
             <div key={type} className="card">
-              <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '16px', color: 'var(--text-primary)', marginBottom: '12px' }}>{ARTICLES_DATA[type].title}</h3>
+              <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '16px', color: 'var(--text-primary)', marginBottom: '12px' }}>{articleTitles[type] || ARTICLES_DATA[type].title}</h3>
               <table className="data-table"><thead><tr><th>Usage</th><th>Article</th><th>Example</th></tr></thead>
                 <tbody>{ARTICLES_DATA[type].forms.map((f, i) => <tr key={i}><td style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{f.label}</td><td className="col-pt" style={{ fontSize: '15px' }}>{f.article}</td><td style={{ fontSize: '12px', color: 'var(--text-tertiary)' }}>{f.example}</td></tr>)}</tbody>
               </table>
             </div>
           ))}
-          <ExpandableCard title="Contrações" accentColor="#008a8a">
+          <ExpandableCard title={showEnglish ? 'Contractions' : 'Contrações'} accentColor="#008a8a">
             <div style={{ marginTop: '12px', display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
               {ARTICLES_DATA.definite.contractions.map((row, i) => <div key={i} style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '6px' }}>{row.map((c, j) => <span key={j} style={{ background: 'rgba(0,138,138,0.08)', color: '#008a8a', padding: '4px 8px', borderRadius: '4px', fontSize: '12px', fontFamily: 'var(--font-mono)', fontWeight: 600 }}>{c}</span>)}</div>)}
             </div>
@@ -818,25 +821,25 @@ function ArticlesSection() {
   );
 }
 
-function VocabularySection() {
+function VocabularySection({ showEnglish }) {
   const [topic, setTopic] = useState(Object.keys(VOCABULARY)[0]);
   const [mode, setMode] = useState('grid');
   return (
     <div>
-      <h2 className="sec-title">Vocabulário por Tema</h2>
-      <p className="sec-desc">A2+ vocabulary organized by CIPLE exam topics. Learn with the articles!</p>
+      <h2 className="sec-title">{showEnglish ? 'Vocabulary by Topic' : 'Vocabulário por Tema'}</h2>
+      <p className="sec-desc">{showEnglish ? 'A2+ vocabulary organized by CIPLE exam topics. Learn with the articles!' : 'A2+ vocabulary organized by CIPLE exam topics. Learn with the articles!'}</p>
       <div className="toggle-row">{Object.keys(VOCABULARY).map(t => <button key={t} className={topic === t ? 'toggle-btn active' : 'toggle-btn'} onClick={() => { setTopic(t); setMode('grid'); }}>{t}</button>)}</div>
-      <div style={{ marginBottom: '10px' }}><button className={mode === 'grid' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('grid')}>Reference</button><button style={{ ...S.navBtn(mode === 'flash'), marginLeft: '5px' }} onClick={() => setMode('flash')}>Flashcards</button></div>
+      <div style={{ marginBottom: '10px' }}><button className={mode === 'grid' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('grid')}>{showEnglish ? 'Reference' : 'Reference'}</button><button style={{ ...S.navBtn(mode === 'flash'), marginLeft: '5px' }} onClick={() => setMode('flash')}>{showEnglish ? 'Flashcards' : 'Flashcards'}</button></div>
       {mode === 'grid' ? <div className="vocab-grid">{VOCABULARY[topic].map(([pt,en], i) => <div key={i} className="vocab-item"><span className="vocab-pt">{pt}</span><span className="vocab-en">{en}</span></div>)}</div> : <FlashcardDrill items={VOCABULARY[topic].map(([pt,en]) => ({ pt, en }))} frontKey="pt" backKey="en" title={topic} sectionId={'vocab_'+topic} />}
     </div>
   );
 }
 
-function ModalsSection() {
+function ModalsSection({ showEnglish }) {
   return (
     <div>
-      <h2 className="sec-title">Verbos Modais</h2>
-      <p className="sec-desc">Modal verbs express ability, obligation, desire, and necessity. Critical for A2 communication.</p>
+      <h2 className="sec-title">{showEnglish ? 'Modal Verbs' : 'Verbos Modais'}</h2>
+      <p className="sec-desc">{showEnglish ? 'Modal verbs express ability, obligation, desire, and necessity. Critical for A2 communication.' : 'Modal verbs express ability, obligation, desire, and necessity. Critical for A2 communication.'}</p>
       {MODAL_VERBS.map((m, i) => (
         <ExpandableCard key={i} title={`${m.verb} — ${m.meaning}`} accentColor="var(--accent)">
           <div style={{ marginTop: '12px' }}>
@@ -852,60 +855,60 @@ function ModalsSection() {
   );
 }
 
-function IdiomsSection() {
+function IdiomsSection({ showEnglish }) {
   const [mode, setMode] = useState('list');
   return (
     <div>
-      <h2 className="sec-title">Expressões Idiomáticas</h2>
-      <p className="sec-desc">Common Portuguese expressions. Knowing these will impress in conversation.</p>
-      <div className="toggle-row"><button className={mode === 'list' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('list')}>Reference</button><button className={mode === 'flash' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('flash')}>Flashcards</button></div>
+      <h2 className="sec-title">{showEnglish ? 'Idiomatic Expressions' : 'Expressões Idiomáticas'}</h2>
+      <p className="sec-desc">{showEnglish ? 'Common Portuguese expressions. Knowing these will impress in conversation.' : 'Common Portuguese expressions. Knowing these will impress in conversation.'}</p>
+      <div className="toggle-row"><button className={mode === 'list' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('list')}>{showEnglish ? 'Reference' : 'Reference'}</button><button className={mode === 'flash' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('flash')}>{showEnglish ? 'Flashcards' : 'Flashcards'}</button></div>
       {mode === 'list' ? IDIOMS.map((idiom, i) => (
-        <ExpandableCard key={i} title={`"${idiom.pt}"`} accentColor="var(--accent)">
+        <ExpandableCard key={i} title={showEnglish ? `"${idiom.en}"` : `"${idiom.pt}"`} accentColor="var(--accent)">
           <div style={{ marginTop: '8px' }}>
-            <div style={{ fontSize: '14px', color: 'var(--accent)', fontWeight: 500 }}>{idiom.en}</div>
+            <div style={{ fontSize: '14px', color: 'var(--accent)', fontWeight: 500 }}>{showEnglish ? idiom.pt : idiom.en}</div>
             <div style={{ fontSize: '12px', color: 'var(--text-tertiary)', marginTop: '6px' }}>Literal: {idiom.literal}</div>
           </div>
         </ExpandableCard>
-      )) : <FlashcardDrill items={IDIOMS} frontKey="pt" backKey={(item) => item.en+'\n(Literal: '+item.literal+')'} title="Expressão" sectionId="idioms" />}
+      )) : <FlashcardDrill items={IDIOMS} frontKey="pt" backKey={(item) => item.en+'\n(Literal: '+item.literal+')'} title={showEnglish ? 'Expression' : 'Expressão'} sectionId="idioms" />}
     </div>
   );
 }
 
-function FalseFriendsSection() {
+function FalseFriendsSection({ showEnglish }) {
   const [mode, setMode] = useState('list');
   return (
     <div>
-      <h2 className="sec-title">Falsos Amigos</h2>
-      <p className="sec-desc">Words that look like English but mean something different. Essential to avoid mistakes!</p>
-      <div className="toggle-row"><button className={mode === 'list' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('list')}>Reference</button><button className={mode === 'flash' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('flash')}>Flashcards</button></div>
+      <h2 className="sec-title">{showEnglish ? 'False Friends' : 'Falsos Amigos'}</h2>
+      <p className="sec-desc">{showEnglish ? 'Words that look like English but mean something different. Essential to avoid mistakes!' : 'Words that look like English but mean something different. Essential to avoid mistakes!'}</p>
+      <div className="toggle-row"><button className={mode === 'list' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('list')}>{showEnglish ? 'Reference' : 'Reference'}</button><button className={mode === 'flash' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('flash')}>{showEnglish ? 'Flashcards' : 'Flashcards'}</button></div>
       {mode === 'list' ? FALSE_FRIENDS.map((ff, i) => (
-        <ExpandableCard key={i} title={ff.pt} accentColor="var(--error)">
+        <ExpandableCard key={i} title={showEnglish ? ff.pt : ff.pt} accentColor="var(--error)">
           <div style={{ marginTop: '8px' }}>
-            <div style={{ fontSize: '13px', color: 'var(--error)', marginBottom: '4px' }}><span style={{ textDecoration: 'line-through' }}>✗ {ff.seems}</span></div>
-            <div style={{ fontSize: '14px', color: 'var(--accent)', fontWeight: 500 }}>✓ {ff.actually}</div>
+            <div style={{ fontSize: '13px', color: 'var(--error)', marginBottom: '4px' }}><span style={{ textDecoration: 'line-through' }}>✗ {showEnglish ? ff.seems : ff.seems}</span></div>
+            <div style={{ fontSize: '14px', color: 'var(--accent)', fontWeight: 500 }}>✓ {showEnglish ? ff.actually : ff.actually}</div>
           </div>
         </ExpandableCard>
-      )) : <FlashcardDrill items={FALSE_FRIENDS} frontKey="pt" backKey={(item) => 'NOT "'+item.seems+'" → '+item.actually} title="Falso Amigo" sectionId="falsefriends" />}
+      )) : <FlashcardDrill items={FALSE_FRIENDS} frontKey="pt" backKey={(item) => 'NOT "'+item.seems+'" → '+item.actually} title={showEnglish ? 'False Friend' : 'Falso Amigo'} sectionId="falsefriends" />}
     </div>
   );
 }
 
-function StructureSection() {
+function StructureSection({ showEnglish }) {
   return (
     <div>
-      <h2 className="sec-title">Estrutura das Frases</h2>
-      <p className="sec-desc">Core sentence patterns for A2. European Portuguese follows SVO order. Tap each pattern to see examples and usage tips.</p>
+      <h2 className="sec-title">{showEnglish ? 'Sentence Structure' : 'Estrutura das Frases'}</h2>
+      <p className="sec-desc">{showEnglish ? 'Core sentence patterns for A2. European Portuguese follows SVO order. Tap each pattern to see examples and usage tips.' : 'Core sentence patterns for A2. European Portuguese follows SVO order. Tap each pattern to see examples and usage tips.'}</p>
       {SENTENCE_STRUCTURE.map((s, i) => (
-        <ExpandableCard key={i} title={s.pattern} accentColor="#008a8a">
+        <ExpandableCard key={i} title={showEnglish ? s.pattern : s.pattern} accentColor="#008a8a">
           <div style={{ marginTop: '8px' }}>
             <div style={{ fontFamily: 'var(--font-mono)', fontSize: '15px', color: 'var(--text-primary)', marginBottom: '6px' }}>{s.example}</div>
-            <div style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '8px' }}>{s.translation}</div>
-            <div style={{ fontSize: '12px', color: 'var(--text-tertiary)', fontStyle: 'italic' }}>Usage: Replace the highlighted words with your own vocabulary to create sentences.</div>
+            <div style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '8px' }}>{showEnglish ? s.translation : s.translation}</div>
+            <div style={{ fontSize: '12px', color: 'var(--text-tertiary)', fontStyle: 'italic' }}>{showEnglish ? 'Usage: Replace the highlighted words with your own vocabulary to create sentences.' : 'Usage: Replace the highlighted words with your own vocabulary to create sentences.'}</div>
           </div>
         </ExpandableCard>
       ))}
       <div className="card" style={{ marginTop: '16px', background: 'rgba(0,168,112,0.04)', border: '1px solid rgba(0,168,112,0.15)' }}>
-        <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--accent)', marginBottom: '10px' }}>How to Use These Patterns</div>
+        <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--accent)', marginBottom: '10px' }}>{showEnglish ? 'How to Use These Patterns' : 'How to Use These Patterns'}</div>
         <div style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: 1.7 }}>
           <p style={{ marginBottom: '8px' }}>1. <strong>Identify the pattern type</strong> — statement, question, negation, etc.</p>
           <p style={{ marginBottom: '8px' }}>2. <strong>Replace the placeholder words</strong> with your own vocabulary while keeping the structure.</p>
@@ -913,7 +916,7 @@ function StructureSection() {
           <p>4. <strong>Practice aloud</strong> — shadow the examples to improve pronunciation.</p>
         </div>
       </div>
-      <ExpandableCard title="EP-Specific Patterns" accentColor="var(--accent)">
+      <ExpandableCard title={showEnglish ? 'EP-Specific Patterns' : 'EP-Specific Patterns'} accentColor="var(--accent)">
         <div style={{ marginTop: '8px', fontSize: '14px', lineHeight: 1.8 }}>
           <div style={{ marginBottom: '10px' }}>
             <strong style={{ color: 'var(--accent)' }}>Continuous:</strong> Use <strong>estar + a + infinitive</strong> for ongoing actions<br/>
@@ -933,19 +936,19 @@ function StructureSection() {
   );
 }
 
-function PreteritoSection() {
+function PreteritoSection({ showEnglish }) {
   const [mode, setMode] = useState('explain');
   return (
     <div>
-      <h2 className="sec-title">Pretérito Perfeito vs Imperfeito</h2>
-      <p className="sec-desc">The most important grammar distinction in Portuguese past tense. Most learners fail here at A2.</p>
+      <h2 className="sec-title">{showEnglish ? 'Past Tense: Perfect vs Imperfect' : 'Pretérito Perfeito vs Imperfeito'}</h2>
+      <p className="sec-desc">{showEnglish ? 'The most important grammar distinction in Portuguese past tense. Most learners fail here at A2.' : 'The most important grammar distinction in Portuguese past tense. Most learners fail here at A2.'}</p>
       <div className="toggle-row">
-        <button className={mode === 'explain' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('explain')}>Explanation</button>
-        <button className={mode === 'practice' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('practice')}>Practice</button>
+        <button className={mode === 'explain' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('explain')}>{showEnglish ? 'Explanation' : 'Explanation'}</button>
+        <button className={mode === 'practice' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('practice')}>{showEnglish ? 'Practice' : 'Practice'}</button>
       </div>
       {mode === 'explain' ? (
         <>
-          <ExpandableCard title="Pretérito Perfeito — Specific, Completed" accentColor="var(--accent)" defaultOpen>
+          <ExpandableCard title={showEnglish ? "Perfect — Specific, Completed" : "Pretérito Perfeito — Specific, Completed"} accentColor="var(--accent)" defaultOpen>
             <div style={{ marginTop: '12px', fontSize: '14px', lineHeight: 1.7 }}>
               <p style={{ marginBottom: '8px' }}>Use <strong>Perfeito</strong> when:</p>
               <ul style={{ paddingLeft: '20px', marginBottom: '12px' }}>
@@ -956,7 +959,7 @@ function PreteritoSection() {
               <div style={{ fontFamily: 'var(--font-mono)', fontSize: '14px', color: 'var(--accent)', padding: '8px 12px', background: 'var(--accent-light)', borderRadius: '6px' }}>Falei com ele ontem. (I spoke with him yesterday.)</div>
             </div>
           </ExpandableCard>
-          <ExpandableCard title="Pretérito Imperfeito — Ongoing, Habitual, Descriptive" accentColor="#008a8a">
+          <ExpandableCard title={showEnglish ? "Imperfect — Ongoing, Habitual, Descriptive" : "Pretérito Imperfeito — Ongoing, Habitual, Descriptive"} accentColor="#008a8a">
             <div style={{ marginTop: '12px', fontSize: '14px', lineHeight: 1.7 }}>
               <p style={{ marginBottom: '8px' }}>Use <strong>Imperfeito</strong> when:</p>
               <ul style={{ paddingLeft: '20px', marginBottom: '12px' }}>
@@ -968,7 +971,7 @@ function PreteritoSection() {
               <div style={{ fontFamily: 'var(--font-mono)', fontSize: '14px', color: '#008a8a', padding: '8px 12px', background: 'rgba(0,138,138,0.06)', borderRadius: '6px' }}>Falava português todos os dias. (I used to speak Portuguese every day.)</div>
             </div>
           </ExpandableCard>
-          <ExpandableCard title="Key Signal Words" accentColor="var(--warning)">
+          <ExpandableCard title={showEnglish ? "Key Signal Words" : "Key Signal Words"} accentColor="var(--warning)">
             <div style={{ marginTop: '8px', display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
               <span style={{ background: 'var(--warning-light)', color: 'var(--warning)', padding: '4px 10px', borderRadius: '6px', fontSize: '12px', fontWeight: 600 }}>Perfeito: ontem, às 3h, no verão passado, já, uma vez</span>
               <span style={{ background: 'rgba(0,138,138,0.08)', color: '#008a8a', padding: '4px 10px', borderRadius: '6px', fontSize: '12px', fontWeight: 600 }}>Imperfeito: sempre, todos os dias, frequentemente, quando era novo</span>
@@ -980,7 +983,7 @@ function PreteritoSection() {
           {PRETERITO_EXERCISES.map(ex => (
             <ExpandableCard key={ex.id} title={ex.sentence} accentColor="var(--border-strong)">
               <div style={{ marginTop: '8px' }}>
-                <div style={{ fontSize: '12px', color: 'var(--text-tertiary)', fontStyle: 'italic', marginBottom: '8px' }}>Hint: {ex.hint}</div>
+                <div style={{ fontSize: '12px', color: 'var(--text-tertiary)', fontStyle: 'italic', marginBottom: '8px' }}>{showEnglish ? 'Hint' : 'Hint'}: {ex.hint}</div>
                 <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginBottom: '8px' }}>
                   <span style={{ fontSize: '13px', color: 'var(--accent)' }}>✓ Perfeito: <strong>{ex.correct_perfeito}</strong></span>
                   <span style={{ fontSize: '13px', color: '#008a8a' }}>✓ Imperfeito: <strong>{ex.correct_imperfeito}</strong></span>
@@ -995,11 +998,11 @@ function PreteritoSection() {
   );
 }
 
-function SerEstarSection() {
+function SerEstarSection({ showEnglish }) {
   return (
     <div>
-      <h2 className="sec-title">Ser vs Estar</h2>
-      <p className="sec-desc">The most important distinction in Portuguese. Both mean "to be" but are used differently.</p>
+      <h2 className="sec-title">{showEnglish ? 'Ser vs Estar' : 'Ser vs Estar'}</h2>
+      <p className="sec-desc">{showEnglish ? 'The most important distinction in Portuguese. Both mean "to be" but are used differently.' : 'The most important distinction in Portuguese. Both mean "to be" but are used differently.'}</p>
       <div className="card" style={{ marginBottom: '16px', background: 'rgba(0,168,112,0.04)', border: '1px solid rgba(0,168,112,0.15)' }}>
         <p style={{ fontSize: '14px', color: 'var(--accent)', fontWeight: 600, marginBottom: '8px' }}>SER = permanent, identity, origin, time, profession, essential characteristics</p>
         <p style={{ fontSize: '14px', color: '#008a8a', fontWeight: 600 }}>ESTAR = temporary states, location, ongoing actions, conditions that can change</p>
@@ -1012,8 +1015,8 @@ function SerEstarSection() {
 function EscritaSection({ showEnglish }) {
   return (
     <div>
-      <h2 className="sec-title">Escrita — Prática CIPLE</h2>
-      <p className="sec-desc">CIPLE-style writing tasks. Read the task, write your answer, then check the model.</p>
+      <h2 className="sec-title">{showEnglish ? 'Writing — CIPLE Practice' : 'Escrita — Prática CIPLE'}</h2>
+      <p className="sec-desc">{showEnglish ? 'CIPLE-style writing tasks. Read the task, write your answer, then check the model.' : 'CIPLE-style writing tasks. Read the task, write your answer, then check the model.'}</p>
       {WRITING_TASKS.map(t => <WritingTask key={t.id} task={t} showEnglish={showEnglish} />)}
     </div>
   );
@@ -1022,8 +1025,8 @@ function EscritaSection({ showEnglish }) {
 function OralSection({ showEnglish }) {
   return (
     <div>
-      <h2 className="sec-title">Oral — Diálogos para Praticar</h2>
-      <p className="sec-desc">Read the dialogues aloud, then try to say the lines yourself. Shadowing is the fastest way to improve pronunciation.</p>
+      <h2 className="sec-title">{showEnglish ? 'Speaking — Dialogue Practice' : 'Oral — Diálogos para Praticar'}</h2>
+      <p className="sec-desc">{showEnglish ? 'Read the dialogues aloud, then try to say the lines yourself. Shadowing is the fastest way to improve pronunciation.' : 'Read the dialogues aloud, then try to say the lines yourself. Shadowing is the fastest way to improve pronunciation.'}</p>
       {ORAL_DIALOGUES.map(d => <OralDialogue key={d.id} dialogue={d} showEnglish={showEnglish} />)}
     </div>
   );
@@ -1032,31 +1035,31 @@ function OralSection({ showEnglish }) {
 function EscutaSection({ showEnglish }) {
   return (
     <div>
-      <h2 className="sec-title">Escuta — Recursos de Audio</h2>
-      <p className="sec-desc">Curated EP listening resources. Click to open and listen, then try the transcript toggle to check your understanding.</p>
+      <h2 className="sec-title">{showEnglish ? 'Listening — Audio Resources' : 'Escuta — Recursos de Audio'}</h2>
+      <p className="sec-desc">{showEnglish ? 'Curated EP listening resources. Click to open and listen, then try the transcript toggle to check your understanding.' : 'Curated EP listening resources. Click to open and listen, then try the transcript toggle to check your understanding.'}</p>
       {LISTENING_RESOURCES.map(item => <ListeningItem key={item.id} item={item} showEnglish={showEnglish} />)}
     </div>
   );
 }
 
-function GlossarySection() {
+function GlossarySection({ showEnglish }) {
   const [filter, setFilter] = useState('');
   const filtered = GLOSSARY_TERMS.filter(t => t.term.toLowerCase().includes(filter.toLowerCase()) || t.category.toLowerCase().includes(filter.toLowerCase()));
   return (
     <div>
-      <h2 className="sec-title">Glossário — Grammar Terms</h2>
-      <p className="sec-desc">Plain-English explanations of Portuguese grammar terminology. Tap any term to expand.</p>
+      <h2 className="sec-title">{showEnglish ? 'Glossary — Grammar Terms' : 'Glossário — Grammar Terms'}</h2>
+      <p className="sec-desc">{showEnglish ? 'Plain-English explanations of Portuguese grammar terminology. Tap any term to expand.' : 'Plain-English explanations of Portuguese grammar terminology. Tap any term to expand.'}</p>
       <div className="search-wrap" style={{ marginBottom: '16px' }}>
-        <input className="input" style={{ width: '100%' }} placeholder="Search terms..." value={filter} onChange={e => setFilter(e.target.value)} />
+        <input className="input" style={{ width: '100%' }} placeholder={showEnglish ? "Search terms..." : "Search terms..."} value={filter} onChange={e => setFilter(e.target.value)} />
         {filter && <button className="search-clear" onClick={() => setFilter('')}>×</button>}
       </div>
       {filtered.map((t, i) => <GlossaryEntry key={i} term={t} />)}
-      {filtered.length === 0 && <div className="card" style={{ textAlign: 'center', color: 'var(--text-secondary)' }}>No terms match your search.</div>}
+      {filtered.length === 0 && <div className="card" style={{ textAlign: 'center', color: 'var(--text-secondary)' }}>{showEnglish ? 'No terms match your search.' : 'No terms match your search.'}</div>}
     </div>
   );
 }
 
-function Verbos999Section() {
+function Verbos999Section({ showEnglish }) {
   const [search, setSearch] = useState("");
   const [letter, setLetter] = useState(null);
   const [typeFilter, setTypeFilter] = useState(null);
@@ -1107,8 +1110,8 @@ function Verbos999Section() {
   return (
     <div>
       <div className="sec-header">
-        <h2 className="sec-title">999 Verbos Portugueses</h2>
-        <p className="sec-desc">Complete searchable verb reference with ~1000 European Portuguese verbs. Use filters or drill with flashcards.</p>
+        <h2 className="sec-title">{showEnglish ? '999 Portuguese Verbs' : '999 Verbos Portugueses'}</h2>
+        <p className="sec-desc">{showEnglish ? 'Complete searchable verb reference with ~1000 European Portuguese verbs. Use filters or drill with flashcards.' : 'Complete searchable verb reference with ~1000 European Portuguese verbs. Use filters or drill with flashcards.'}</p>
       </div>
 
       <div className="search-wrap">
@@ -1116,7 +1119,7 @@ function Verbos999Section() {
           className="input"
           value={search}
           onChange={e => { setSearch(e.target.value); setVisibleCount(100); }}
-          placeholder="Search verbs or meanings..."
+          placeholder={showEnglish ? "Search verbs or meanings..." : "Search verbs or meanings..."}
         />
         {search && (
           <button className="search-clear" onClick={() => setSearch('')}>×</button>
@@ -1124,14 +1127,14 @@ function Verbos999Section() {
       </div>
 
       <div className="toggle-row">
-        {[['list','Reference'],['flash','Flashcards']].map(([m, label]) => (
+        {[['list', showEnglish ? 'Reference' : 'Reference'],['flash', showEnglish ? 'Flashcards' : 'Flashcards']].map(([m, label]) => (
           <button key={m} className={mode === m ? 'toggle-btn active' : 'toggle-btn'} onClick={() => { setMode(m); setFlashIdx(0); setFlipped(false); setScore({correct:0,total:0}); }}>{label}</button>
         ))}
         <button className={a2Only ? 'toggle-btn active' : 'toggle-btn'} onClick={() => { setA2Only(!a2Only); setVisibleCount(100); }}>
-          {a2Only ? '★ A2 Active' : '☆ A2 Filter'}
+          {a2Only ? (showEnglish ? '★ A2 Active' : '★ A2 Ativo') : (showEnglish ? '☆ A2 Filter' : '☆ A2 Filtro')}
         </button>
         {(search || letter || typeFilter || a2Only) && (
-          <button className="toggle-btn" onClick={clearFilters}>Clear</button>
+          <button className="toggle-btn" onClick={clearFilters}>{showEnglish ? 'Clear' : 'Limpar'}</button>
         )}
       </div>
 
@@ -1150,7 +1153,7 @@ function Verbos999Section() {
       </div>
 
       <div className="filter-count">
-        Showing {filtered.length} of {ALL_VERBS.length} verbs
+        {showEnglish ? 'Showing' : 'A mostrar'} {filtered.length} {showEnglish ? 'of' : 'de'} {ALL_VERBS.length} {showEnglish ? 'verbs' : 'verbos'}
       </div>
 
       {mode === 'list' ? (
@@ -1174,7 +1177,7 @@ function Verbos999Section() {
           {visibleCount < filtered.length && (
             <div style={{ textAlign: 'center', marginTop: '16px' }}>
               <button className="btn btn-primary" onClick={() => setVisibleCount(v => v + 100)}>
-                Load more ({filtered.length - visibleCount} remaining)
+                {showEnglish ? 'Load more' : 'Carregar mais'} ({filtered.length - visibleCount} {showEnglish ? 'remaining' : 'restantes'})
               </button>
             </div>
           )}
@@ -1182,7 +1185,7 @@ function Verbos999Section() {
       ) : (
         <div>
           {filtered.length === 0 ? (
-            <div className="empty-state">No verbs match your filters</div>
+            <div className="empty-state">{showEnglish ? 'No verbs match your filters' : 'Nenhum verbo corresponde aos filtros'}</div>
           ) : (
             <>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
@@ -1193,17 +1196,17 @@ function Verbos999Section() {
               <div className="flashcard" onClick={() => setFlipped(!flipped)}>
                 {!flipped ? (
                   <>
-                    <div className="flashcard-label">Verbo <span className={`verb-type-badge verb-type-${currentFlash[2].replace('-','')}`}>{currentFlash[2]}</span></div>
+                    <div className="flashcard-label">{showEnglish ? 'Verb' : 'Verbo'} <span className={`verb-type-badge verb-type-${currentFlash[2].replace('-','')}`}>{currentFlash[2]}</span></div>
                     <div className="flashcard-verb">{currentFlash[0]}</div>
-                    <div className="flashcard-hint">tap to flip</div>
+                    <div className="flashcard-hint">{showEnglish ? 'tap to flip' : 'tocar para virar'}</div>
                   </>
                 ) : (
                   <>
                     <div className="flashcard-label">English</div>
                     <div className="flashcard-meaning">{currentFlash[1]}</div>
                     <div className="flashcard-actions">
-                      <button className="btn btn-danger" onClick={e => { e.stopPropagation(); nextFlash(false); }}>Again</button>
-                      <button className="btn btn-primary" onClick={e => { e.stopPropagation(); nextFlash(true); }}>Got it</button>
+                      <button className="btn btn-danger" onClick={e => { e.stopPropagation(); nextFlash(false); }}>{showEnglish ? 'Again' : 'Errei'}</button>
+                      <button className="btn btn-primary" onClick={e => { e.stopPropagation(); nextFlash(true); }}>{showEnglish ? 'Got it' : 'Consegui'}</button>
                     </div>
                   </>
                 )}
