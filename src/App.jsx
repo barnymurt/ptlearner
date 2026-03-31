@@ -405,12 +405,15 @@ function speakPortuguese(text) {
   window.speechSynthesis.cancel();
   const utterance = new SpeechSynthesisUtterance(text);
   const voices = window.speechSynthesis.getVoices();
-  const ptVoice = voices.find(v => v.lang.startsWith('pt'));
+  const ptVoice = voices.find(v => 
+    v.lang === 'pt-PT' || 
+    (v.lang.startsWith('pt') && v.name.toLowerCase().includes('portugal'))
+  ) || voices.find(v => v.lang.startsWith('pt'));
   if (ptVoice) {
     utterance.voice = ptVoice;
     utterance.lang = 'pt-PT';
   } else {
-    utterance.lang = 'pt-PT';
+    utterance.lang = 'pt';
   }
   utterance.rate = 0.85;
   utterance.pitch = 1;
