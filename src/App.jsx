@@ -420,6 +420,31 @@ function VerbCard({ verb, meaning, conj }) {
   );
 }
 
+function AdjectiveCard({ pt, en }) {
+  const [show, setShow] = useState(false);
+  const masculine = pt;
+  const feminine = pt.replace(/o$/, 'a') || pt.replace(/r$/, 'ra') || pt;
+  const plural = pt + 's';
+  return (
+    <div className="card verb-card" onClick={() => setShow(!show)}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px' }}>
+        <span className="verb-text">{pt}</span>
+        <span className="verb-meaning">{en}</span>
+      </div>
+      {show && (
+        <div style={{ marginTop: '12px', paddingTop: '12px', borderTop: '1px solid var(--border)' }}>
+          <div style={{ fontSize: '12px', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+            <div style={{ marginBottom: '6px' }}><strong style={{ color: 'var(--accent)' }}>Masculine:</strong> {masculine}</div>
+            <div style={{ marginBottom: '6px' }}><strong style={{ color: '#008a8a' }}>Feminine:</strong> {feminine}</div>
+            <div><strong style={{ color: 'var(--warning)' }}>Plural:</strong> {plural}</div>
+          </div>
+        </div>
+      )}
+      <div style={{ fontSize: '10px', color: 'var(--text-tertiary)', marginTop: '8px', textAlign: 'center' }}>{show ? '▲ hide' : '▼ reveal'}</div>
+    </div>
+  );
+}
+
 function ExpandableCard({ title, children, defaultOpen = false, accentColor }) {
   const [expanded, setExpanded] = useState(defaultOpen);
   return (
@@ -748,9 +773,9 @@ function AdjectivesSection() {
   return (
     <div>
       <h2 className="sec-title">40 Adjetivos Essenciais</h2>
-      <p className="sec-desc">Core adjectives for A2. Remember: most adjectives agree in gender and number.</p>
+      <p className="sec-desc">Core adjectives for A2. Remember: most adjectives agree in gender and number. Tap any adjective to see masculine, feminine, and plural forms.</p>
       <div className="toggle-row"><button className={mode === 'grid' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('grid')}>Reference</button><button className={mode === 'flash' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('flash')}>Flashcards</button></div>
-      {mode === 'grid' ? <div className="vocab-grid">{ADJECTIVES.map(([pt,en], i) => <div key={i} className="vocab-item"><span className="vocab-pt">{pt}</span><span className="vocab-en">{en}</span></div>)}</div> : <FlashcardDrill items={ADJECTIVES.map(([pt,en]) => ({ pt, en }))} frontKey="pt" backKey="en" title="Adjetivo" sectionId="adjectives" />}
+      {mode === 'grid' ? <div className="grid-2">{ADJECTIVES.map(([pt,en], i) => <AdjectiveCard key={i} pt={pt} en={en} />)}</div> : <FlashcardDrill items={ADJECTIVES.map(([pt,en]) => ({ pt, en }))} frontKey="pt" backKey="en" title="Adjetivo" sectionId="adjectives" />}
     </div>
   );
 }
