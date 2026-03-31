@@ -614,8 +614,8 @@ function ListeningItem({ item, showEnglish }) {
       <button style={{ ...S.btn, marginTop: '8px', marginLeft: '7px', borderColor: '#008a8a', color: '#008a8a', background: 'rgba(0,138,138,0.08)' }} onClick={() => setShowTranscript(!showTranscript)}>{effectiveShowTranscript ? 'Hide Transcript' : 'Show Transcript'}</button>
       {effectiveShowTranscript && (
         <div style={{ marginTop: '10px', padding: '12px', background: 'rgba(0,138,138,0.04)', borderRadius: '8px' }}>
-          <div style={{ fontSize: '10px', color: '#008a8a', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '6px', fontWeight: 600 }}>{effectiveShowEn && item.englishTranscript ? 'English' : 'Portuguese'}</div>
-          <div style={{ fontSize: '12px', color: '#1a1a1a', lineHeight: 1.7, fontFamily: 'monospace' }}>{effectiveShowEn && item.englishTranscript ? item.englishTranscript : item.transcript}</div>
+          <div style={{ fontSize: '10px', color: '#008a8a', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '6px', fontWeight: 600 }}>{effectiveShowTranscript && item.englishTranscript ? 'English' : 'Portuguese'}</div>
+          <div style={{ fontSize: '12px', color: '#1a1a1a', lineHeight: 1.7, fontFamily: 'monospace' }}>{effectiveShowTranscript && item.englishTranscript ? item.englishTranscript : item.transcript}</div>
         </div>
       )}
     </div>
