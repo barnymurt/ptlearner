@@ -736,72 +736,29 @@ function OralDialogue({ dialogue, showEnglish }) {
 
 function ListeningItem({ item, showEnglish }) {
   const [showTranscript, setShowTranscript] = useState(false);
-  const [showPlayer, setShowPlayer] = useState(false);
   const effectiveShowTranscript = showTranscript || showEnglish;
   const difficultyColor = item.difficulty === 'Fácil' ? 'var(--accent)' : item.difficulty === 'Médio' ? 'var(--warning)' : 'var(--error)';
   
-  const getEmbedUrl = (url) => {
-    if (url.includes('youtube.com/watch')) {
-      const videoId = url.split('v=')[1]?.split('&')[0];
-      return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
-    }
-    if (url.includes('youtu.be/')) {
-      const videoId = url.split('youtu.be/')[1]?.split('?')[0];
-      return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
-    }
-    return url;
-  };
-  
-  const embedUrl = getEmbedUrl(item.url);
-  const blockedHosts = ['youtube.com', 'youtu.be', 'rtp.pt', 'sic.pt', 'tvglobo.pt'];
-  const isBlocked = blockedHosts.some(host => item.url.includes(host));
-  
-  const handleOpenResource = () => {
-    if (isBlocked) {
-      window.open(item.url, '_blank', 'noopener,noreferrer');
-    } else {
-      setShowPlayer(true);
-    }
-  };
-  
   return (
-    <>
-      <ExpandableCard
-        title={item.title}
-        accentColor={difficultyColor}
-      >
-        <div style={{ marginTop: '12px' }}>
-          <div style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '12px', lineHeight: 1.5 }}>{item.description}</div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '12px' }}>{item.topics.map((t, i) => <span key={i} style={{ background: 'rgba(0,138,138,0.08)', color: '#008a8a', padding: '4px 10px', borderRadius: '6px', fontSize: '11px' }}>{t}</span>)}</div>
-          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-            <button className={showPlayer ? 'btn btn-primary' : 'btn btn-ghost'} onClick={handleOpenResource} style={{ fontSize: '13px', padding: '8px 16px' }}>▶ Open Resource</button>
-            <button style={{ border: '1px solid #008a8a', color: '#008a8a', background: effectiveShowTranscript ? 'rgba(0,138,138,0.1)' : 'transparent', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer', fontSize: '13px' }} onClick={() => setShowTranscript(!showTranscript)}>{effectiveShowTranscript ? 'Hide Transcript' : 'Show Transcript'}</button>
-          </div>
-          {effectiveShowTranscript && (
-            <div style={{ marginTop: '12px', padding: '12px', background: 'rgba(0,138,138,0.04)', borderRadius: '8px' }}>
-              <div style={{ fontSize: '11px', color: '#008a8a', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px', fontWeight: 600 }}>{effectiveShowTranscript && item.englishTranscript ? 'English' : 'Portuguese'}</div>
-              <div style={{ fontSize: '13px', color: 'var(--text-primary)', lineHeight: 1.7, fontFamily: 'var(--font-mono)' }}>{effectiveShowTranscript && item.englishTranscript ? item.englishTranscript : item.transcript}</div>
-            </div>
-          )}
+    <ExpandableCard
+      title={item.title}
+      accentColor={difficultyColor}
+    >
+      <div style={{ marginTop: '12px' }}>
+        <div style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '12px', lineHeight: 1.5 }}>{item.description}</div>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '12px' }}>{item.topics.map((t, i) => <span key={i} style={{ background: 'rgba(0,138,138,0.08)', color: '#008a8a', padding: '4px 10px', borderRadius: '6px', fontSize: '11px' }}>{t}</span>)}</div>
+        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+          <a href={item.url} target="_blank" rel="noopener noreferrer" className="btn btn-primary">▶ Open Resource</a>
+          <button style={{ border: '1px solid #008a8a', color: '#008a8a', background: effectiveShowTranscript ? 'rgba(0,138,138,0.1)' : 'transparent', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer', fontSize: '13px' }} onClick={() => setShowTranscript(!showTranscript)}>{effectiveShowTranscript ? 'Hide Transcript' : 'Show Transcript'}</button>
         </div>
-      </ExpandableCard>
-      {showPlayer && !isBlocked && (
-        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.8)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }} onClick={() => setShowPlayer(false)}>
-          <div style={{ background: 'var(--bg-card)', borderRadius: '12px', padding: '20px', maxWidth: '800px', width: '100%', maxHeight: '90vh', overflow: 'auto' }} onClick={e => e.stopPropagation()}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-              <h3 style={{ margin: 0, fontSize: '16px' }}>{item.title}</h3>
-              <button onClick={() => setShowPlayer(false)} style={{ background: 'transparent', border: 'none', fontSize: '20px', cursor: 'pointer', color: 'var(--text-tertiary)' }}>✕</button>
-            </div>
-            <iframe 
-              src={embedUrl} 
-              style={{ width: '100%', height: '400px', border: 'none', borderRadius: '8px' }}
-              allow="autoplay; fullscreen"
-              title={item.title}
-            />
+        {effectiveShowTranscript && (
+          <div style={{ marginTop: '12px', padding: '12px', background: 'rgba(0,138,138,0.04)', borderRadius: '8px' }}>
+            <div style={{ fontSize: '11px', color: '#008a8a', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px', fontWeight: 600 }}>{effectiveShowTranscript && item.englishTranscript ? 'English' : 'Portuguese'}</div>
+            <div style={{ fontSize: '13px', color: 'var(--text-primary)', lineHeight: 1.7, fontFamily: 'var(--font-mono)' }}>{effectiveShowTranscript && item.englishTranscript ? item.englishTranscript : item.transcript}</div>
           </div>
-        </div>
-      )}
-    </>
+        )}
+      </div>
+    </ExpandableCard>
   );
 }
 
