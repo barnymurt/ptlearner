@@ -420,6 +420,24 @@ function VerbCard({ verb, meaning, conj }) {
   );
 }
 
+function VocabCard({ pt, en }) {
+  const [show, setShow] = useState(false);
+  return (
+    <div className="card verb-card" onClick={() => setShow(!show)}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px' }}>
+        <span className="verb-text">{pt}</span>
+        <span className="verb-meaning">{en}</span>
+      </div>
+      {show && (
+        <div style={{ marginTop: '12px', paddingTop: '12px', borderTop: '1px solid var(--border)', fontSize: '12px', color: 'var(--text-secondary)' }}>
+          <div style={{ fontStyle: 'italic' }}>{pt}</div>
+        </div>
+      )}
+      <div style={{ fontSize: '10px', color: 'var(--text-tertiary)', marginTop: '8px', textAlign: 'center' }}>{show ? '▲ hide' : '▼ reveal'}</div>
+    </div>
+  );
+}
+
 function AdjectiveCard({ pt, en }) {
   const [show, setShow] = useState(false);
   const masculine = pt;
@@ -828,9 +846,9 @@ function VocabularySection({ showEnglish }) {
     <div>
       <h2 className="sec-title">{showEnglish ? 'Vocabulary by Topic' : 'Vocabulário por Tema'}</h2>
       <p className="sec-desc">{showEnglish ? 'A2+ vocabulary organized by CIPLE exam topics. Learn with the articles!' : 'A2+ vocabulary organized by CIPLE exam topics. Learn with the articles!'}</p>
-      <div className="toggle-row">{Object.keys(VOCABULARY).map(t => <button key={t} className={topic === t ? 'toggle-btn active' : 'toggle-btn'} onClick={() => { setTopic(t); setMode('grid'); }}>{t}</button>)}</div>
+      <div className="toggle-row">{Object.keys(VOCABULARY).map(t => <button key={t} className={topic === t ? 'toggle-btn active' : 'toggle-btn'} onClick={() => { setTopic(t); setMode('grid'); }}>{showEnglish ? t : t}</button>)}</div>
       <div style={{ marginBottom: '10px' }}><button className={mode === 'grid' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('grid')}>{showEnglish ? 'Reference' : 'Reference'}</button><button style={{ ...S.navBtn(mode === 'flash'), marginLeft: '5px' }} onClick={() => setMode('flash')}>{showEnglish ? 'Flashcards' : 'Flashcards'}</button></div>
-      {mode === 'grid' ? <div className="vocab-grid">{VOCABULARY[topic].map(([pt,en], i) => <div key={i} className="vocab-item"><span className="vocab-pt">{pt}</span><span className="vocab-en">{en}</span></div>)}</div> : <FlashcardDrill items={VOCABULARY[topic].map(([pt,en]) => ({ pt, en }))} frontKey="pt" backKey="en" title={topic} sectionId={'vocab_'+topic} />}
+      {mode === 'grid' ? <div className="grid-2">{VOCABULARY[topic].map(([pt,en], i) => <VocabCard key={i} pt={pt} en={en} />)}</div> : <FlashcardDrill items={VOCABULARY[topic].map(([pt,en]) => ({ pt, en }))} frontKey="pt" backKey="en" title={topic} sectionId={'vocab_'+topic} />}
     </div>
   );
 }
