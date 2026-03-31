@@ -450,28 +450,127 @@ const SECTIONS_MAP = {
   'glossary': { label: 'Glossário', labelEn: 'Glossary', icon: '📖', desc: 'Grammar terms explained simply', keywords: ['grammar', 'terms', 'definitions', 'reference', 'help', 'explanations'] },
 };
 
-function generateLessonPlan(text) {
+function generateLessonPlan(answers) {
+  const text = `level: ${answers.level}. goal: ${answers.goal}. context: ${answers.context}. time: ${answers.time}`.toLowerCase();
   const recommendations = [];
+  const reasons = {};
   
-  if (text.includes('beginner') || text.includes('new') || text.includes('starting') || text.includes('never') || text.includes('zero') || text.includes('a1')) {
-    recommendations.push('verbs25', 'conjugation', 'pronouns', 'vocabulary');
-  } else if (text.includes('intermediate') || text.includes('some') || text.includes('basic') || text.includes('a2')) {
-    recommendations.push('verbs25', 'conjugation', 'vocabulary', 'prepositions', 'articles', 'modals', 'structure');
-  } else if (text.includes('advanced') || text.includes('fluent') || text.includes('b1') || text.includes('b2') || text.includes('c1')) {
-    recommendations.push('preterito', 'serestar', 'idioms', 'falsefriends', 'escrita', 'oral');
+  const addRec = (id, reason) => {
+    if (!recommendations.includes(id)) {
+      recommendations.push(id);
+      reasons[id] = reason;
+    }
+  };
+  
+  const level = text.includes('beginner') || text.includes('never') || text.includes('zero') || text.includes('a1') || text.includes('starting') || text.includes('new to');
+  const intermediate = text.includes('intermediate') || text.includes('some basics') || text.includes('basic') || text.includes('a2') || text.includes('some knowledge');
+  const advanced = text.includes('advanced') || text.includes('fluent') || text.includes('b1') || text.includes('b2') || text.includes('c1') || text.includes('proficient');
+  
+  if (level) {
+    addRec('verbs25', 'Start with the 25 most essential verbs - they form the foundation of everyday Portuguese conversation');
+    addRec('conjugation', 'Learn how verbs change form across tenses - critical for building basic sentences');
+    addRec('pronouns', 'Understanding pronouns (eu, tu, ele, nós) is essential for sentence structure');
+    addRec('vocabulary', 'Build your vocabulary with themed word sets for daily situations');
+    addRec('articles', 'Learn the gender system (o, a, os, as) - Portuguese nouns have gender');
+  } else if (intermediate) {
+    addRec('verbs25', 'Refresh and expand your verb knowledge with essential verbs');
+    addRec('conjugation', 'Master verb conjugations across multiple tenses');
+    addRec('vocabulary', 'Expand vocabulary in specific areas relevant to your goals');
+    addRec('prepositions', 'Prepositions (em, de, para, com) are crucial for natural speech');
+    addRec('articles', 'Solidify your understanding of article usage and gender');
+    addRec('modals', 'Modal verbs (poder, dever, querer) are key for expressing needs');
+    addRec('structure', 'Understand Portuguese sentence structure patterns');
+  } else if (advanced) {
+    addRec('preterito', 'Master the past tense forms - Pretérito Perfeito and Imperfeito');
+    addRec('serestar', 'Understand the subtle differences between ser and estar');
+    addRec('idioms', 'Learn natural Portuguese expressions and idioms');
+    addRec('falsefriends', 'Avoid common mistakes that trip up even advanced learners');
+    addRec('escrita', 'Practice formal writing for exams or professional contexts');
   }
   
-  if (text.includes('speak') || text.includes('talk') || text.includes('conversation')) recommendations.push('oral', 'vocabulary', 'modals');
-  if (text.includes('listen') || text.includes('audio') || text.includes('video')) recommendations.push('escuta', 'oral');
-  if (text.includes('write') || text.includes('essay') || text.includes('exam')) recommendations.push('escrita', 'structure', 'vocabulary');
-  if (text.includes('travel') || text.includes('vacation') || text.includes('portugal')) recommendations.push('vocabulary', 'oral', 'prepositions', 'articles');
-  if (text.includes('work') || text.includes('business') || text.includes('job')) recommendations.push('escrita', 'modals', 'vocabulary', 'structure');
-  if (text.includes('family') || text.includes('friend')) recommendations.push('oral', 'vocabulary', 'idioms');
-  if (text.includes('grammar')) recommendations.push('conjugation', 'pronouns', 'articles', 'prepositions');
+  const speak = text.includes('speak') || text.includes('talk') || text.includes('conversation') || text.includes('pronunciation') || text.includes('oral');
+  const listen = text.includes('listen') || text.includes('audio') || text.includes('video') || text.includes('watch') || text.includes('podcast');
+  const write = text.includes('write') || text.includes('essay') || text.includes('exam') || text.includes('cile') || text.includes('writing');
+  const read = text.includes('read') || text.includes('reading') || text.includes('text');
   
-  const unique = [...new Set(recommendations)];
-  if (unique.length === 0) unique.push('verbs25', 'vocabulary', 'conjugation', 'oral', 'prepositions');
-  return unique.slice(0, 5);
+  if (speak) {
+    addRec('oral', 'Practice speaking with shadow dialogues - repeat phrases to improve pronunciation');
+    addRec('vocabulary', 'Focus on conversational vocabulary and phrases');
+    if (!advanced) addRec('modals', 'Modal verbs help express needs and abilities in conversation');
+  }
+  if (listen) {
+    addRec('escuta', 'Access real Portuguese media - RTP, YouTube channels, podcasts');
+    addRec('oral', 'Listen and repeat to improve comprehension and pronunciation');
+  }
+  if (write) {
+    addRec('escrita', 'Practice formal writing with model answers and templates');
+    addRec('structure', 'Understand proper sentence construction for written Portuguese');
+    addRec('vocabulary', 'Learn formal vocabulary for writing essays and emails');
+  }
+  if (read) {
+    addRec('vocabulary', 'Build vocabulary across different topics and contexts');
+  }
+  
+  const travel = text.includes('travel') || text.includes('vacation') || text.includes('holiday') || text.includes('tourism') || text.includes('trip');
+  const living = text.includes('live') || text.includes('living') || text.includes('residence') || text.includes('move') || text.includes('immigrat');
+  const business = text.includes('work') || text.includes('business') || text.includes('job') || text.includes('professional') || text.includes('career');
+  const family = text.includes('family') || text.includes('husband') || text.includes('wife') || text.includes('partner') || text.includes('children') || text.includes('friend') || text.includes('portuguese partner');
+  const exam = text.includes('exam') || text.includes('cile') || text.includes('certification') || text.includes('diploma') || text.includes('test');
+  const school = text.includes('school') || text.includes('study') || text.includes('university') || text.includes('student');
+  
+  if (travel) {
+    addRec('vocabulary', 'Essential travel phrases and vocabulary for common situations');
+    addRec('oral', 'Practice ordering food, asking directions, and everyday interactions');
+    addRec('prepositions', 'Prepositions help with directions and locations while traveling');
+    addRec('articles', 'Article usage is crucial for proper pronunciation');
+  }
+  if (living) {
+    addRec('vocabulary', 'Vocabulary for daily life - housing, shopping, healthcare');
+    addRec('prepositions', 'Essential for understanding directions and locations');
+    addRec('oral', 'Daily conversation practice for integrating into Portuguese life');
+    addRec('conjugation', 'Verb forms for discussing daily routines and plans');
+  }
+  if (business) {
+    addRec('escrita', 'Formal email and document writing skills');
+    addRec('modals', 'Express obligation, permission, and ability professionally');
+    addRec('vocabulary', 'Business vocabulary - meetings, emails, presentations');
+    addRec('structure', 'Professional communication structure');
+  }
+  if (family) {
+    addRec('vocabulary', 'Family-related vocabulary for personal conversations');
+    addRec('oral', 'Practice informal conversation about daily life');
+    addRec('idioms', 'Sound more natural in family conversations');
+  }
+  if (exam) {
+    addRec('escrita', 'Exam writing practice with model answers');
+    addRec('oral', 'Oral exam preparation with dialogue practice');
+    addRec('structure', 'Grammar and sentence structure for exam success');
+    addRec('preterito', 'Past tense is frequently tested in exams');
+  }
+  if (school) {
+    addRec('conjugation', 'Verb conjugations are fundamental for academic Portuguese');
+    addRec('vocabulary', 'Academic vocabulary for studying');
+    addRec('glossary', 'Grammar terminology in plain language');
+  }
+  
+  const intensive = text.includes('intensive') || text.includes('many hours') || text.includes('full time') || text.includes('dedicated');
+  const casual = text.includes('casual') || text.includes('few hours') || text.includes('limited') || text.includes('busy') || text.includes('30 minutes') || text.includes('1 hour');
+  
+  if (intensive) {
+    recommendations.push('verbs999', 'adjectives', 'falsefriends');
+  }
+  
+  if (recommendations.length === 0) {
+    recommendations.push('verbs25', 'vocabulary', 'conjugation', 'prepositions', 'oral');
+  }
+  
+  const finalPlan = recommendations.slice(0, 6).map(id => ({
+    id,
+    ...SECTIONS_MAP[id],
+    reason: reasons[id] || SECTIONS_MAP[id]?.desc
+  }));
+  
+  return finalPlan;
 }
 
 function OnboardingChat({ onComplete, recommendedSections = [] }) {
@@ -594,8 +693,7 @@ function OnboardingChat({ onComplete, recommendedSections = [] }) {
   };
 
   const handleFinish = () => {
-    const combinedText = `level: ${answers.level}. goal: ${answers.goal}. context: ${answers.context}. time: ${answers.time}`;
-    const plan = generateLessonPlan(combinedText);
+    const plan = generateLessonPlan(answers);
     setLessonPlan(plan);
   };
 
@@ -606,7 +704,6 @@ function OnboardingChat({ onComplete, recommendedSections = [] }) {
   };
 
   if (lessonPlan.length > 0) {
-    const planWithDescriptions = lessonPlan.map(id => `${SECTIONS_MAP[id]?.icon} ${SECTIONS_MAP[id]?.labelEn}: ${SECTIONS_MAP[id]?.desc}`).join('\n');
     return (
       <div style={{ maxWidth: '700px', margin: '0 auto', padding: '24px' }}>
         <div style={{ background: 'var(--bg-card)', borderRadius: '20px', boxShadow: '0 8px 32px rgba(0,0,0,0.12)', padding: '32px' }}>
@@ -615,11 +712,24 @@ function OnboardingChat({ onComplete, recommendedSections = [] }) {
             <h3 style={{ margin: 0, fontSize: '24px', color: 'var(--text-primary)', fontWeight: 700 }}>Your Personalized Plan</h3>
             <p style={{ margin: '8px 0 0', fontSize: '15px', color: 'var(--text-secondary)' }}>Based on your goals, here's what to study:</p>
           </div>
-          <div style={{ background: 'var(--bg)', borderRadius: '16px', padding: '20px', marginBottom: '24px' }}>
-            <pre style={{ margin: 0, fontSize: '15px', lineHeight: 1.9, whiteSpace: 'pre-wrap', fontFamily: 'var(--font-body)' }}>{planWithDescriptions}</pre>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '24px' }}>
+            {lessonPlan.map((item, idx) => (
+              <div key={item.id} style={{ 
+                background: 'var(--bg)', 
+                borderRadius: '12px', 
+                padding: '16px',
+                borderLeft: `4px solid var(--accent)`
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
+                  <span style={{ fontSize: '20px' }}>{item.icon}</span>
+                  <span style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text-primary)' }}>{item.labelEn}</span>
+                </div>
+                <p style={{ margin: 0, fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 1.5 }}>{item.reason}</p>
+              </div>
+            ))}
           </div>
           <button 
-            onClick={() => onComplete(lessonPlan)} 
+            onClick={() => onComplete(lessonPlan.map(p => p.id))} 
             style={{ width: '100%', padding: '18px', background: 'var(--accent)', color: 'white', border: 'none', borderRadius: '14px', cursor: 'pointer', fontSize: '17px', fontWeight: 600, boxShadow: '0 4px 16px rgba(0,168,112,0.3)' }}
           >
             Let's Go! 🚀
@@ -1948,56 +2058,10 @@ const SECTION_GROUPS = [
   },
 ];
 
-function LandingPage({ onStartChat }) {
+function LandingPage({ onComplete }) {
   return (
-    <div style={{ padding: '24px', maxWidth: '600px', margin: '0 auto' }}>
-      <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-        <h1 style={{ fontSize: '42px', fontWeight: 700, margin: '0 0 12px', color: 'var(--text-primary)', fontFamily: 'var(--font-display)' }}>Fluência</h1>
-        <p style={{ fontSize: '18px', color: 'var(--text-secondary)', margin: '0 0 32px' }}>Master European Portuguese for your CIPLE A2 exam</p>
-        <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
-          <button 
-            onClick={onStartChat}
-            style={{ 
-              padding: '16px 32px', 
-              background: 'linear-gradient(135deg, #00a870, #008a5a)', 
-              color: 'white', 
-              border: 'none', 
-              borderRadius: '12px', 
-              cursor: 'pointer', 
-              fontSize: '16px', 
-              fontWeight: 600,
-              boxShadow: '0 4px 16px rgba(0,168,112,0.3)',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px'
-            }}
-          >
-            💬 Chat with Patrick
-          </button>
-          <a 
-            href="https://ko-fi.com/fluencia" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            style={{ 
-              padding: '16px 32px', 
-              background: '#13c3ba', 
-              color: 'white', 
-              border: 'none', 
-              borderRadius: '12px', 
-              cursor: 'pointer', 
-              fontSize: '16px', 
-              fontWeight: 600,
-              textDecoration: 'none',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              boxShadow: '0 4px 16px rgba(19,195,186,0.3)'
-            }}
-          >
-            ☕ Support Fluência
-          </a>
-        </div>
-      </div>
+    <div style={{ padding: '24px', maxWidth: '900px', margin: '0 auto' }}>
+      <OnboardingChat onComplete={onComplete} />
     </div>
   );
 }
@@ -2158,7 +2222,11 @@ export default function App() {
           <div className="content">
             {section ? <SectionComp showEnglish={showEnglish} /> : (
               <div className="welcome-screen">
-                <LandingPage onStartChat={() => setChatOpen(true)} />
+                <LandingPage onComplete={(recommendedSections) => {
+                  if (recommendedSections.length > 0) {
+                    setSection(recommendedSections[0]);
+                  }
+                }} />
               </div>
             )}
           </div>
