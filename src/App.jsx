@@ -578,6 +578,7 @@ function OnboardingChat({ onComplete, onSavePlan, savedPlan }) {
   const [currentAnswer, setCurrentAnswer] = useState('');
   const [activeQuestion, setActiveQuestion] = useState(null);
   const [isListening, setIsListening] = useState(false);
+  const [activeRecordingQuestion, setActiveRecordingQuestion] = useState(null);
   const [transcript, setTranscript] = useState('');
   const [recognition, setRecognition] = useState(null);
   const [pauseTimer, setPauseTimer] = useState(null);
@@ -606,7 +607,27 @@ function OnboardingChat({ onComplete, onSavePlan, savedPlan }) {
     return rec;
   };
 
+  const stopVoice = () => {
+    if (recognition) {
+      try { recognition.stop(); } catch(e) {}
+    }
+    if (pauseTimer) clearTimeout(pauseTimer);
+    if (durationInterval) clearInterval(durationInterval);
+    if (maxDurationInterval) clearTimeout(maxDurationInterval);
+    setIsListening(false);
+    setActiveRecordingQuestion(null);
+    setRecognition(null);
+    setPauseTimer(null);
+    setMaxDurationInterval(null);
+    if (durationInterval) clearInterval(durationInterval);
+  };
+
   const startVoice = (questionId) => {
+    if (isListening) {
+      stopVoice();
+      if (activeRecordingQuestion === questionId) return;
+    }
+
     if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
       return;
     }
@@ -616,6 +637,7 @@ function OnboardingChat({ onComplete, onSavePlan, savedPlan }) {
 
     setRecognition(rec);
     setIsListening(true);
+    setActiveRecordingQuestion(questionId);
     setTranscript('');
     setActiveQuestion(questionId);
     setCurrentAnswer('');
@@ -673,28 +695,15 @@ function OnboardingChat({ onComplete, onSavePlan, savedPlan }) {
     }
   };
 
-  const stopVoice = () => {
-    if (recognition) {
-      try { recognition.stop(); } catch(e) {}
-    }
-    if (pauseTimer) clearTimeout(pauseTimer);
-    if (durationInterval) clearInterval(durationInterval);
-    if (maxDurationInterval) clearTimeout(maxDurationInterval);
-    setIsListening(false);
-    setRecognition(null);
-    setPauseTimer(null);
-    setMaxDurationInterval(null);
-    clearInterval(durationInterval);
-  };
-
   const handleQuestionClick = (questionId) => {
-    if (isListening) return;
+    if (isListening) stopVoice();
     setActiveQuestion(questionId);
     setCurrentAnswer(answers[questionId] || '');
     setTranscript(answers[questionId] || '');
   };
 
   const handleSaveAnswer = (questionId) => {
+    if (isListening) stopVoice();
     const textToSave = currentAnswer.trim() || transcript.trim();
     if (textToSave) {
       setAnswers(prev => ({ ...prev, [questionId]: textToSave }));
@@ -811,7 +820,7 @@ function OnboardingChat({ onComplete, onSavePlan, savedPlan }) {
         {questions.map((q, idx) => {
           const isAnswered = answers[q.id]?.trim();
           const isActive = activeQuestion === q.id;
-          const isCurrentlyListening = isListening && isActive;
+          const isThisRecording = isListening && activeRecordingQuestion === q.id;
           const hasTranscript = transcript.trim().length > 0;
           
           return (
@@ -821,14 +830,14 @@ function OnboardingChat({ onComplete, onSavePlan, savedPlan }) {
                 padding: '20px',
                 borderRadius: '16px',
                 background: 'var(--bg-card)',
-                border: isActive ? '2px solid var(--accent)' : '2px solid transparent',
+                border: isActive || isThisRecording ? '2px solid var(--accent)' : '2px solid transparent',
                 boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
                 transition: 'all 0.3s ease'
               }}
             >
               <div 
-                style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: isActive ? '12px' : '8px', cursor: isListening ? 'default' : 'pointer' }}
-                onClick={() => !isListening && handleQuestionClick(q.id)}
+                style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: isActive ? '12px' : '8px', cursor: 'pointer' }}
+                onClick={() => handleQuestionClick(q.id)}
               >
                 <span style={{ 
                   width: '32px', 
@@ -848,17 +857,17 @@ function OnboardingChat({ onComplete, onSavePlan, savedPlan }) {
                 <span style={{ fontSize: '15px', fontWeight: 600, color: 'var(--text-primary)', lineHeight: 1.3 }}>{q.label}</span>
               </div>
               
-              {isAnswered && !isActive && (
+              {isAnswered && !isActive && !isThisRecording && (
                 <div 
                   style={{ paddingLeft: '44px', cursor: 'pointer' }}
-                  onClick={() => !isListening && handleQuestionClick(q.id)}
+                  onClick={() => handleQuestionClick(q.id)}
                 >
                   <p style={{ margin: 0, fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 1.5, wordWrap: 'break-word', whiteSpace: 'pre-wrap' }}>{answers[q.id]}</p>
                   <p style={{ margin: '4px 0 0', fontSize: '12px', color: 'var(--accent)' }}>Tap to edit</p>
                 </div>
               )}
               
-              {isActive && (
+              {(isActive || isThisRecording) && (
                 <div style={{ paddingLeft: '44px' }}>
                   <p style={{ margin: '0 0 14px', fontSize: '13px', color: 'var(--text-tertiary)' }}>{q.hint}</p>
                   
@@ -879,16 +888,16 @@ function OnboardingChat({ onComplete, onSavePlan, savedPlan }) {
                   
                   <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
                     <button 
-                      onClick={() => isCurrentlyListening ? stopVoice() : startVoice(q.id)} 
+                      onClick={() => isThisRecording ? stopVoice() : startVoice(q.id)} 
                       style={{ 
                         padding: '14px 24px', 
-                        background: isCurrentlyListening ? '#ff4444' : 'var(--accent)', 
+                        background: isThisRecording ? '#ff4444' : 'var(--accent)', 
                         border: 'none', 
                         borderRadius: '12px', 
                         cursor: 'pointer', 
                         fontSize: '15px',
                         transition: 'all 0.2s',
-                        boxShadow: isCurrentlyListening ? '0 4px 16px rgba(255,68,68,0.4)' : '0 4px 12px rgba(0,168,112,0.3)',
+                        boxShadow: isThisRecording ? '0 4px 16px rgba(255,68,68,0.4)' : '0 4px 12px rgba(0,168,112,0.3)',
                         display: 'flex',
                         alignItems: 'center',
                         gap: '8px',
@@ -898,7 +907,7 @@ function OnboardingChat({ onComplete, onSavePlan, savedPlan }) {
                         justifyContent: 'center'
                       }}
                     >
-                      {isCurrentlyListening ? (
+                      {isThisRecording ? (
                         <>
                           ⏹️ Stop ({formatDuration(recordingDuration)})
                         </>
