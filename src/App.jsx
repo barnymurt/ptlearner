@@ -573,17 +573,19 @@ function generateLessonPlan(answers) {
   return finalPlan;
 }
 
-function OnboardingChat({ onComplete, recommendedSections = [] }) {
+function OnboardingChat({ onComplete, onSavePlan, savedPlan }) {
   const [answers, setAnswers] = useState({ level: '', goal: '', context: '', time: '' });
   const [currentAnswer, setCurrentAnswer] = useState('');
   const [activeQuestion, setActiveQuestion] = useState(null);
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState('');
   const [recognition, setRecognition] = useState(null);
-  const [lessonPlan, setLessonPlan] = useState(recommendedSections);
   const [pauseTimer, setPauseTimer] = useState(null);
   const [recordingDuration, setRecordingDuration] = useState(0);
   const [durationInterval, setDurationInterval] = useState(null);
+  const [maxDurationInterval, setMaxDurationInterval] = useState(null);
+  const [lessonPlan, setLessonPlan] = useState(savedPlan || []);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const questions = [
     { id: 'level', label: "What's your current level in Portuguese?", hint: 'Complete beginner, some basics, or intermediate' },
@@ -623,13 +625,16 @@ function OnboardingChat({ onComplete, recommendedSections = [] }) {
     }, 1000);
     setDurationInterval(durInterval);
 
+    const maxDur = setTimeout(() => {
+      stopVoice();
+    }, 60000);
+    setMaxDurationInterval(maxDur);
+
     const resetPauseTimer = () => {
       if (pauseTimer) clearTimeout(pauseTimer);
       const timer = setTimeout(() => {
-        if (recordingDuration > 2) {
-          stopVoice();
-        }
-      }, 8000);
+        stopVoice();
+      }, 12000);
       setPauseTimer(timer);
     };
 
@@ -643,13 +648,13 @@ function OnboardingChat({ onComplete, recommendedSections = [] }) {
       const results = Array.from(event.results);
       const transcriptText = results.map(r => r[0].transcript).join('');
       setTranscript(transcriptText);
+      setCurrentAnswer(transcriptText);
       resetPauseTimer();
 
       if (event.results[event.results.length - 1].isFinal) {
         const finalTranscript = event.results[event.results.length - 1][0].transcript;
         setCurrentAnswer(finalTranscript);
-        handleAnswerSelect(questionId, finalTranscript);
-        stopVoice();
+        setTranscript(finalTranscript);
       }
     };
 
@@ -669,22 +674,34 @@ function OnboardingChat({ onComplete, recommendedSections = [] }) {
   };
 
   const stopVoice = () => {
-    if (recognition) recognition.stop();
+    if (recognition) {
+      try { recognition.stop(); } catch(e) {}
+    }
     if (pauseTimer) clearTimeout(pauseTimer);
     if (durationInterval) clearInterval(durationInterval);
+    if (maxDurationInterval) clearTimeout(maxDurationInterval);
     setIsListening(false);
     setRecognition(null);
     setPauseTimer(null);
-    if (durationInterval) clearInterval(durationInterval);
+    setMaxDurationInterval(null);
+    clearInterval(durationInterval);
   };
 
-  const handleAnswerSelect = (questionId, text) => {
-    if (text) {
-      setAnswers(prev => ({ ...prev, [questionId]: text }));
-    }
+  const handleQuestionClick = (questionId) => {
+    if (isListening) return;
     setActiveQuestion(questionId);
-    setCurrentAnswer(text || answers[questionId] || '');
-    setTranscript(text || '');
+    setCurrentAnswer(answers[questionId] || '');
+    setTranscript(answers[questionId] || '');
+  };
+
+  const handleSaveAnswer = (questionId) => {
+    const textToSave = currentAnswer.trim() || transcript.trim();
+    if (textToSave) {
+      setAnswers(prev => ({ ...prev, [questionId]: textToSave }));
+      setActiveQuestion(null);
+      setCurrentAnswer('');
+      setTranscript('');
+    }
   };
 
   const handleInputChange = (text) => {
@@ -692,9 +709,25 @@ function OnboardingChat({ onComplete, recommendedSections = [] }) {
     setTranscript(text);
   };
 
-  const handleFinish = () => {
-    const plan = generateLessonPlan(answers);
-    setLessonPlan(plan);
+  const handleGeneratePlan = async () => {
+    if (!allAnswered) return;
+    setIsGenerating(true);
+    
+    try {
+      const plan = await generateLessonPlanWithLLM(answers);
+      setLessonPlan(plan);
+    } catch (error) {
+      const plan = generateLessonPlan(answers);
+      setLessonPlan(plan);
+    }
+    
+    setIsGenerating(false);
+  };
+
+  const handleSavePlanToProfile = () => {
+    if (lessonPlan.length > 0 && onSavePlan) {
+      onSavePlan({ plan: lessonPlan, answers });
+    }
   };
 
   const formatDuration = (seconds) => {
@@ -712,6 +745,7 @@ function OnboardingChat({ onComplete, recommendedSections = [] }) {
             <h3 style={{ margin: 0, fontSize: '24px', color: 'var(--text-primary)', fontWeight: 700 }}>Your Personalized Plan</h3>
             <p style={{ margin: '8px 0 0', fontSize: '15px', color: 'var(--text-secondary)' }}>Based on your goals, here's what to study:</p>
           </div>
+          
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '24px' }}>
             {lessonPlan.map((item, idx) => (
               <div key={item.id} style={{ 
@@ -724,16 +758,25 @@ function OnboardingChat({ onComplete, recommendedSections = [] }) {
                   <span style={{ fontSize: '20px' }}>{item.icon}</span>
                   <span style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text-primary)' }}>{item.labelEn}</span>
                 </div>
-                <p style={{ margin: 0, fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 1.5 }}>{item.reason}</p>
+                <p style={{ margin: 0, fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 1.5, wordWrap: 'break-word', whiteSpace: 'pre-wrap' }}>{item.reason}</p>
               </div>
             ))}
           </div>
+          
           <button 
             onClick={() => onComplete(lessonPlan.map(p => p.id))} 
-            style={{ width: '100%', padding: '18px', background: 'var(--accent)', color: 'white', border: 'none', borderRadius: '14px', cursor: 'pointer', fontSize: '17px', fontWeight: 600, boxShadow: '0 4px 16px rgba(0,168,112,0.3)' }}
+            style={{ width: '100%', padding: '18px', background: 'var(--accent)', color: 'white', border: 'none', borderRadius: '14px', cursor: 'pointer', fontSize: '17px', fontWeight: 600, boxShadow: '0 4px 16px rgba(0,168,112,0.3)', marginBottom: '12px' }}
           >
             Let's Go! 🚀
           </button>
+          
+          <button 
+            onClick={handleSavePlanToProfile}
+            style={{ width: '100%', padding: '16px', background: 'var(--accent-light)', color: 'var(--accent)', border: '2px solid var(--accent)', borderRadius: '14px', cursor: 'pointer', fontSize: '16px', fontWeight: 600 }}
+          >
+            💾 Save Plan to My Plan
+          </button>
+          
           <button 
             onClick={() => { setLessonPlan([]); setAnswers({}); setActiveQuestion(null); setCurrentAnswer(''); }} 
             style={{ width: '100%', marginTop: '12px', padding: '14px', background: 'transparent', border: '1px solid var(--border)', borderRadius: '12px', cursor: 'pointer', color: 'var(--text-secondary)', fontSize: '15px' }}
@@ -752,7 +795,7 @@ function OnboardingChat({ onComplete, recommendedSections = [] }) {
     <div style={{ maxWidth: '800px', margin: '0 auto', padding: '24px' }}>
       <div style={{ textAlign: 'center', marginBottom: '32px' }}>
         <h2 style={{ fontSize: '28px', fontWeight: 700, margin: '0 0 8px', color: 'var(--text-primary)' }}>💬 Tell me about yourself</h2>
-        <p style={{ margin: 0, fontSize: '15px', color: 'var(--text-secondary)' }}>Click any question to answer. All questions help create your perfect plan.</p>
+        <p style={{ margin: 0, fontSize: '15px', color: 'var(--text-secondary)' }}>Click any question to answer in any order. All questions help create your perfect plan.</p>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '16px' }}>
@@ -760,23 +803,24 @@ function OnboardingChat({ onComplete, recommendedSections = [] }) {
           const isAnswered = answers[q.id]?.trim();
           const isActive = activeQuestion === q.id;
           const isCurrentlyListening = isListening && isActive;
+          const hasTranscript = transcript.trim().length > 0;
           
           return (
             <div 
               key={q.id}
-              onClick={() => !isListening && handleAnswerSelect(q.id, '')}
               style={{ 
                 padding: '20px',
                 borderRadius: '16px',
                 background: 'var(--bg-card)',
                 border: isActive ? '2px solid var(--accent)' : '2px solid transparent',
                 boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
-                cursor: isListening ? 'default' : 'pointer',
-                transition: 'all 0.3s ease',
-                opacity: activeQuestion && !isActive ? 0.7 : 1
+                transition: 'all 0.3s ease'
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: isActive ? '12px' : '8px' }}>
+              <div 
+                style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: isActive ? '12px' : '8px', cursor: isListening ? 'default' : 'pointer' }}
+                onClick={() => !isListening && handleQuestionClick(q.id)}
+              >
                 <span style={{ 
                   width: '32px', 
                   height: '32px', 
@@ -796,68 +840,84 @@ function OnboardingChat({ onComplete, recommendedSections = [] }) {
               </div>
               
               {isAnswered && !isActive && (
-                <p style={{ margin: 0, paddingLeft: '44px', fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 1.5 }}>{answers[q.id]}</p>
+                <div 
+                  style={{ paddingLeft: '44px', cursor: 'pointer' }}
+                  onClick={() => !isListening && handleQuestionClick(q.id)}
+                >
+                  <p style={{ margin: 0, fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 1.5, wordWrap: 'break-word', whiteSpace: 'pre-wrap' }}>{answers[q.id]}</p>
+                  <p style={{ margin: '4px 0 0', fontSize: '12px', color: 'var(--accent)' }}>Tap to edit</p>
+                </div>
               )}
               
               {isActive && (
                 <div style={{ paddingLeft: '44px' }}>
                   <p style={{ margin: '0 0 14px', fontSize: '13px', color: 'var(--text-tertiary)' }}>{q.hint}</p>
                   
-                  <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginBottom: '12px' }}>
-                    <input 
-                      type="text" 
-                      value={currentAnswer}
-                      onChange={(e) => handleInputChange(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' && currentAnswer.trim()) {
-                          handleAnswerSelect(q.id, currentAnswer);
-                        }
-                      }}
-                      placeholder="Type or tap mic to record..."
-                      style={{ flex: 1, padding: '14px 16px', borderRadius: '12px', border: '1px solid var(--border)', fontSize: '15px', outline: 'none', background: 'var(--bg)' }}
-                    />
-                  </div>
+                  <input 
+                    type="text" 
+                    value={currentAnswer}
+                    onChange={(e) => handleInputChange(e.target.value)}
+                    placeholder="Type your answer or tap Record..."
+                    style={{ width: '100%', padding: '14px 16px', borderRadius: '12px', border: '1px solid var(--border)', fontSize: '15px', outline: 'none', background: 'var(--bg)', marginBottom: '12px', boxSizing: 'border-box' }}
+                  />
                   
-                  <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                  {hasTranscript && (
+                    <div style={{ marginBottom: '12px', padding: '12px', background: 'var(--accent-light)', borderRadius: '10px', borderLeft: '3px solid var(--accent)' }}>
+                      <p style={{ margin: '0 0 6px', fontSize: '12px', fontWeight: 600, color: 'var(--accent)' }}>Voice note:</p>
+                      <p style={{ margin: 0, fontSize: '14px', color: 'var(--text-primary)', lineHeight: 1.5, wordWrap: 'break-word', whiteSpace: 'pre-wrap' }}>{transcript}</p>
+                    </div>
+                  )}
+                  
+                  <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
                     <button 
-                      onClick={(e) => { e.stopPropagation(); isCurrentlyListening ? stopVoice() : startVoice(q.id); }} 
+                      onClick={() => isCurrentlyListening ? stopVoice() : startVoice(q.id)} 
                       style={{ 
-                        padding: '14px 20px', 
+                        padding: '14px 24px', 
                         background: isCurrentlyListening ? '#ff4444' : 'var(--accent)', 
                         border: 'none', 
                         borderRadius: '12px', 
                         cursor: 'pointer', 
-                        fontSize: '16px',
+                        fontSize: '15px',
                         transition: 'all 0.2s',
                         boxShadow: isCurrentlyListening ? '0 4px 16px rgba(255,68,68,0.4)' : '0 4px 12px rgba(0,168,112,0.3)',
                         display: 'flex',
                         alignItems: 'center',
                         gap: '8px',
                         color: 'white',
-                        fontWeight: 600
+                        fontWeight: 600,
+                        minWidth: '140px',
+                        justifyContent: 'center'
                       }}
                     >
-                      {isCurrentlyListening ? '⏹️' : '🎙️'} {isCurrentlyListening ? 'Stop' : 'Record'}
-                      {isCurrentlyListening && (
-                        <span style={{ fontSize: '13px', opacity: 0.9 }}>({formatDuration(recordingDuration)})</span>
+                      {isCurrentlyListening ? (
+                        <>
+                          ⏹️ Stop ({formatDuration(recordingDuration)})
+                        </>
+                      ) : (
+                        <>
+                          🎙️ Record
+                        </>
                       )}
                     </button>
                     
-                    {currentAnswer.trim() && (
-                      <button 
-                        onClick={(e) => { e.stopPropagation(); handleAnswerSelect(q.id, currentAnswer); }}
-                        style={{ padding: '14px 20px', background: 'var(--accent)', color: 'white', border: 'none', borderRadius: '12px', cursor: 'pointer', fontWeight: 600, fontSize: '15px' }}
-                      >
-                        Save ✓
-                      </button>
-                    )}
+                    <button 
+                      onClick={() => handleSaveAnswer(q.id)}
+                      disabled={!hasTranscript && !currentAnswer.trim()}
+                      style={{ 
+                        padding: '14px 24px', 
+                        background: (hasTranscript || currentAnswer.trim()) ? 'var(--accent)' : 'var(--border)',
+                        color: 'white', 
+                        border: 'none', 
+                        borderRadius: '12px', 
+                        cursor: (hasTranscript || currentAnswer.trim()) ? 'pointer' : 'not-allowed',
+                        fontWeight: 600, 
+                        fontSize: '15px',
+                        opacity: (hasTranscript || currentAnswer.trim()) ? 1 : 0.5
+                      }}
+                    >
+                      ✓ Save Answer
+                    </button>
                   </div>
-                  
-                  {isCurrentlyListening && transcript && (
-                    <p style={{ margin: '12px 0 0', fontSize: '13px', color: 'var(--accent)', fontStyle: 'italic', background: 'var(--accent-light)', padding: '10px 12px', borderRadius: '8px' }}>
-                      {transcript}
-                    </p>
-                  )}
                 </div>
               )}
             </div>
@@ -867,11 +927,11 @@ function OnboardingChat({ onComplete, recommendedSections = [] }) {
 
       <div style={{ marginTop: '32px', textAlign: 'center' }}>
         <button 
-          onClick={handleFinish} 
-          disabled={!allAnswered}
+          onClick={handleGeneratePlan} 
+          disabled={!allAnswered || isGenerating}
           style={{ 
             padding: '18px 48px', 
-            background: allAnswered ? 'var(--accent)' : 'var(--border)',
+            background: allAnswered ? (isGenerating ? '#007a52' : 'var(--accent)') : 'var(--border)',
             color: 'white', 
             border: 'none', 
             borderRadius: '14px', 
@@ -879,10 +939,18 @@ function OnboardingChat({ onComplete, recommendedSections = [] }) {
             fontSize: '17px',
             fontWeight: 600,
             boxShadow: allAnswered ? '0 4px 20px rgba(0,168,112,0.4)' : 'none',
-            transition: 'all 0.3s ease'
+            transition: 'all 0.3s ease',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+            margin: '0 auto'
           }}
         >
-          {allAnswered ? '✨ Generate My Plan' : `Answer all questions (${Object.values(answers).filter(a => a.trim()).length}/4)`}
+          {isGenerating ? (
+            <>⏳ Generating your plan...</>
+          ) : (
+            <>✨ {allAnswered ? 'Generate My Plan' : `Answer all questions (${Object.values(answers).filter(a => a.trim()).length}/4)`}</>
+          )}
         </button>
         <div style={{ marginTop: '16px' }}>
           <button onClick={() => onComplete([])} style={{ padding: '12px 24px', background: 'transparent', border: '1px solid var(--border)', borderRadius: '10px', cursor: 'pointer', color: 'var(--text-secondary)', fontSize: '14px' }}>
@@ -892,6 +960,66 @@ function OnboardingChat({ onComplete, recommendedSections = [] }) {
       </div>
     </div>
   );
+}
+
+async function generateLessonPlanWithLLM(answers) {
+  const sectionsContent = Object.entries(SECTIONS_MAP).map(([id, section]) => {
+    return `${section.icon} ${section.labelEn}: ${section.desc} (Keywords: ${section.keywords?.join(', ') || ''})`;
+  }).join('\n');
+
+  const prompt = `You are Patrick, a Portuguese learning assistant. Create a personalized learning plan based on these user answers:
+  
+Level: ${answers.level}
+Goal: ${answers.goal}  
+Context: ${answers.context}
+Time available: ${answers.time}
+
+Available sections in the app:
+${sectionsContent}
+
+Based on the user's answers, select 5-7 sections that would be most beneficial. For each section, provide a specific reason why this section matches their goals.
+
+Return your response as a JSON array with this format:
+[
+  {"id": "sectionId", "icon": "emoji", "labelEn": "Section Name", "reason": "Why this section is recommended for this user"}
+]
+
+Make sure your recommendations are specific to their goals and context. If they want to travel, focus on oral and vocabulary. If they need an exam, focus on writing and grammar.`;
+
+  try {
+    const response = await fetch('https://api.minimaxi.chat/v1/text/chatcompletion', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${import.meta.env.VITE_MINIMAX_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: 'MiniMax-Text-01',
+        messages: [
+          { role: 'system', content: 'You are Patrick, a friendly Portuguese learning assistant. Always respond with valid JSON.' },
+          { role: 'user', content: prompt }
+        ],
+        temperature: 0.7
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error('LLM API failed');
+    }
+
+    const data = await response.json();
+    const content = data.choices?.[0]?.message?.content;
+    
+    if (content) {
+      const cleanedContent = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+      const plan = JSON.parse(cleanedContent);
+      return plan;
+    }
+  } catch (error) {
+    console.log('LLM fallback to rule-based plan');
+  }
+  
+  return generateLessonPlan(answers);
 }
 
 function FloatingChatButton({ onClick }) {
@@ -1985,6 +2113,7 @@ function Verbos999Section({ showEnglish }) {
 // ─── SECTION MAP ────────────────────────────────────────────────────────────────
 
 const SECTION_MAP = {
+  myplan: MyPlanSection,
   verbs25: Verbs25Section, conjugation: ConjugationSection, pronouns: PronounsSection,
   adjectives: AdjectivesSection, prepositions: PrepositionsSection, articles: ArticlesSection,
   vocabulary: VocabularySection, modals: ModalsSection, idioms: IdiomsSection,
@@ -2001,6 +2130,13 @@ window.onunhandledrejection = e => console.error('[Unhandled Promise]', e.reason
 // ─── HOME SCREEN ───────────────────────────────────────────────────────────────
 
 const SECTION_GROUPS = [
+  {
+    label: 'My Plan',
+    labelPt: 'O Meu Plano',
+    sections: [
+      { id: 'myplan', label: 'O Meu Plano', labelEn: 'My Plan', icon: '🎯', desc: 'Your personalized learning plan' },
+    ],
+  },
   {
     label: 'Reference',
     labelPt: 'Referência',
@@ -2058,10 +2194,85 @@ const SECTION_GROUPS = [
   },
 ];
 
-function LandingPage({ onComplete }) {
+function LandingPage({ onComplete, onSavePlan, savedPlan }) {
   return (
     <div style={{ padding: '24px', maxWidth: '900px', margin: '0 auto' }}>
-      <OnboardingChat onComplete={onComplete} />
+      <OnboardingChat onComplete={onComplete} onSavePlan={onSavePlan} savedPlan={savedPlan} />
+    </div>
+  );
+}
+
+function MyPlanSection({ savedPlan, onSelectSection }) {
+  if (!savedPlan || !savedPlan.plan || savedPlan.plan.length === 0) {
+    return (
+      <div style={{ padding: '24px', textAlign: 'center' }}>
+        <div style={{ fontSize: '48px', marginBottom: '16px' }}>📋</div>
+        <h2 style={{ fontSize: '20px', fontWeight: 600, margin: '0 0 8px', color: 'var(--text-primary)' }}>My Plan</h2>
+        <p style={{ fontSize: '14px', color: 'var(--text-secondary)', margin: '0 0 20px' }}>
+          Complete the questionnaire to get your personalized learning plan.
+        </p>
+        <button 
+          onClick={() => onSelectSection(null)}
+          style={{ padding: '12px 24px', background: 'var(--accent)', color: 'white', border: 'none', borderRadius: '10px', cursor: 'pointer', fontSize: '14px', fontWeight: 600 }}
+        >
+          Start Questionnaire
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ padding: '24px' }}>
+      <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+        <h2 style={{ fontSize: '22px', fontWeight: 700, margin: '0 0 4px', color: 'var(--text-primary)' }}>🎯 My Learning Plan</h2>
+        <p style={{ fontSize: '13px', color: 'var(--text-secondary)', margin: 0 }}>Your personalized path to Portuguese fluency</p>
+      </div>
+      
+      {savedPlan.answers && (
+        <div style={{ background: 'var(--bg-muted)', borderRadius: '12px', padding: '16px', marginBottom: '20px' }}>
+          <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-secondary)', margin: '0 0 12px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Your Profile</h3>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div><span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>Level:</span> <span style={{ color: 'var(--text-secondary)' }}>{savedPlan.answers.level}</span></div>
+            <div><span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>Goal:</span> <span style={{ color: 'var(--text-secondary)' }}>{savedPlan.answers.goal}</span></div>
+            <div><span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>Context:</span> <span style={{ color: 'var(--text-secondary)' }}>{savedPlan.answers.context}</span></div>
+            <div><span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>Time:</span> <span style={{ color: 'var(--text-secondary)' }}>{savedPlan.answers.time}</span></div>
+          </div>
+        </div>
+      )}
+      
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        {savedPlan.plan.map((item, idx) => (
+          <button
+            key={item.id}
+            onClick={() => onSelectSection(item.id)}
+            style={{
+              padding: '16px',
+              background: 'var(--bg-card)',
+              border: '1px solid var(--border)',
+              borderRadius: '12px',
+              cursor: 'pointer',
+              textAlign: 'left',
+              transition: 'all 0.2s ease',
+              borderLeft: `4px solid var(--accent)`
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
+              <span style={{ fontSize: '20px' }}>{item.icon}</span>
+              <span style={{ fontSize: '15px', fontWeight: 600, color: 'var(--text-primary)' }}>{item.labelEn}</span>
+            </div>
+            <p style={{ margin: 0, fontSize: '13px', color: 'var(--text-secondary)', lineHeight: 1.5, wordWrap: 'break-word', whiteSpace: 'pre-wrap' }}>{item.reason}</p>
+          </button>
+        ))}
+      </div>
+      
+      <div style={{ marginTop: '24px', textAlign: 'center' }}>
+        <button 
+          onClick={() => onSelectSection(null)}
+          style={{ padding: '12px 24px', background: 'var(--accent)', color: 'white', border: 'none', borderRadius: '10px', cursor: 'pointer', fontSize: '14px', fontWeight: 600 }}
+        >
+          Update My Plan →
+        </button>
+      </div>
     </div>
   );
 }
@@ -2171,6 +2382,7 @@ export default function App() {
   const [showEnglish, setShowEnglish] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
+  const [savedPlan, setSavedPlan] = useState(null);
   const SectionComp = section ? (SECTION_MAP[section] || Verbs25Section) : null;
 
   useEffect(() => {
@@ -2178,7 +2390,21 @@ export default function App() {
       const prev = parseInt(localStorage.getItem('sessions') || '0', 10);
       localStorage.setItem('sessions', String(prev + 1));
     } catch {}
+
+    try {
+      const saved = localStorage.getItem('fluencia_plan');
+      if (saved) {
+        setSavedPlan(JSON.parse(saved));
+      }
+    } catch {}
   }, []);
+
+  const handleSavePlan = (planData) => {
+    setSavedPlan(planData);
+    try {
+      localStorage.setItem('fluencia_plan', JSON.stringify(planData));
+    } catch {}
+  };
 
   const handleSectionSelect = (id) => {
     setSection(id);
@@ -2207,7 +2433,7 @@ export default function App() {
                   ← <span style={{ fontFamily: 'var(--font-display)', fontSize: '18px', color: 'var(--text-primary)' }}>Fluência</span>
                 </button>
                 <div className="section-nav-title">
-                  {showEnglish ? (SECTIONS.find(s => s.id === section)?.labelEn || section) : (SECTIONS.find(s => s.id === section)?.label || section)}
+                  {section === 'myplan' ? '🎯 My Plan' : (showEnglish ? (SECTIONS.find(s => s.id === section)?.labelEn || section) : (SECTIONS.find(s => s.id === section)?.label || section))}
                 </div>
               </>
             ) : (
@@ -2220,13 +2446,23 @@ export default function App() {
             )}
           </div>
           <div className="content">
-            {section ? <SectionComp showEnglish={showEnglish} /> : (
+            {section === 'myplan' ? (
+              <MyPlanSection savedPlan={savedPlan} onSelectSection={(id) => {
+                if (id === null) {
+                  setSection(null);
+                } else {
+                  setSection(id);
+                }
+              }} />
+            ) : section ? (
+              <SectionComp showEnglish={showEnglish} savedPlan={savedPlan} onSavePlan={handleSavePlan} />
+            ) : (
               <div className="welcome-screen">
                 <LandingPage onComplete={(recommendedSections) => {
                   if (recommendedSections.length > 0) {
                     setSection(recommendedSections[0]);
                   }
-                }} />
+                }} onSavePlan={handleSavePlan} savedPlan={savedPlan} />
               </div>
             )}
           </div>
