@@ -1003,7 +1003,7 @@ function OnboardingChat({ onComplete, onSavePlan, savedPlan }) {
 
 async function generateLessonPlanWithLLM(answers) {
   try {
-    const response = await fetch('/api/generate-plan', {
+    const response = await fetch('/api', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
