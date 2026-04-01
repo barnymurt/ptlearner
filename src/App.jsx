@@ -963,60 +963,25 @@ function OnboardingChat({ onComplete, onSavePlan, savedPlan }) {
 }
 
 async function generateLessonPlanWithLLM(answers) {
-  const sectionsContent = Object.entries(SECTIONS_MAP).map(([id, section]) => {
-    return `${section.icon} ${section.labelEn}: ${section.desc} (Keywords: ${section.keywords?.join(', ') || ''})`;
-  }).join('\n');
-
-  const prompt = `You are Patrick, a Portuguese learning assistant. Create a personalized learning plan based on these user answers:
-  
-Level: ${answers.level}
-Goal: ${answers.goal}  
-Context: ${answers.context}
-Time available: ${answers.time}
-
-Available sections in the app:
-${sectionsContent}
-
-Based on the user's answers, select 5-7 sections that would be most beneficial. For each section, provide a specific reason why this section matches their goals.
-
-Return your response as a JSON array with this format:
-[
-  {"id": "sectionId", "icon": "emoji", "labelEn": "Section Name", "reason": "Why this section is recommended for this user"}
-]
-
-Make sure your recommendations are specific to their goals and context. If they want to travel, focus on oral and vocabulary. If they need an exam, focus on writing and grammar.`;
-
   try {
-    const response = await fetch('https://api.minimaxi.chat/v1/text/chatcompletion', {
+    const response = await fetch('/api/generate-plan', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${import.meta.env.VITE_MINIMAX_API_KEY}`
       },
-      body: JSON.stringify({
-        model: 'MiniMax-Text-01',
-        messages: [
-          { role: 'system', content: 'You are Patrick, a friendly Portuguese learning assistant. Always respond with valid JSON.' },
-          { role: 'user', content: prompt }
-        ],
-        temperature: 0.7
-      })
+      body: JSON.stringify({ answers })
     });
 
     if (!response.ok) {
-      throw new Error('LLM API failed');
+      throw new Error('API call failed');
     }
 
     const data = await response.json();
-    const content = data.choices?.[0]?.message?.content;
-    
-    if (content) {
-      const cleanedContent = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-      const plan = JSON.parse(cleanedContent);
-      return plan;
+    if (data.plan && data.plan.length > 0) {
+      return data.plan;
     }
   } catch (error) {
-    console.log('LLM fallback to rule-based plan');
+    console.error('Plan generation error:', error);
   }
   
   return generateLessonPlan(answers);
