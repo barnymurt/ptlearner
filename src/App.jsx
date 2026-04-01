@@ -577,16 +577,9 @@ function OnboardingChat({ onComplete, onSavePlan, savedPlan }) {
   const [answers, setAnswers] = useState({ level: '', goal: '', context: '', time: '' });
   const [currentAnswer, setCurrentAnswer] = useState('');
   const [activeQuestion, setActiveQuestion] = useState(null);
-  const [isListening, setIsListening] = useState(false);
-  const [activeRecordingQuestion, setActiveRecordingQuestion] = useState(null);
-  const [transcript, setTranscript] = useState('');
-  const [recognition, setRecognition] = useState(null);
-  const [pauseTimer, setPauseTimer] = useState(null);
-  const [recordingDuration, setRecordingDuration] = useState(0);
-  const [durationInterval, setDurationInterval] = useState(null);
-  const [maxDurationInterval, setMaxDurationInterval] = useState(null);
   const [lessonPlan, setLessonPlan] = useState(savedPlan || []);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [recordings, setRecordings] = useState({});
 
   const questions = [
     { id: 'level', label: "What's your current level in Portuguese?", hint: 'Complete beginner, some basics, or intermediate' },
@@ -597,134 +590,114 @@ function OnboardingChat({ onComplete, onSavePlan, savedPlan }) {
 
   const allAnswered = Object.values(answers).every(a => a.trim());
 
-  const initRecognition = () => {
+  const getRecording = (questionId) => recordings[questionId] || { isRecording: false, transcript: '', duration: 0, recognition: null };
+
+  const startRecording = (questionId) => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) return null;
+    if (!SpeechRecognition) return;
+
     const rec = new SpeechRecognition();
     rec.lang = 'en-US';
     rec.continuous = true;
     rec.interimResults = true;
-    return rec;
-  };
 
-  const stopVoice = (shouldReset = true) => {
-    if (recognition) {
-      try { recognition.stop(); } catch(e) {}
-    }
-    if (pauseTimer) clearTimeout(pauseTimer);
-    if (durationInterval) clearInterval(durationInterval);
-    if (maxDurationInterval) clearTimeout(maxDurationInterval);
-    if (shouldReset) {
-      setIsListening(false);
-      setActiveRecordingQuestion(null);
-      setRecognition(null);
-      setPauseTimer(null);
-      setMaxDurationInterval(null);
-      setRecordingDuration(0);
-    }
-  };
-
-  const startVoice = (questionId) => {
-    if (activeRecordingQuestion === questionId && isListening) {
-      stopVoice(true);
-      return;
-    }
-
-    if (isListening) {
-      stopVoice(true);
-    }
-
-    if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
-      return;
-    }
-
-    const rec = initRecognition();
-    if (!rec) return;
-
-    setRecognition(rec);
-    setIsListening(true);
-    setActiveRecordingQuestion(questionId);
-    setTranscript('');
-    setActiveQuestion(questionId);
-    setCurrentAnswer('');
-    setRecordingDuration(0);
-
-    const durInterval = setInterval(() => {
-      setRecordingDuration(prev => prev + 1);
+    let duration = 0;
+    let pauseTimer = null;
+    const durationInterval = setInterval(() => {
+      duration += 1;
+      setRecordings(prev => ({
+        ...prev,
+        [questionId]: { ...prev[questionId], duration }
+      }));
     }, 1000);
-    setDurationInterval(durInterval);
 
-    const maxDur = setTimeout(() => {
-      stopVoice(true);
+    const maxDuration = setTimeout(() => {
+      stopRecording(questionId, rec, durationInterval, pauseTimer);
     }, 60000);
-    setMaxDurationInterval(maxDur);
 
-    let latestPauseTimer = null;
     const resetPauseTimer = () => {
-      if (latestPauseTimer) clearTimeout(latestPauseTimer);
-      latestPauseTimer = setTimeout(() => {
-        stopVoice(true);
+      if (pauseTimer) clearTimeout(pauseTimer);
+      pauseTimer = setTimeout(() => {
+        stopRecording(questionId, rec, durationInterval, pauseTimer);
       }, 12000);
-      setPauseTimer(latestPauseTimer);
     };
 
     rec.onstart = () => {
-      setIsListening(true);
-      setRecordingDuration(0);
-      resetPauseTimer();
+      setRecordings(prev => ({
+        ...prev,
+        [questionId]: { isRecording: true, transcript: '', duration: 0, recognition: rec, durationInterval, maxDuration, pauseTimer }
+      }));
     };
 
     rec.onresult = (event) => {
-      const results = Array.from(event.results);
-      const transcriptText = results.map(r => r[0].transcript).join('');
-      setTranscript(transcriptText);
-      setCurrentAnswer(transcriptText);
+      const transcriptText = Array.from(event.results).map(r => r[0].transcript).join('');
+      setRecordings(prev => ({
+        ...prev,
+        [questionId]: { ...prev[questionId], transcript: transcriptText }
+      }));
       resetPauseTimer();
 
       if (event.results[event.results.length - 1].isFinal) {
-        const finalTranscript = event.results[event.results.length - 1][0].transcript;
-        setCurrentAnswer(finalTranscript);
-        setTranscript(finalTranscript);
-        stopVoice(true);
+        setRecordings(prev => ({
+          ...prev,
+          [questionId]: { ...prev[questionId], transcript: event.results[event.results.length - 1][0].transcript }
+        }));
+        stopRecording(questionId, rec, durationInterval, pauseTimer);
       }
     };
 
     rec.onerror = () => {
-      stopVoice(true);
+      stopRecording(questionId, rec, durationInterval, pauseTimer);
     };
 
     rec.onend = () => {
-      stopVoice(true);
+      stopRecording(questionId, rec, durationInterval, pauseTimer);
     };
 
-    try {
-      rec.start();
-    } catch (e) {
-      stopVoice(true);
-    }
+    rec.start();
+  };
+
+  const stopRecording = (questionId, rec, durationInterval, pauseTimer) => {
+    try { rec?.stop(); } catch(e) {}
+    if (durationInterval) clearInterval(durationInterval);
+    if (pauseTimer) clearTimeout(pauseTimer);
+    
+    setRecordings(prev => {
+      const current = prev[questionId];
+      return {
+        ...prev,
+        [questionId]: { 
+          ...current, 
+          isRecording: false, 
+          duration: 0,
+          durationInterval: null,
+          pauseTimer: null
+        }
+      };
+    });
   };
 
   const handleQuestionClick = (questionId) => {
-    if (isListening) stopVoice();
     setActiveQuestion(questionId);
     setCurrentAnswer(answers[questionId] || '');
-    setTranscript(answers[questionId] || '');
   };
 
   const handleSaveAnswer = (questionId) => {
-    if (isListening) stopVoice();
-    const textToSave = currentAnswer.trim() || transcript.trim();
+    const rec = getRecording(questionId);
+    if (rec.isRecording) {
+      stopRecording(questionId, rec.recognition, null, null);
+    }
+    const textToSave = currentAnswer.trim() || rec.transcript.trim();
     if (textToSave) {
       setAnswers(prev => ({ ...prev, [questionId]: textToSave }));
       setActiveQuestion(null);
       setCurrentAnswer('');
-      setTranscript('');
+      setRecordings(prev => ({ ...prev, [questionId]: { isRecording: false, transcript: '', duration: 0 } }));
     }
   };
 
   const handleInputChange = (text) => {
     setCurrentAnswer(text);
-    setTranscript(text);
   };
 
   const [planSource, setPlanSource] = useState('');
@@ -829,8 +802,9 @@ function OnboardingChat({ onComplete, onSavePlan, savedPlan }) {
         {questions.map((q, idx) => {
           const isAnswered = answers[q.id]?.trim();
           const isActive = activeQuestion === q.id;
-          const isThisRecording = isListening && activeRecordingQuestion === q.id;
-          const hasTranscript = transcript.trim().length > 0;
+          const recording = getRecording(q.id);
+          const isThisRecording = recording.isRecording;
+          const hasTranscript = (recording.transcript || currentAnswer).trim().length > 0;
           
           return (
             <div 
@@ -866,7 +840,7 @@ function OnboardingChat({ onComplete, onSavePlan, savedPlan }) {
                 <span style={{ fontSize: '15px', fontWeight: 600, color: 'var(--text-primary)', lineHeight: 1.3 }}>{q.label}</span>
               </div>
               
-              {isAnswered && !isActive && !isThisRecording && (
+              {isAnswered && !isActive && (
                 <div 
                   style={{ paddingLeft: '44px', cursor: 'pointer' }}
                   onClick={() => handleQuestionClick(q.id)}
@@ -876,7 +850,7 @@ function OnboardingChat({ onComplete, onSavePlan, savedPlan }) {
                 </div>
               )}
               
-              {(isActive || isThisRecording) && (
+              {isActive && (
                 <div style={{ paddingLeft: '44px' }}>
                   <p style={{ margin: '0 0 14px', fontSize: '13px', color: 'var(--text-tertiary)' }}>{q.hint}</p>
                   
@@ -888,17 +862,16 @@ function OnboardingChat({ onComplete, onSavePlan, savedPlan }) {
                     style={{ width: '100%', padding: '14px 16px', borderRadius: '12px', border: '1px solid var(--border)', fontSize: '15px', outline: 'none', background: 'var(--bg)', marginBottom: '12px', boxSizing: 'border-box' }}
                   />
                   
-                  {hasTranscript && (
+                  {recording.transcript && (
                     <div style={{ marginBottom: '12px', padding: '12px', background: 'var(--accent-light)', borderRadius: '10px', borderLeft: '3px solid var(--accent)', wordBreak: 'break-word', overflowWrap: 'break-word' }}>
                       <p style={{ margin: '0 0 6px', fontSize: '12px', fontWeight: 600, color: 'var(--accent)' }}>Voice note:</p>
-                      <div style={{ margin: 0, fontSize: '14px', color: 'var(--text-primary)', lineHeight: 1.5, wordBreak: 'break-word', overflowWrap: 'break-word', maxWidth: '100%' }}>{transcript}</div>
+                      <div style={{ margin: 0, fontSize: '14px', color: 'var(--text-primary)', lineHeight: 1.5, wordBreak: 'break-word', overflowWrap: 'break-word', maxWidth: '100%' }}>{recording.transcript}</div>
                     </div>
                   )}
                   
                   <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
                     <button 
-                      key={`record-${q.id}-${isThisRecording}`}
-                      onClick={() => isThisRecording ? stopVoice(true) : startVoice(q.id)} 
+                      onClick={() => isThisRecording ? stopRecording(q.id, recording.recognition, null, null) : startRecording(q.id)} 
                       style={{ 
                         padding: '14px 24px', 
                         background: isThisRecording ? '#ff4444' : '#00a870', 
@@ -917,7 +890,7 @@ function OnboardingChat({ onComplete, onSavePlan, savedPlan }) {
                       }}
                     >
                       {isThisRecording ? (
-                        <>⏹️ Stop ({formatDuration(recordingDuration)})</>
+                        <>⏹️ Stop ({formatDuration(recording.duration)})</>
                       ) : (
                         <>🎙️ Record</>
                       )}
@@ -925,17 +898,17 @@ function OnboardingChat({ onComplete, onSavePlan, savedPlan }) {
                     
                     <button 
                       onClick={() => handleSaveAnswer(q.id)}
-                      disabled={!hasTranscript && !currentAnswer.trim()}
+                      disabled={!hasTranscript}
                       style={{ 
                         padding: '14px 24px', 
-                        background: (hasTranscript || currentAnswer.trim()) ? 'var(--accent)' : 'var(--border)',
+                        background: hasTranscript ? 'var(--accent)' : 'var(--border)',
                         color: 'white', 
                         border: 'none', 
                         borderRadius: '12px', 
-                        cursor: (hasTranscript || currentAnswer.trim()) ? 'pointer' : 'not-allowed',
+                        cursor: hasTranscript ? 'pointer' : 'not-allowed',
                         fontWeight: 600, 
                         fontSize: '15px',
-                        opacity: (hasTranscript || currentAnswer.trim()) ? 1 : 0.5
+                        opacity: hasTranscript ? 1 : 0.5
                       }}
                     >
                       ✓ Save Answer
