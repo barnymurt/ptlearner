@@ -607,25 +607,26 @@ function OnboardingChat({ onComplete, onSavePlan, savedPlan }) {
     return rec;
   };
 
-  const stopVoice = () => {
+  const stopVoice = (shouldReset = true) => {
     if (recognition) {
       try { recognition.stop(); } catch(e) {}
     }
     if (pauseTimer) clearTimeout(pauseTimer);
     if (durationInterval) clearInterval(durationInterval);
     if (maxDurationInterval) clearTimeout(maxDurationInterval);
-    setIsListening(false);
-    setActiveRecordingQuestion(null);
-    setRecognition(null);
-    setPauseTimer(null);
-    setMaxDurationInterval(null);
-    if (durationInterval) clearInterval(durationInterval);
+    if (shouldReset) {
+      setIsListening(false);
+      setActiveRecordingQuestion(null);
+      setRecognition(null);
+      setPauseTimer(null);
+      setMaxDurationInterval(null);
+      setRecordingDuration(0);
+    }
   };
 
   const startVoice = (questionId) => {
     if (isListening) {
-      stopVoice();
-      if (activeRecordingQuestion === questionId) return;
+      stopVoice(true);
     }
 
     if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
@@ -641,6 +642,7 @@ function OnboardingChat({ onComplete, onSavePlan, savedPlan }) {
     setTranscript('');
     setActiveQuestion(questionId);
     setCurrentAnswer('');
+    setRecordingDuration(0);
 
     const durInterval = setInterval(() => {
       setRecordingDuration(prev => prev + 1);
@@ -648,16 +650,17 @@ function OnboardingChat({ onComplete, onSavePlan, savedPlan }) {
     setDurationInterval(durInterval);
 
     const maxDur = setTimeout(() => {
-      stopVoice();
+      stopVoice(true);
     }, 60000);
     setMaxDurationInterval(maxDur);
 
+    let latestPauseTimer = null;
     const resetPauseTimer = () => {
-      if (pauseTimer) clearTimeout(pauseTimer);
-      const timer = setTimeout(() => {
-        stopVoice();
+      if (latestPauseTimer) clearTimeout(latestPauseTimer);
+      latestPauseTimer = setTimeout(() => {
+        stopVoice(true);
       }, 12000);
-      setPauseTimer(timer);
+      setPauseTimer(latestPauseTimer);
     };
 
     rec.onstart = () => {
@@ -677,21 +680,22 @@ function OnboardingChat({ onComplete, onSavePlan, savedPlan }) {
         const finalTranscript = event.results[event.results.length - 1][0].transcript;
         setCurrentAnswer(finalTranscript);
         setTranscript(finalTranscript);
+        stopVoice(true);
       }
     };
 
     rec.onerror = () => {
-      stopVoice();
+      stopVoice(true);
     };
 
     rec.onend = () => {
-      stopVoice();
+      stopVoice(true);
     };
 
     try {
       rec.start();
     } catch (e) {
-      stopVoice();
+      stopVoice(true);
     }
   };
 
