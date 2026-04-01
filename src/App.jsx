@@ -625,6 +625,11 @@ function OnboardingChat({ onComplete, onSavePlan, savedPlan }) {
   };
 
   const startVoice = (questionId) => {
+    if (activeRecordingQuestion === questionId && isListening) {
+      stopVoice(true);
+      return;
+    }
+
     if (isListening) {
       stopVoice(true);
     }
