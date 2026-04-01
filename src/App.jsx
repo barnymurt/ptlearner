@@ -884,24 +884,24 @@ function OnboardingChat({ onComplete, onSavePlan, savedPlan }) {
                   />
                   
                   {hasTranscript && (
-                    <div style={{ marginBottom: '12px', padding: '12px', background: 'var(--accent-light)', borderRadius: '10px', borderLeft: '3px solid var(--accent)' }}>
+                    <div style={{ marginBottom: '12px', padding: '12px', background: 'var(--accent-light)', borderRadius: '10px', borderLeft: '3px solid var(--accent)', wordBreak: 'break-word', overflowWrap: 'break-word' }}>
                       <p style={{ margin: '0 0 6px', fontSize: '12px', fontWeight: 600, color: 'var(--accent)' }}>Voice note:</p>
-                      <p style={{ margin: 0, fontSize: '14px', color: 'var(--text-primary)', lineHeight: 1.5, wordWrap: 'break-word', whiteSpace: 'pre-wrap' }}>{transcript}</p>
+                      <div style={{ margin: 0, fontSize: '14px', color: 'var(--text-primary)', lineHeight: 1.5, wordBreak: 'break-word', overflowWrap: 'break-word', maxWidth: '100%' }}>{transcript}</div>
                     </div>
                   )}
                   
                   <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
                     <button 
-                      onClick={() => isThisRecording ? stopVoice() : startVoice(q.id)} 
+                      key={`record-${q.id}-${isThisRecording}`}
+                      onClick={() => isThisRecording ? stopVoice(true) : startVoice(q.id)} 
                       style={{ 
                         padding: '14px 24px', 
-                        background: isThisRecording ? '#ff4444' : 'var(--accent)', 
+                        background: isThisRecording ? '#ff4444' : '#00a870', 
                         border: 'none', 
                         borderRadius: '12px', 
                         cursor: 'pointer', 
                         fontSize: '15px',
-                        transition: 'all 0.2s',
-                        boxShadow: isThisRecording ? '0 4px 16px rgba(255,68,68,0.4)' : '0 4px 12px rgba(0,168,112,0.3)',
+                        transition: 'background 0.2s',
                         display: 'flex',
                         alignItems: 'center',
                         gap: '8px',
@@ -912,13 +912,9 @@ function OnboardingChat({ onComplete, onSavePlan, savedPlan }) {
                       }}
                     >
                       {isThisRecording ? (
-                        <>
-                          ⏹️ Stop ({formatDuration(recordingDuration)})
-                        </>
+                        <>⏹️ Stop ({formatDuration(recordingDuration)})</>
                       ) : (
-                        <>
-                          🎙️ Record
-                        </>
+                        <>🎙️ Record</>
                       )}
                     </button>
                     
