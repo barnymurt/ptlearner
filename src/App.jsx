@@ -720,19 +720,26 @@ function OnboardingChat({ onComplete, onSavePlan, savedPlan }) {
   };
 
   const [planSource, setPlanSource] = useState('');
+  const [planError, setPlanError] = useState('');
 
   const handleGeneratePlan = async () => {
     if (!allAnswered) return;
     setIsGenerating(true);
+    setPlanSource('');
+    setPlanError('');
     
     try {
       const result = await generateLessonPlanWithLLM(answers);
-      setLessonPlan(result.plan || result);
-      setPlanSource(result.source || '');
+      console.log('Plan result:', result);
+      setLessonPlan(result.plan || []);
+      setPlanSource(result.source || 'error');
+      setPlanError(result.error || '');
     } catch (error) {
+      console.error('Plan generation error:', error);
       const plan = generateLessonPlan(answers);
       setLessonPlan(plan);
       setPlanSource('error');
+      setPlanError(error.message);
     }
     
     setIsGenerating(false);
@@ -763,9 +770,16 @@ function OnboardingChat({ onComplete, onSavePlan, savedPlan }) {
                 ✨ Tailored by Patrick (AI)
               </p>
             )}
-            {planSource !== 'llm' && planSource && (
+            {planSource === 'fallback' && (
               <p style={{ margin: '8px 0 0', fontSize: '12px', color: 'var(--warning)' }}>
                 📋 Generated from your answers
+                {planError && <span style={{ display: 'block', fontSize: '10px', marginTop: '4px', opacity: 0.7 }}>Fallback reason: {planError}</span>}
+              </p>
+            )}
+            {planSource === 'error' && (
+              <p style={{ margin: '8px 0 0', fontSize: '12px', color: 'var(--error)' }}>
+                ❌ Error generating plan
+                {planError && <span style={{ display: 'block', fontSize: '10px', marginTop: '4px' }}>{planError}</span>}
               </p>
             )}
             {!planSource && (

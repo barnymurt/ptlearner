@@ -152,17 +152,19 @@ Return JSON:
     }
 
     const data = await response.json();
+    console.log('MiniMax response:', data);
     const content = data.choices?.[0]?.message?.content;
     
     if (content) {
       const cleanedContent = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+      console.log('Parsed content:', cleanedContent);
       const plan = JSON.parse(cleanedContent);
       return res.status(200).json({ plan, source: 'llm' });
     }
+    
+    throw new Error('No content in response');
   } catch (error) {
     console.error('LLM API error:', error);
-    return res.status(200).json({ plan: generateLessonPlanFallback(answers), source: 'fallback', reason: error.message });
+    return res.status(200).json({ plan: generateLessonPlanFallback(answers), source: 'fallback', error: error.message });
   }
-  
-  return res.status(200).json({ plan: generateLessonPlanFallback(answers), source: 'fallback' });
 };
