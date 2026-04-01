@@ -91,31 +91,43 @@ module.exports = async function handler(req, res) {
   const apiKey = process.env.MINIMAX_API_KEY;
   
   if (!apiKey) {
-    return res.status(500).json({ error: 'API key not configured', plan: generateLessonPlanFallback(answers) });
+    return res.status(200).json({ plan: generateLessonPlanFallback(answers), source: 'fallback', reason: 'No API key configured' });
   }
 
   const sectionsContent = Object.entries(SECTIONS_MAP).map(([id, section]) => {
-    return `${section.icon} ${section.labelEn}: ${section.desc} (Keywords: ${section.keywords?.join(', ') || ''})`;
+    return `${section.icon} ${section.labelEn}: ${section.desc}`;
   }).join('\n');
 
-  const prompt = `You are Patrick, a Portuguese learning assistant. Create a personalized learning plan based on these user answers:
-  
-Level: ${answers.level}
-Goal: ${answers.goal}  
-Context: ${answers.context}
-Time available: ${answers.time}
+  const prompt = `You are Patrick, a warm and experienced Portuguese teacher. Create a highly personalized learning plan based on this student's unique situation.
 
-Available sections in the app:
+STUDENT PROFILE:
+- Current Level: ${answers.level}
+- Main Goal: ${answers.goal}
+- Where they'll use it: ${answers.context}
+- Time available: ${answers.time}
+
+APP SECTIONS:
 ${sectionsContent}
 
-Based on the user's answers, select 5-7 sections that would be most beneficial. For each section, provide a specific reason why this section matches their goals.
+IMPORTANT CONTEXT FROM THEIR ANSWERS:
+- They want to speak with their GIRLFRIEND and her DAUGHTER - this is personal, intimate communication
+- They have local knowledge but terrible ACCENT - pronunciation is a priority
+- This is for DAILY LIFE in Lisbon - street conversations, family home, casual settings
+- They need to build a DAILY HABIT - suggest micro-learning strategies
 
-Return your response as a JSON array with this format:
+TASK:
+Create a plan of 5-7 sections that addresses their specific needs. For each section explain EXACTLY why it helps them with their girlfriend, her daughter, and daily Lisbon life.
+
+Be specific about:
+- Which vocabulary topics (family words, emotions, daily routines, food, etc.)
+- Which oral/speaking exercises help with accent
+- Which expressions sound natural in Portugal (not Brazil)
+- How to build a 20-minute daily habit
+
+Return JSON:
 [
-  {"id": "sectionId", "icon": "emoji", "labelEn": "Section Name", "reason": "Why this section is recommended for this user"}
-]
-
-Make sure your recommendations are specific to their goals and context.`;
+  {"id": "sectionId", "icon": "emoji", "labelEn": "Section Name", "reason": "Specific reason tied to their situation"}
+]`;
 
   try {
     const response = await fetch('https://api.minimaxi.chat/v1/text/chatcompletion', {
@@ -127,15 +139,16 @@ Make sure your recommendations are specific to their goals and context.`;
       body: JSON.stringify({
         model: 'MiniMax-Text-01',
         messages: [
-          { role: 'system', content: 'You are Patrick, a friendly Portuguese learning assistant. Always respond with valid JSON.' },
+          { role: 'system', content: 'You are Patrick, a warm and experienced Portuguese teacher from Lisbon. You specialize in helping people communicate with their partners and families. Always respond with valid JSON.' },
           { role: 'user', content: prompt }
         ],
-        temperature: 0.7
+        temperature: 0.8,
+        max_tokens: 2000
       })
     });
 
     if (!response.ok) {
-      throw new Error('MiniMax API failed');
+      throw new Error('MiniMax API failed: ' + response.status);
     }
 
     const data = await response.json();
@@ -144,11 +157,12 @@ Make sure your recommendations are specific to their goals and context.`;
     if (content) {
       const cleanedContent = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
       const plan = JSON.parse(cleanedContent);
-      return res.status(200).json({ plan });
+      return res.status(200).json({ plan, source: 'llm' });
     }
   } catch (error) {
     console.error('LLM API error:', error);
+    return res.status(200).json({ plan: generateLessonPlanFallback(answers), source: 'fallback', reason: error.message });
   }
   
-  return res.status(200).json({ plan: generateLessonPlanFallback(answers) });
+  return res.status(200).json({ plan: generateLessonPlanFallback(answers), source: 'fallback' });
 };
