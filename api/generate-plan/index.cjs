@@ -152,12 +152,10 @@ Return JSON:
     }
 
     const data = await response.json();
-    console.log('MiniMax response:', data);
     const content = data.choices?.[0]?.message?.content;
     
     if (content) {
       const cleanedContent = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-      console.log('Parsed content:', cleanedContent);
       const plan = JSON.parse(cleanedContent);
       return res.status(200).json({ plan, source: 'llm' });
     }
