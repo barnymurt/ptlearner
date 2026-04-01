@@ -602,76 +602,95 @@ function OnboardingChat({ onComplete, onSavePlan, savedPlan }) {
     rec.interimResults = true;
 
     let duration = 0;
-    let pauseTimer = null;
-    const durationInterval = setInterval(() => {
+    let pauseTimerId = null;
+    let maxTimerId = null;
+    let intervalId = null;
+
+    intervalId = setInterval(() => {
       duration += 1;
-      setRecordings(prev => ({
-        ...prev,
-        [questionId]: { ...prev[questionId], duration }
-      }));
+      setRecordings(prev => {
+        const current = prev[questionId] || { isRecording: false, transcript: '', duration: 0 };
+        return { ...prev, [questionId]: { ...current, duration } };
+      });
     }, 1000);
 
-    const maxDuration = setTimeout(() => {
-      stopRecording(questionId, rec, durationInterval, pauseTimer);
+    maxTimerId = setTimeout(() => {
+      finishRecording(questionId, rec, intervalId, pauseTimerId);
     }, 60000);
 
     const resetPauseTimer = () => {
-      if (pauseTimer) clearTimeout(pauseTimer);
-      pauseTimer = setTimeout(() => {
-        stopRecording(questionId, rec, durationInterval, pauseTimer);
+      if (pauseTimerId) clearTimeout(pauseTimerId);
+      pauseTimerId = setTimeout(() => {
+        finishRecording(questionId, rec, intervalId, pauseTimerId);
       }, 12000);
     };
 
     rec.onstart = () => {
       setRecordings(prev => ({
         ...prev,
-        [questionId]: { isRecording: true, transcript: '', duration: 0, recognition: rec, durationInterval, maxDuration, pauseTimer }
+        [questionId]: { isRecording: true, transcript: '', duration: 0 }
       }));
     };
 
     rec.onresult = (event) => {
       const transcriptText = Array.from(event.results).map(r => r[0].transcript).join('');
-      setRecordings(prev => ({
-        ...prev,
-        [questionId]: { ...prev[questionId], transcript: transcriptText }
-      }));
+      setRecordings(prev => {
+        const current = prev[questionId] || { isRecording: false, transcript: '', duration: 0 };
+        return { ...prev, [questionId]: { ...current, transcript: transcriptText } };
+      });
       resetPauseTimer();
 
       if (event.results[event.results.length - 1].isFinal) {
-        setRecordings(prev => ({
-          ...prev,
-          [questionId]: { ...prev[questionId], transcript: event.results[event.results.length - 1][0].transcript }
-        }));
-        stopRecording(questionId, rec, durationInterval, pauseTimer);
+        const finalTranscript = event.results[event.results.length - 1][0].transcript;
+        setRecordings(prev => {
+          const current = prev[questionId] || { isRecording: false, transcript: '', duration: 0 };
+          return { ...prev, [questionId]: { ...current, transcript: finalTranscript } };
+        });
+        finishRecording(questionId, rec, intervalId, pauseTimerId);
       }
     };
 
     rec.onerror = () => {
-      stopRecording(questionId, rec, durationInterval, pauseTimer);
+      finishRecording(questionId, rec, intervalId, pauseTimerId);
     };
 
     rec.onend = () => {
-      stopRecording(questionId, rec, durationInterval, pauseTimer);
+      finishRecording(questionId, rec, intervalId, pauseTimerId);
     };
 
     rec.start();
   };
 
-  const stopRecording = (questionId, rec, durationInterval, pauseTimer) => {
+  const finishRecording = (questionId, rec, intervalId, pauseTimerId) => {
     try { rec?.stop(); } catch(e) {}
-    if (durationInterval) clearInterval(durationInterval);
-    if (pauseTimer) clearTimeout(pauseTimer);
+    if (intervalId) clearInterval(intervalId);
+    if (pauseTimerId) clearTimeout(pauseTimerId);
     
     setRecordings(prev => {
       const current = prev[questionId];
+      if (!current) return prev;
       return {
         ...prev,
         [questionId]: { 
-          ...current, 
           isRecording: false, 
-          duration: 0,
-          durationInterval: null,
-          pauseTimer: null
+          transcript: current.transcript || '',
+          duration: 0
+        }
+      };
+    });
+  };
+
+  const stopRecording = (questionId) => {
+    setRecordings(prev => {
+      const current = prev[questionId];
+      if (!current) return prev;
+      try { current.recognition?.stop(); } catch(e) {}
+      return {
+        ...prev,
+        [questionId]: { 
+          isRecording: false, 
+          transcript: current.transcript || '',
+          duration: 0
         }
       };
     });
@@ -685,7 +704,7 @@ function OnboardingChat({ onComplete, onSavePlan, savedPlan }) {
   const handleSaveAnswer = (questionId) => {
     const rec = getRecording(questionId);
     if (rec.isRecording) {
-      stopRecording(questionId, rec.recognition, null, null);
+      stopRecording(questionId);
     }
     const textToSave = currentAnswer.trim() || rec.transcript.trim();
     if (textToSave) {
@@ -871,7 +890,7 @@ function OnboardingChat({ onComplete, onSavePlan, savedPlan }) {
                   
                   <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
                     <button 
-                      onClick={() => isThisRecording ? stopRecording(q.id, recording.recognition, null, null) : startRecording(q.id)} 
+                      onClick={() => isThisRecording ? stopRecording(q.id) : startRecording(q.id)} 
                       style={{ 
                         padding: '14px 24px', 
                         background: isThisRecording ? '#ff4444' : '#00a870', 
