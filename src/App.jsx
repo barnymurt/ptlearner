@@ -758,9 +758,19 @@ function OnboardingChat({ onComplete, onSavePlan, savedPlan }) {
             <div style={{ fontSize: '56px', marginBottom: '16px' }}>🎯</div>
             <h3 style={{ margin: 0, fontSize: '24px', color: 'var(--text-primary)', fontWeight: 700 }}>Your Personalized Plan</h3>
             <p style={{ margin: '8px 0 0', fontSize: '15px', color: 'var(--text-secondary)' }}>Based on your goals, here's what to study:</p>
-            {planSource && (
-              <p style={{ margin: '8px 0 0', fontSize: '12px', color: planSource === 'llm' ? 'var(--accent)' : 'var(--warning)' }}>
-                {planSource === 'llm' ? '✨ Tailored by Patrick (AI)' : '📋 Generated from your answers'}
+            {planSource === 'llm' && (
+              <p style={{ margin: '8px 0 0', fontSize: '12px', color: 'var(--accent)', fontWeight: 600 }}>
+                ✨ Tailored by Patrick (AI)
+              </p>
+            )}
+            {planSource !== 'llm' && planSource && (
+              <p style={{ margin: '8px 0 0', fontSize: '12px', color: 'var(--warning)' }}>
+                📋 Generated from your answers
+              </p>
+            )}
+            {!planSource && (
+              <p style={{ margin: '8px 0 0', fontSize: '12px', color: 'var(--text-tertiary)' }}>
+                Loading...
               </p>
             )}
           </div>
@@ -995,9 +1005,9 @@ async function generateLessonPlanWithLLM(answers) {
     return data;
   } catch (error) {
     console.error('Plan generation error:', error);
+    const plan = generateLessonPlan(answers);
+    return { plan, source: 'error' };
   }
-  
-  return generateLessonPlan(answers);
 }
 
 function FloatingChatButton({ onClick }) {
