@@ -78,6 +78,42 @@ function generateLessonPlanFallback(answers) {
 }
 
 module.exports = async function handler(req, res) {
+  if (req.method === 'POST' && req.body.action === 'translate') {
+    const { phrase } = req.body;
+    if (!phrase || !phrase.trim()) {
+      return res.status(400).json({ error: 'No phrase provided' });
+    }
+    const apiKey = process.env.MINIMAX_API_KEY;
+    if (!apiKey) {
+      return res.status(200).json({ error: 'No API key configured' });
+    }
+    try {
+      const response = await fetch('https://api.minimax.io/v1/text/chatcompletion_v2', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+        body: JSON.stringify({
+          model: 'MiniMax-Text-01',
+          messages: [
+            { role: 'system', content: 'You are a Portuguese language teacher. Translate the user\'s phrase to European Portuguese. Return ONLY valid JSON: {"portuguese":"...", "pronunciation":"...", "context":"..."}' },
+            { role: 'user', content: `Translate this English phrase to European Portuguese: "${phrase}"` }
+          ],
+          temperature: 0.3,
+          max_tokens: 500
+        })
+      });
+      if (!response.ok) throw new Error('MiniMax API failed: ' + response.status);
+      const data = await response.json();
+      const content = data.choices?.[0]?.message?.content;
+      if (!content) throw new Error('No content in response');
+      const cleaned = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+      const translation = JSON.parse(cleaned);
+      return res.status(200).json({ translation });
+    } catch (error) {
+      console.error('Translation error:', error);
+      return res.status(200).json({ error: error.message });
+    }
+  }
+
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }

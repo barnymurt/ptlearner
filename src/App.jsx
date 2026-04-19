@@ -1037,6 +1037,196 @@ async function generateLessonPlanWithLLM(answers) {
   }
 }
 
+async function translatePhraseWithLLM(phrase) {
+  try {
+    const response = await fetch('/api', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'translate', phrase })
+    });
+    if (!response.ok) throw new Error('API call failed');
+    const data = await response.json();
+    if (data.error) throw new Error(data.error);
+    return data.translation;
+  } catch (error) {
+    console.error('Translation error:', error);
+    throw error;
+  }
+}
+
+function MyPhrasesSection() {
+  const [phrases, setPhrases] = useLocal('my_phrases', []);
+  const [input, setInput] = useState('');
+  const [isTranslating, setIsTranslating] = useState(false);
+  const [currentResult, setCurrentResult] = useState(null);
+  const [error, setError] = useState('');
+  const [copied, setCopied] = useState(false);
+
+  const handleTranslate = async () => {
+    if (!input.trim()) return;
+    setIsTranslating(true);
+    setError('');
+    setCurrentResult(null);
+    try {
+      const result = await translatePhraseWithLLM(input.trim());
+      const newEntry = {
+        id: Date.now(),
+        english: input.trim(),
+        portuguese: result.portuguese,
+        pronunciation: result.pronunciation,
+        context: result.context,
+        createdAt: new Date().toISOString()
+      };
+      setPhrases(prev => [newEntry, ...prev]);
+      setCurrentResult(newEntry);
+      setInput('');
+    } catch (err) {
+      setError(err.message);
+    }
+    setIsTranslating(false);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleTranslate();
+    }
+  };
+
+  const copyPortuguese = (text) => {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    });
+  };
+
+  const deletePhrase = (id) => {
+    setPhrases(prev => prev.filter(p => p.id !== id));
+  };
+
+  const clearAll = () => {
+    if (confirm('Delete all saved phrases?')) setPhrases([]);
+  };
+
+  return (
+    <div style={{ padding: 'clamp(12px, 4vw, 24px)', maxWidth: '700px', margin: '0 auto' }}>
+      <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+        <h2 style={{ fontSize: 'clamp(20px, 5vw, 26px)', fontWeight: 700, margin: '0 0 8px', color: 'var(--text-primary)' }}>🌐 My Phrases</h2>
+        <p style={{ margin: 0, fontSize: '14px', color: 'var(--text-secondary)' }}>Type an English phrase to get the European Portuguese translation</p>
+      </div>
+
+      <div style={{ background: 'var(--bg-card)', borderRadius: '16px', padding: 'clamp(16px, 4vw, 24px)', marginBottom: '20px', boxShadow: '0 2px 12px rgba(0,0,0,0.08)' }}>
+        <textarea
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder="Type a phrase you want to say in Portuguese... e.g. 'I miss you' or 'How was your day?'"
+          rows={3}
+          style={{
+            width: '100%',
+            padding: '14px 16px',
+            borderRadius: '12px',
+            border: '1px solid var(--border)',
+            fontSize: '15px',
+            fontFamily: 'inherit',
+            background: 'var(--bg)',
+            color: 'var(--text-primary)',
+            resize: 'none',
+            outline: 'none',
+            boxSizing: 'border-box',
+            marginBottom: '12px',
+            lineHeight: 1.5
+          }}
+        />
+        {error && (
+          <div style={{ padding: '10px 14px', background: 'var(--error-light)', borderRadius: '8px', fontSize: '13px', color: 'var(--error)', marginBottom: '10px', fontFamily: 'monospace' }}>
+            ❌ {error}
+          </div>
+        )}
+        <button
+          onClick={handleTranslate}
+          disabled={!input.trim() || isTranslating}
+          style={{
+            width: '100%',
+            padding: '14px',
+            background: input.trim() ? 'var(--accent)' : 'var(--border)',
+            color: 'white',
+            border: 'none',
+            borderRadius: '12px',
+            cursor: input.trim() ? 'pointer' : 'not-allowed',
+            fontSize: '15px',
+            fontWeight: 600,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px'
+          }}
+        >
+          {isTranslating ? (
+            <>
+              <div style={{ width: '16px', height: '16px', border: '2px solid rgba(255,255,255,0.3)', borderTopColor: 'white', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+              Translating...
+            </>
+          ) : (
+            '🌐 Translate & Save'
+          )}
+        </button>
+      </div>
+
+      {currentResult && (
+        <div style={{ background: 'var(--accent-light)', borderRadius: '16px', padding: 'clamp(16px, 4vw, 24px)', marginBottom: '20px', border: '2px solid var(--accent)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
+            <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Latest Translation</div>
+            <button onClick={() => speakPortuguese(currentResult.portuguese)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '18px', padding: '4px' }}>🔊</button>
+          </div>
+          <div style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '8px' }}>{currentResult.english}</div>
+          <div style={{ fontSize: 'clamp(18px, 5vw, 24px)', fontWeight: 700, color: 'var(--accent)', marginBottom: '6px', fontFamily: 'var(--font-display)' }}>{currentResult.portuguese}</div>
+          <div style={{ fontSize: '13px', color: 'var(--text-secondary)', fontStyle: 'italic', marginBottom: '12px' }}>[{currentResult.pronunciation}]</div>
+          <div style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: 1.5, padding: '10px 12px', background: 'var(--bg)', borderRadius: '8px' }}>{currentResult.context}</div>
+        </div>
+      )}
+
+      {phrases.length > 0 && (
+        <div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+            <h3 style={{ fontSize: '15px', fontWeight: 600, color: 'var(--text-primary)', margin: 0 }}>
+              Saved Phrases ({phrases.length})
+            </h3>
+            <button onClick={clearAll} style={{ fontSize: '12px', color: 'var(--error)', background: 'transparent', border: 'none', cursor: 'pointer', padding: '4px 8px' }}>
+              Clear all
+            </button>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            {phrases.map(phrase => (
+              <div key={phrase.id} style={{ background: 'var(--bg-card)', borderRadius: '12px', padding: '14px 16px', border: '1px solid var(--border)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
+                  <div style={{ fontSize: '12px', color: 'var(--text-tertiary)' }}>{phrase.english}</div>
+                  <div style={{ display: 'flex', gap: '6px' }}>
+                    <button onClick={() => speakPortuguese(phrase.portuguese)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '14px', padding: '2px' }}>🔊</button>
+                    <button onClick={() => copyPortuguese(phrase.portuguese)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '12px', padding: '2px 6px', color: 'var(--accent)' }}>
+                      {copied ? '✓' : '📋'}
+                    </button>
+                    <button onClick={() => deletePhrase(phrase.id)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '12px', padding: '2px', color: 'var(--error)' }}>✕</button>
+                  </div>
+                </div>
+                <div style={{ fontSize: '16px', fontWeight: 600, color: 'var(--accent)', marginBottom: '4px' }}>{phrase.portuguese}</div>
+                <div style={{ fontSize: '12px', color: 'var(--text-tertiary)', fontStyle: 'italic' }}>[{phrase.pronunciation}]</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {phrases.length === 0 && !currentResult && (
+        <div style={{ textAlign: 'center', padding: '40px 20px', color: 'var(--text-tertiary)' }}>
+          <div style={{ fontSize: '40px', marginBottom: '12px' }}>💬</div>
+          <p style={{ fontSize: '14px', margin: 0 }}>Your saved phrases will appear here</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function FloatingChatButton({ onClick }) {
   return (
     <button 
@@ -2129,6 +2319,7 @@ function Verbos999Section({ showEnglish }) {
 
 const SECTION_MAP = {
   myplan: MyPlanSection,
+  phrases: MyPhrasesSection,
   verbs25: Verbs25Section, conjugation: ConjugationSection, pronouns: PronounsSection,
   adjectives: AdjectivesSection, prepositions: PrepositionsSection, articles: ArticlesSection,
   vocabulary: VocabularySection, modals: ModalsSection, idioms: IdiomsSection,
@@ -2203,6 +2394,7 @@ const SECTION_GROUPS = [
     label: 'Tools',
     labelPt: 'Ferramentas',
     sections: [
+      { id: 'phrases', label: 'Minhas Frases', labelEn: 'My Phrases', icon: '💬', desc: 'Save and review your personal phrases' },
       { id: 'glossary', label: 'Glossário', labelEn: 'Glossary', icon: '📖', desc: 'Grammar terms in plain English' },
       { id: 'progresso', label: 'Progresso', labelEn: 'Progress', icon: '📊', desc: 'Track your learning journey' },
     ],
