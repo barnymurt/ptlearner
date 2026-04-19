@@ -1337,3 +1337,32 @@ a:hover { text-decoration: underline; }
   .writing-task-title { font-size: 15px; }
   .writing-model { padding: var(--space-3); }
 }
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.plan-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 24px;
+  font-size: 14px;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.plan-loading .spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--accent-light);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}

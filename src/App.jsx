@@ -786,12 +786,12 @@ function OnboardingChat({ onComplete, onSavePlan, savedPlan }) {
             {planSource === 'error' && (
               <p style={{ margin: '8px 0 0', fontSize: '12px', color: 'var(--error)' }}>
                 ❌ Error generating plan
-                {planError && <span style={{ display: 'block', fontSize: '10px', marginTop: '4px' }}>{planError}</span>}
+                {planError && <span style={{ display: 'block', fontSize: '10px', marginTop: '4px', fontFamily: 'monospace', opacity: 0.8 }}>{planError}</span>}
               </p>
             )}
-            {!planSource && (
-              <p style={{ margin: '8px 0 0', fontSize: '12px', color: 'var(--text-tertiary)' }}>
-                Loading...
+            {isGenerating && (
+              <p style={{ margin: '8px 0 0', fontSize: '12px', color: 'var(--accent)', fontWeight: 600, animation: 'pulse 1.5s infinite' }}>
+                ✨ Calling Patrick (AI)...
               </p>
             )}
           </div>
@@ -988,14 +988,18 @@ function OnboardingChat({ onComplete, onSavePlan, savedPlan }) {
             transition: 'all 0.3s ease',
             display: 'flex',
             alignItems: 'center',
-            gap: '8px',
+            justifyContent: 'center',
+            gap: '10px',
             margin: '0 auto',
             maxWidth: '100%',
             boxSizing: 'border-box'
           }}
         >
           {isGenerating ? (
-            <>⏳ Generating your plan...</>
+            <>
+              <div className="spinner" style={{ width: '18px', height: '18px', border: '2px solid rgba(255,255,255,0.3)', borderTopColor: 'white', borderRadius: '50%', animation: 'spin 0.8s linear infinite', flexShrink: 0 }} />
+              <span>Calling Patrick...</span>
+            </>
           ) : (
             <>✨ {allAnswered ? 'Generate My Plan' : `Answer all questions (${Object.values(answers).filter(a => a.trim()).length}/4)`}</>
           )}
