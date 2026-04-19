@@ -1277,12 +1277,56 @@ a:hover { text-decoration: underline; }
   }
   .sidebar-close-btn { display: block; }
   .section-nav { gap: var(--space-2); }
+  .app { flex-direction: column; }
+  .main-content { width: 100%; }
+  .sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 199;
+  }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 540px) {
   .content { padding: var(--space-3); padding-bottom: var(--space-8); }
   .card { padding: var(--space-3); }
-  .sec-title { font-size: 22px; }
+  .sec-title { font-size: 20px; }
   .flashcard { padding: var(--space-8) var(--space-4); }
   .dialogue-translation { padding-left: 0; margin-top: var(--space-1); }
+  .welcome-screen { padding: var(--space-4); min-height: 50vh; }
+  .sidebar-title { font-size: 18px; }
+  .section-nav-title { font-size: 15px; }
+  .sec-desc { font-size: 12px; }
+  .btn { padding: var(--space-2) var(--space-3); font-size: 12px; min-height: 36px; }
+  .quiz-option { font-size: 12px; padding: var(--space-2) var(--space-3); }
+  .verb-meaning { font-size: 11px; max-width: 40%; }
+  .verb-text { font-size: 14px; }
+  .vocab-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+  .theme-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+  .grid-2 { grid-template-columns: 1fr; }
+  .grid-3 { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+  .toggle-row { gap: var(--space-1); }
+  .type-pills { gap: var(--space-1); overflow-x: auto; padding-bottom: var(--space-2); }
+  .letter-bar { gap: 2px; }
+  .letter-btn { width: 26px; height: 26px; font-size: 10px; }
+  .flashcard-verb { font-size: 24px; }
+  .flashcard-meaning { font-size: 18px; }
+}
+
+@media (max-width: 380px) {
+  .content { padding: var(--space-2); }
+  .sec-title { font-size: 18px; }
+  .card { padding: var(--space-2); margin-bottom: var(--space-2); }
+  .vocab-grid { grid-template-columns: 1fr; }
+  .theme-grid { grid-template-columns: 1fr; }
+  .conj-grid { gap: 1px 8px; }
+  .conj-pronoun { font-size: 10px; }
+  .conj-form { font-size: 12px; }
+  .dialogue-line { flex-direction: column; gap: var(--space-1); }
+  .dialogue-speaker { min-width: 60px; }
+  .writing-task-title { font-size: 15px; }
+  .writing-model { padding: var(--space-3); }
 }

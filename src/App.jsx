@@ -841,7 +841,7 @@ function OnboardingChat({ onComplete, onSavePlan, savedPlan }) {
         <p style={{ margin: 0, fontSize: '15px', color: 'var(--text-secondary)' }}>Click any question to answer in any order. All questions help create your perfect plan.</p>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '16px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
         {questions.map((q, idx) => {
           const isAnswered = answers[q.id]?.trim();
           const isActive = activeQuestion === q.id;
