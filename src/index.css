@@ -62,10 +62,13 @@ body {
   font-size: 14px;
   line-height: 1.5;
   overflow-x: hidden;
+  overflow-y: auto;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   padding-bottom: env(safe-area-inset-bottom, 20px);
+  /* Prevent pull-to-refresh on mobile */
+  overscroll-behavior: none;
 }
 
 /* Scrollbar */

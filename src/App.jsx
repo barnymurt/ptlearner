@@ -759,8 +759,8 @@ function OnboardingChat({ onComplete, onSavePlan, savedPlan }) {
 
   if (lessonPlan.length > 0) {
     return (
-      <div style={{ maxWidth: '700px', margin: '0 auto', padding: '24px' }}>
-        <div style={{ background: 'var(--bg-card)', borderRadius: '20px', boxShadow: '0 8px 32px rgba(0,0,0,0.12)', padding: '32px' }}>
+      <div style={{ maxWidth: '700px', margin: '0 auto', padding: 'clamp(12px, 4vw, 24px)', width: '100%', boxSizing: 'border-box' }}>
+        <div style={{ background: 'var(--bg-card)', borderRadius: '20px', boxShadow: '0 8px 32px rgba(0,0,0,0.12)', padding: 'clamp(16px, 4vw, 32px)' }}>
           <div style={{ textAlign: 'center', marginBottom: '24px' }}>
             <div style={{ fontSize: '56px', marginBottom: '16px' }}>🎯</div>
             <h3 style={{ margin: 0, fontSize: '24px', color: 'var(--text-primary)', fontWeight: 700 }}>Your Personalized Plan</h3>
@@ -835,7 +835,7 @@ function OnboardingChat({ onComplete, onSavePlan, savedPlan }) {
   }
 
   return (
-    <div style={{ maxWidth: '800px', margin: '0 auto', padding: '24px' }}>
+    <div style={{ maxWidth: '800px', margin: '0 auto', padding: 'clamp(12px, 4vw, 24px)', width: '100%', boxSizing: 'border-box', overflowX: 'hidden' }}>
       <div style={{ textAlign: 'center', marginBottom: '32px' }}>
         <h2 style={{ fontSize: '28px', fontWeight: 700, margin: '0 0 8px', color: 'var(--text-primary)' }}>💬 Tell me about yourself</h2>
         <p style={{ margin: 0, fontSize: '15px', color: 'var(--text-secondary)' }}>Click any question to answer in any order. All questions help create your perfect plan.</p>
@@ -964,25 +964,27 @@ function OnboardingChat({ onComplete, onSavePlan, savedPlan }) {
         })}
       </div>
 
-      <div style={{ marginTop: '32px', textAlign: 'center' }}>
-        <button 
-          onClick={handleGeneratePlan} 
+      <div style={{ marginTop: '24px', textAlign: 'center', overflowX: 'hidden' }}>
+        <button
+          onClick={handleGeneratePlan}
           disabled={!allAnswered || isGenerating}
-          style={{ 
-            padding: '18px 48px', 
+          style={{
+            padding: '14px clamp(16px, 5vw, 32px)',
             background: allAnswered ? (isGenerating ? '#007a52' : 'var(--accent)') : 'var(--border)',
-            color: 'white', 
-            border: 'none', 
-            borderRadius: '14px', 
+            color: 'white',
+            border: 'none',
+            borderRadius: '14px',
             cursor: allAnswered ? 'pointer' : 'not-allowed',
-            fontSize: '17px',
+            fontSize: 'clamp(14px, 4vw, 17px)',
             fontWeight: 600,
             boxShadow: allAnswered ? '0 4px 20px rgba(0,168,112,0.4)' : 'none',
             transition: 'all 0.3s ease',
             display: 'flex',
             alignItems: 'center',
-            gap: '10px',
-            margin: '0 auto'
+            gap: '8px',
+            margin: '0 auto',
+            maxWidth: '100%',
+            boxSizing: 'border-box'
           }}
         >
           {isGenerating ? (
