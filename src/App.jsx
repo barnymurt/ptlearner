@@ -605,6 +605,7 @@ function OnboardingChat({ onComplete, onSavePlan, savedPlan }) {
     let pauseTimerId = null;
     let maxTimerId = null;
     let intervalId = null;
+    let manualStop = false;
 
     intervalId = setInterval(() => {
       duration += 1;
@@ -615,17 +616,22 @@ function OnboardingChat({ onComplete, onSavePlan, savedPlan }) {
     }, 1000);
 
     maxTimerId = setTimeout(() => {
+      manualStop = true;
       finishRecording(questionId, rec, intervalId, pauseTimerId);
-    }, 60000);
+    }, 90000);
 
     const resetPauseTimer = () => {
       if (pauseTimerId) clearTimeout(pauseTimerId);
       pauseTimerId = setTimeout(() => {
-        finishRecording(questionId, rec, intervalId, pauseTimerId);
-      }, 12000);
+        if (!manualStop) {
+          manualStop = true;
+          finishRecording(questionId, rec, intervalId, pauseTimerId);
+        }
+      }, 20000);
     };
 
     rec.onstart = () => {
+      manualStop = false;
       setRecordings(prev => ({
         ...prev,
         [questionId]: { isRecording: true, transcript: '', duration: 0 }
@@ -646,15 +652,17 @@ function OnboardingChat({ onComplete, onSavePlan, savedPlan }) {
           const current = prev[questionId] || { isRecording: false, transcript: '', duration: 0 };
           return { ...prev, [questionId]: { ...current, transcript: finalTranscript } };
         });
-        finishRecording(questionId, rec, intervalId, pauseTimerId);
       }
     };
 
-    rec.onerror = () => {
-      finishRecording(questionId, rec, intervalId, pauseTimerId);
+    rec.onerror = (event) => {
+      if (event.error === 'aborted' || manualStop) return;
+      resetPauseTimer();
     };
 
     rec.onend = () => {
+      if (manualStop) return;
+      manualStop = true;
       finishRecording(questionId, rec, intervalId, pauseTimerId);
     };
 
@@ -684,7 +692,6 @@ function OnboardingChat({ onComplete, onSavePlan, savedPlan }) {
     setRecordings(prev => {
       const current = prev[questionId];
       if (!current) return prev;
-      try { current.recognition?.stop(); } catch(e) {}
       return {
         ...prev,
         [questionId]: { 
