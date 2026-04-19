@@ -130,14 +130,14 @@ Return JSON:
 ]`;
 
   try {
-    const response = await fetch('https://api.minimax.io/v1/text/chatcompletion', {
+    const response = await fetch('https://api.minimax.io/v1/text/chatcompletion_v2', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${apiKey}`
       },
       body: JSON.stringify({
-        model: 'abab6.5s-chat',
+        model: 'MiniMax-Text-01',
         messages: [
           { role: 'system', content: 'You are Patrick, a warm and experienced Portuguese teacher from Lisbon. You specialize in helping people communicate with their partners and families. Always respond with valid JSON.' },
           { role: 'user', content: prompt }
@@ -157,7 +157,7 @@ Return JSON:
       throw new Error('Rate limit exceeded. Please wait a minute and try again.');
     }
     
-    const content = data.reply || data.choices?.[0]?.message?.content;
+    const content = data.choices?.[0]?.message?.content;
     
     if (content) {
       const cleanedContent = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
