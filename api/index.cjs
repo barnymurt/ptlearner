@@ -40,7 +40,7 @@ function generateLessonPlanFallback(answers) {
 module.exports = async function handler(req, res) {
   if (req.method === 'POST' && req.body && req.body.action === 'translate') {
     const { phrase } = req.body;
-    if (!phrase || !phrase.trim()) return res.status(400).json({ error: 'No phrase provided' });
+    if (!phrase || !phrase.trim()) return res.status(200).json({ error: 'No phrase provided' });
     const apiKey = process.env.MINIMAX_API_KEY;
     if (!apiKey) return res.status(200).json({ error: 'No API key configured' });
     try {
@@ -62,10 +62,11 @@ module.exports = async function handler(req, res) {
       const content = data.choices?.[0]?.message?.content;
       if (!content) throw new Error('No content in response');
       const cleaned = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-      const translation = JSON.parse(cleaned);
+      let translation;
+      try { translation = JSON.parse(cleaned); } catch { throw new Error('Failed to parse translation JSON: ' + cleaned.substring(0, 100)); }
       return res.status(200).json({ translation });
     } catch (error) {
-      console.error('Translation error:', error);
+      console.error('Translation error:', error.message);
       return res.status(200).json({ error: error.message });
     }
   }
