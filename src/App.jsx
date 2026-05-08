@@ -821,7 +821,7 @@ function OnboardingChat({ onComplete, onSavePlan, savedPlan }) {
           </button>
           
           <button 
-            onClick={handleSavePlanToProfile}
+            onClick={() => { handleSavePlanToProfile(); onComplete(['myplan']); }}
             style={{ width: '100%', padding: '16px', background: 'var(--accent-light)', color: 'var(--accent)', border: '2px solid var(--accent)', borderRadius: '14px', cursor: 'pointer', fontSize: '16px', fontWeight: 600 }}
           >
             💾 Save Plan to My Plan
