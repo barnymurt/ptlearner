@@ -1054,31 +1054,126 @@ async function translatePhraseWithLLM(phrase) {
   }
 }
 
-function MyPhrasesSection() {
-  const [phrases, setPhrases] = useLocal('my_phrases', []);
+function SignInPrompt({ onSignIn }) {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleGoogleSignIn = async () => {
+    setIsLoading(true);
+    setError('');
+    try {
+      const { signInWithGoogle } = await import('./firebase/config');
+      await signInWithGoogle();
+    } catch (err) {
+      setError(err.message || 'Sign-in failed');
+    }
+    setIsLoading(false);
+  };
+
+  return (
+    <div style={{ 
+      display: 'flex', 
+      flexDirection: 'column', 
+      alignItems: 'center', 
+      justifyContent: 'center',
+      padding: '60px 24px',
+      gap: '16px',
+      textAlign: 'center'
+    }}>
+      <div style={{ fontSize: '56px', marginBottom: '8px' }}>🔐</div>
+      <h2 style={{ fontSize: '22px', fontWeight: 600, color: 'var(--text-primary)', margin: 0 }}>Sign in to save your phrases</h2>
+      <p style={{ fontSize: '14px', color: 'var(--text-secondary)', margin: '0 0 8px', maxWidth: '280px' }}>
+        Your phrases will be saved to your Google account and synced across all your devices
+      </p>
+      {error && (
+        <div style={{ padding: '10px 14px', background: 'var(--error-light)', borderRadius: '8px', fontSize: '13px', color: 'var(--error)' }}>
+          ❌ {error}
+        </div>
+      )}
+      <button
+        onClick={handleGoogleSignIn}
+        disabled={isLoading}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px',
+          padding: '14px 24px',
+          background: '#fff',
+          color: '#333',
+          border: '1px solid var(--border)',
+          borderRadius: '12px',
+          cursor: isLoading ? 'not-allowed' : 'pointer',
+          fontSize: '15px',
+          fontWeight: 600,
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+          minWidth: '220px',
+          justifyContent: 'center'
+        }}
+      >
+        {isLoading ? (
+          <>
+            <div style={{ width: '18px', height: '18px', border: '2px solid #e2e0dd', borderTopColor: '#333', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+            Signing in...
+          </>
+        ) : (
+          <>
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+              <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z" fill="#4285F4"/>
+              <path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.123 15.983 5.114 18 9 18z" fill="#34A853"/>
+              <path d="M3.964 10.71c-.18-.54-.282-1.117-.282-1.71s.102-1.17.282-1.71V4.958H.957C.347 6.173 0 7.548 0 9s.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/>
+              <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.114 2 2.123 4.017.957 7.042l3.007 2.332C4.672 5.164 6.656 3.58 9 3.58z" fill="#EA4335"/>
+            </svg>
+            Continue with Google
+          </>
+        )}
+      </button>
+    </div>
+  );
+}
+
+function MyPhrasesSection({ user }) {
+  const [phrases, setPhrases] = useState([]);
   const [input, setInput] = useState('');
   const [isTranslating, setIsTranslating] = useState(false);
   const [currentResult, setCurrentResult] = useState(null);
   const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
+  const [loadingPhrases, setLoadingPhrases] = useState(true);
+
+  const uid = user?.uid;
+
+  useEffect(() => {
+    if (!uid) return;
+    async function loadPhrases() {
+      try {
+        const { getPhrases } = await import('./firebase/config');
+        const data = await getPhrases(uid);
+        setPhrases(data);
+      } catch (err) {
+        console.error('Failed to load phrases:', err);
+      }
+      setLoadingPhrases(false);
+    }
+    loadPhrases();
+  }, [uid]);
 
   const handleTranslate = async () => {
-    if (!input.trim()) return;
+    if (!input.trim() || !uid) return;
     setIsTranslating(true);
     setError('');
     setCurrentResult(null);
     try {
       const result = await translatePhraseWithLLM(input.trim());
       const newEntry = {
-        id: Date.now(),
         english: input.trim(),
         portuguese: result.portuguese,
         pronunciation: result.pronunciation,
-        context: result.context,
-        createdAt: new Date().toISOString()
+        context: result.context
       };
-      setPhrases(prev => [newEntry, ...prev]);
-      setCurrentResult(newEntry);
+      const { savePhrase } = await import('./firebase/config');
+      const docRef = await savePhrase(uid, newEntry);
+      setPhrases(prev => [{ id: docRef.id, ...newEntry, createdAt: new Date().toISOString() }, ...prev]);
+      setCurrentResult({ id: docRef.id, ...newEntry, createdAt: new Date().toISOString() });
       setInput('');
     } catch (err) {
       setError(err.message);
@@ -1100,12 +1195,27 @@ function MyPhrasesSection() {
     });
   };
 
-  const deletePhrase = (id) => {
-    setPhrases(prev => prev.filter(p => p.id !== id));
+  const deletePhrase = async (id) => {
+    try {
+      const { deletePhrase } = await import('./firebase/config');
+      await deletePhrase(uid, id);
+      setPhrases(prev => prev.filter(p => p.id !== id));
+    } catch (err) {
+      console.error('Failed to delete phrase:', err);
+    }
   };
 
-  const clearAll = () => {
-    if (confirm('Delete all saved phrases?')) setPhrases([]);
+  const clearAll = async () => {
+    if (!confirm('Delete all saved phrases?')) return;
+    try {
+      const { getPhrases } = await import('./firebase/config');
+      const all = await getPhrases(uid);
+      const { deletePhrase } = await import('./firebase/config');
+      for (const p of all) await deletePhrase(uid, p.id);
+      setPhrases([]);
+    } catch (err) {
+      console.error('Failed to clear phrases:', err);
+    }
   };
 
   return (
@@ -1113,6 +1223,7 @@ function MyPhrasesSection() {
       <div style={{ textAlign: 'center', marginBottom: '24px' }}>
         <h2 style={{ fontSize: 'clamp(20px, 5vw, 26px)', fontWeight: 700, margin: '0 0 8px', color: 'var(--text-primary)' }}>🌐 My Phrases</h2>
         <p style={{ margin: 0, fontSize: '14px', color: 'var(--text-secondary)' }}>Type an English phrase to get the European Portuguese translation</p>
+        <p style={{ margin: '8px 0 0', fontSize: '12px', color: 'var(--text-tertiary)' }}>Signed in as {user?.displayName || user?.email}</p>
       </div>
 
       <div style={{ background: 'var(--bg-card)', borderRadius: '16px', padding: 'clamp(16px, 4vw, 24px)', marginBottom: '20px', boxShadow: '0 2px 12px rgba(0,0,0,0.08)' }}>
@@ -1186,7 +1297,11 @@ function MyPhrasesSection() {
         </div>
       )}
 
-      {phrases.length > 0 && (
+      {loadingPhrases ? (
+        <div style={{ display: 'flex', justifyContent: 'center', padding: '40px' }}>
+          <div style={{ width: '24px', height: '24px', border: '2px solid var(--border)', borderTopColor: 'var(--accent)', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+        </div>
+      ) : phrases.length > 0 ? (
         <div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
             <h3 style={{ fontSize: '15px', fontWeight: 600, color: 'var(--text-primary)', margin: 0 }}>
@@ -1215,9 +1330,7 @@ function MyPhrasesSection() {
             ))}
           </div>
         </div>
-      )}
-
-      {phrases.length === 0 && !currentResult && (
+      ) : (
         <div style={{ textAlign: 'center', padding: '40px 20px', color: 'var(--text-tertiary)' }}>
           <div style={{ fontSize: '40px', marginBottom: '12px' }}>💬</div>
           <p style={{ fontSize: '14px', margin: 0 }}>Your saved phrases will appear here</p>
@@ -2484,7 +2597,7 @@ function MyPlanSection({ savedPlan, onSelectSection }) {
   );
 }
 
-function Sidebar({ section, onSelect, isOpen, onClose, showEnglish, onOpenChat }) {
+function Sidebar({ section, onSelect, isOpen, onClose, showEnglish, onOpenChat, currentUser, onLogout }) {
   return (
     <aside className={`sidebar ${isOpen ? 'sidebar-open' : ''}`}>
       <div className="sidebar-header">
@@ -2515,6 +2628,57 @@ function Sidebar({ section, onSelect, isOpen, onClose, showEnglish, onOpenChat }
         ))}
       </nav>
       <div style={{ padding: '16px', borderTop: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: '10px', marginTop: 'auto' }}>
+        {currentUser ? (
+          <button
+            onClick={onLogout}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              background: 'var(--bg-muted)',
+              color: 'var(--text-secondary)',
+              padding: '10px 16px',
+              borderRadius: '8px',
+              border: '1px solid var(--border)',
+              cursor: 'pointer',
+              fontFamily: 'var(--font-sans)',
+              fontWeight: 500,
+              fontSize: '13px'
+            }}
+          >
+            <img src={currentUser.photoURL} alt="" style={{ width: '20px', height: '20px', borderRadius: '50%' }} />
+            {currentUser.displayName || currentUser.email}
+            <span style={{ marginLeft: 'auto', fontSize: '10px' }}>🚪</span>
+          </button>
+        ) : (
+          <button
+            onClick={async () => {
+              try {
+                const { signInWithGoogle } = await import('./firebase/config');
+                await signInWithGoogle();
+              } catch (err) {
+                console.error('Sign-in error:', err);
+              }
+            }}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px',
+              background: 'var(--accent)',
+              color: '#fff',
+              padding: '12px 16px',
+              borderRadius: '8px',
+              border: 'none',
+              cursor: 'pointer',
+              fontFamily: 'var(--font-sans)',
+              fontWeight: 600,
+              fontSize: '14px'
+            }}
+          >
+            🔐 Sign in to save phrases
+          </button>
+        )}
         <button 
           onClick={() => { onClose(); onOpenChat(); }}
           style={{ 
@@ -2590,6 +2754,8 @@ export default function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
   const [savedPlan, setSavedPlan] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
   const SectionComp = section ? (SECTION_MAP[section] || Verbs25Section) : null;
 
   useEffect(() => {
@@ -2605,6 +2771,28 @@ export default function App() {
       }
     } catch {}
   }, []);
+
+  useEffect(() => {
+    let unsubscribe;
+    async function initAuth() {
+      const { onAuthChange } = await import('./firebase/config');
+      unsubscribe = onAuthChange((user) => {
+        setCurrentUser(user);
+        setAuthLoading(false);
+      });
+    }
+    initAuth();
+    return () => { if (unsubscribe) unsubscribe(); };
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      const { logOut } = await import('./firebase/config');
+      await logOut();
+    } catch (err) {
+      console.error('Logout error:', err);
+    }
+  };
 
   const handleSavePlan = (planData) => {
     setSavedPlan(planData);
@@ -2623,11 +2811,39 @@ export default function App() {
     setSidebarOpen(false);
   };
 
+  const renderSection = () => {
+    if (section === 'phrases') {
+      if (authLoading) {
+        return (
+          <div style={{ display: 'flex', justifyContent: 'center', padding: '60px' }}>
+            <div style={{ width: '32px', height: '32px', border: '3px solid var(--border)', borderTopColor: 'var(--accent)', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+          </div>
+        );
+      }
+      if (!currentUser) {
+        return <SignInPrompt onSignIn={() => {}} />;
+      }
+      return <SectionComp user={currentUser} />;
+    }
+
+    if (section === 'myplan') {
+      return <MyPlanSection savedPlan={savedPlan} onSelectSection={(id) => { setSection(id); setSidebarOpen(false); }} />;
+    }
+    if (section) {
+      return <SectionComp showEnglish={showEnglish} savedPlan={savedPlan} onSavePlan={handleSavePlan} />;
+    }
+    return (
+      <div className="welcome-screen">
+        <LandingPage onComplete={(recommendedSections) => { if (recommendedSections.length > 0) setSection(recommendedSections[0]); }} onSavePlan={handleSavePlan} savedPlan={savedPlan} />
+      </div>
+    );
+  };
+
   return (
     <ErrorBoundary>
       <div className="app">
         <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');`}</style>
-        <Sidebar section={section} onSelect={handleSectionSelect} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} showEnglish={showEnglish} onOpenChat={() => setChatOpen(true)} />
+        <Sidebar section={section} onSelect={handleSectionSelect} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} showEnglish={showEnglish} onOpenChat={() => setChatOpen(true)} currentUser={currentUser} onLogout={handleLogout} />
         {sidebarOpen && <div className="sidebar-overlay" onClick={() => setSidebarOpen(false)} />}
         <main className="main-content">
           <div className="section-nav">
@@ -2653,25 +2869,7 @@ export default function App() {
             )}
           </div>
           <div className="content">
-            {section === 'myplan' ? (
-              <MyPlanSection savedPlan={savedPlan} onSelectSection={(id) => {
-                if (id === null) {
-                  setSection(null);
-                } else {
-                  setSection(id);
-                }
-              }} />
-            ) : section ? (
-              <SectionComp showEnglish={showEnglish} savedPlan={savedPlan} onSavePlan={handleSavePlan} />
-            ) : (
-              <div className="welcome-screen">
-                <LandingPage onComplete={(recommendedSections) => {
-                  if (recommendedSections.length > 0) {
-                    setSection(recommendedSections[0]);
-                  }
-                }} onSavePlan={handleSavePlan} savedPlan={savedPlan} />
-              </div>
-            )}
+            {renderSection()}
           </div>
         </main>
         <ChatModal isOpen={chatOpen} onClose={() => setChatOpen(false)} />
