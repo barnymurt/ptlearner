@@ -1446,7 +1446,6 @@ function ChatModal({ isOpen, onClose }) {
     if (!text.trim()) return;
     setTranscript('');
     addMessage(text, true);
-    setChatHistory(prev => [...prev, { text, isUser: true, id: Date.now() + Math.random() }]);
     
     try {
       const response = await fetch('/api', {
@@ -1459,7 +1458,6 @@ function ChatModal({ isOpen, onClose }) {
         addMessage(`Sorry, I couldn't respond: ${data.error}`);
       } else {
         addMessage(data.reply);
-        setChatHistory(prev => [...prev, { text: data.reply, isUser: false, id: Date.now() + Math.random() }]);
       }
     } catch (err) {
       addMessage('Sorry, something went wrong. Please try again.');
