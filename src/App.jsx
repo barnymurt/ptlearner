@@ -766,7 +766,7 @@ function OnboardingChat({ onComplete, onSavePlan, savedPlan }) {
 
   if (lessonPlan.length > 0) {
     return (
-      <div style={{ maxWidth: '700px', margin: '0 auto', padding: 'clamp(12px, 4vw, 24px)', width: '100%', boxSizing: 'border-box' }}>
+      <div style={{ maxWidth: '700px', margin: '0 auto', padding: 'clamp(12px, 4vw, 24px)', width: '100%', boxSizing: 'border-box', overflowY: 'auto', maxHeight: 'calc(100vh - 120px)' }}>
         <div style={{ background: 'var(--bg-card)', borderRadius: '20px', boxShadow: '0 8px 32px rgba(0,0,0,0.12)', padding: 'clamp(16px, 4vw, 32px)' }}>
           <div style={{ textAlign: 'center', marginBottom: '24px' }}>
             <div style={{ fontSize: '56px', marginBottom: '16px' }}>🎯</div>
