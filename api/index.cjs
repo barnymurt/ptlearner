@@ -38,6 +38,37 @@ function generateLessonPlanFallback(answers) {
 }
 
 module.exports = async function handler(req, res) {
+  if (req.method === 'POST' && req.body && req.body.action === 'chat') {
+    const { message, history } = req.body;
+    if (!message || !message.trim()) return res.status(200).json({ error: 'No message provided' });
+    const apiKey = process.env.MINIMAX_API_KEY;
+    if (!apiKey) return res.status(200).json({ error: 'AI not configured' });
+    try {
+      const response = await fetch('https://api.minimax.io/v1/text/chatcompletion_v2', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+        body: JSON.stringify({
+          model: 'MiniMax-Text-01',
+          messages: [
+            { role: 'system', content: 'You are Patrick, a warm and experienced European Portuguese teacher from Lisbon. You help learners practice Portuguese, answer questions about grammar, vocabulary, pronunciation, and culture. Keep responses conversational, encouraging, and focused on European Portuguese (not Brazilian). If recommending sections, mention specific section names from the app.' },
+            ...(history || []).map(h => ({ role: h.isUser ? 'user' : 'assistant', content: h.text })),
+            { role: 'user', content: message }
+          ],
+          temperature: 0.8,
+          max_tokens: 800
+        })
+      });
+      if (!response.ok) throw new Error('MiniMax API failed: ' + response.status);
+      const data = await response.json();
+      const content = data.choices?.[0]?.message?.content;
+      if (!content) throw new Error('No content in response');
+      return res.status(200).json({ reply: content });
+    } catch (error) {
+      console.error('Chat error:', error.message);
+      return res.status(200).json({ error: error.message });
+    }
+  }
+
   if (req.method === 'POST' && req.body && req.body.action === 'translate') {
     const { phrase } = req.body;
     if (!phrase || !phrase.trim()) return res.status(200).json({ error: 'No phrase provided' });

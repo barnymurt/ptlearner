@@ -1442,12 +1442,28 @@ function ChatModal({ isOpen, onClose }) {
     setIsListening(false);
   };
   
-  const handleSubmit = (text) => {
+  const handleSubmit = async (text) => {
     if (!text.trim()) return;
     setTranscript('');
     addMessage(text, true);
-    const plan = generateLessonPlan(text);
-    addMessage(`Based on your goals: ${plan.map(id => SECTIONS_MAP[id]?.icon + ' ' + SECTIONS_MAP[id]?.labelEn).join(', ')}`);
+    setChatHistory(prev => [...prev, { text, isUser: true, id: Date.now() + Math.random() }]);
+    
+    try {
+      const response = await fetch('/api', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'chat', message: text, history: chatHistory })
+      });
+      const data = await response.json();
+      if (data.error) {
+        addMessage(`Sorry, I couldn't respond: ${data.error}`);
+      } else {
+        addMessage(data.reply);
+        setChatHistory(prev => [...prev, { text: data.reply, isUser: false, id: Date.now() + Math.random() }]);
+      }
+    } catch (err) {
+      addMessage('Sorry, something went wrong. Please try again.');
+    }
   };
   
   if (!isOpen) return null;
