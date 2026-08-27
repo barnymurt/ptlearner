@@ -28,6 +28,115 @@ const TOP_25_VERBS = [
   { verb: "conhecer", meaning: "to know (people)", conj: ["conheço","conheces","conhece","conhecemos","conheceis","conhecem"], conjEn: ["know","know","knows","know","know","know"] },
 ];
 
+const TOP_100_VERBS = [
+  { verb: "ser", meaning: "to be (permanent)", examplePt: "Sou estudante.", exampleEn: "I am a student." },
+  { verb: "estar", meaning: "to be (temporary)", examplePt: "Estou em casa.", exampleEn: "I am at home." },
+  { verb: "ter", meaning: "to have", examplePt: "Tenho dois irmãos.", exampleEn: "I have two siblings." },
+  { verb: "fazer", meaning: "to do/make", examplePt: "Faço o jantar hoje.", exampleEn: "I'm making dinner today." },
+  { verb: "ir", meaning: "to go", examplePt: "Vou ao cinema.", exampleEn: "I'm going to the cinema." },
+  { verb: "poder", meaning: "to be able to", examplePt: "Posso entrar?", exampleEn: "Can I come in?" },
+  { verb: "dizer", meaning: "to say", examplePt: "Ele diz a verdade.", exampleEn: "He tells the truth." },
+  { verb: "dar", meaning: "to give", examplePt: "Dou-te o livro.", exampleEn: "I'll give you the book." },
+  { verb: "saber", meaning: "to know (facts)", examplePt: "Sei o caminho.", exampleEn: "I know the way." },
+  { verb: "querer", meaning: "to want", examplePt: "Quero um café.", exampleEn: "I want a coffee." },
+  { verb: "ver", meaning: "to see", examplePt: "Vejo a televisão.", exampleEn: "I watch television." },
+  { verb: "vir", meaning: "to come", examplePt: "Venho de Lisboa.", exampleEn: "I come from Lisbon." },
+  { verb: "falar", meaning: "to speak", examplePt: "Falo português.", exampleEn: "I speak Portuguese." },
+  { verb: "comer", meaning: "to eat", examplePt: "Como às oito.", exampleEn: "I eat at eight." },
+  { verb: "viver", meaning: "to live", examplePt: "Vivo em Portugal.", exampleEn: "I live in Portugal." },
+  { verb: "trabalhar", meaning: "to work", examplePt: "Trabalho em Lisboa.", exampleEn: "I work in Lisbon." },
+  { verb: "precisar", meaning: "to need", examplePt: "Preciso de ajuda.", exampleEn: "I need help." },
+  { verb: "encontrar", meaning: "to find/meet", examplePt: "Encontro-te às cinco.", exampleEn: "I'll meet you at five." },
+  { verb: "pôr", meaning: "to put", examplePt: "Ponho a mesa.", exampleEn: "I set the table." },
+  { verb: "ficar", meaning: "to stay/become", examplePt: "Fico em casa hoje.", exampleEn: "I'm staying home today." },
+  { verb: "dever", meaning: "to owe/should", examplePt: "Devo estudar mais.", exampleEn: "I should study more." },
+  { verb: "trazer", meaning: "to bring", examplePt: "Trago o jantar.", exampleEn: "I'm bringing dinner." },
+  { verb: "esperar", meaning: "to wait/hope", examplePt: "Espero o autocarro.", exampleEn: "I wait for the bus." },
+  { verb: "beber", meaning: "to drink", examplePt: "Bebo café de manhã.", exampleEn: "I drink coffee in the morning." },
+  { verb: "conhecer", meaning: "to know (people)", examplePt: "Conheço Lisboa bem.", exampleEn: "I know Lisbon well." },
+  { verb: "haver", meaning: "to have/there is", examplePt: "Há um livro na mesa.", exampleEn: "There is a book on the table." },
+  { verb: "dormir", meaning: "to sleep", examplePt: "Eu durmo cedo.", exampleEn: "I sleep early." },
+  { verb: "sentir", meaning: "to feel", examplePt: "Sinto-me bem hoje.", exampleEn: "I feel good today." },
+  { verb: "levantar", meaning: "to get up/raise", examplePt: "Levanto-me às sete.", exampleEn: "I get up at seven." },
+  { verb: "sentar", meaning: "to sit", examplePt: "Senta-te aqui.", exampleEn: "Sit here." },
+  { verb: "chamar", meaning: "to call", examplePt: "Como te chamas?", exampleEn: "What's your name?" },
+  { verb: "pensar", meaning: "to think", examplePt: "Penso que sim.", exampleEn: "I think so." },
+  { verb: "perder", meaning: "to lose", examplePt: "Perdi as chaves.", exampleEn: "I lost my keys." },
+  { verb: "ganhar", meaning: "to win/earn", examplePt: "Ganho pouco dinheiro.", exampleEn: "I earn little money." },
+  { verb: "abrir", meaning: "to open", examplePt: "Abre a porta, por favor.", exampleEn: "Open the door, please." },
+  { verb: "fechar", meaning: "to close", examplePt: "Fecha a janela.", exampleEn: "Close the window." },
+  { verb: "pedir", meaning: "to ask for", examplePt: "Posso pedir ajuda?", exampleEn: "Can I ask for help?" },
+  { verb: "receber", meaning: "to receive", examplePt: "Recebi uma carta.", exampleEn: "I received a letter." },
+  { verb: "vender", meaning: "to sell", examplePt: "Vendo livros usados.", exampleEn: "I sell used books." },
+  { verb: "comprar", meaning: "to buy", examplePt: "Compro pão todos os dias.", exampleEn: "I buy bread every day." },
+  { verb: "pagar", meaning: "to pay", examplePt: "Pago em dinheiro.", exampleEn: "I pay in cash." },
+  { verb: "ajudar", meaning: "to help", examplePt: "Ajuda-me, por favor.", exampleEn: "Help me, please." },
+  { verb: "usar", meaning: "to use", examplePt: "Uso óculos para ler.", exampleEn: "I use glasses to read." },
+  { verb: "gostar", meaning: "to like", examplePt: "Gosto de café.", exampleEn: "I like coffee." },
+  { verb: "preferir", meaning: "to prefer", examplePt: "Prefiro chá.", exampleEn: "I prefer tea." },
+  { verb: "acabar", meaning: "to finish", examplePt: "Acabei o trabalho.", exampleEn: "I finished the work." },
+  { verb: "começar", meaning: "to begin", examplePt: "Começo amanhã.", exampleEn: "I start tomorrow." },
+  { verb: "continuar", meaning: "to continue", examplePt: "Continua a ler.", exampleEn: "Keep reading." },
+  { verb: "tentar", meaning: "to try", examplePt: "Tento de novo.", exampleEn: "I'll try again." },
+  { verb: "aprender", meaning: "to learn", examplePt: "Aprendo português.", exampleEn: "I'm learning Portuguese." },
+  { verb: "ensinar", meaning: "to teach", examplePt: "Ensino inglês.", exampleEn: "I teach English." },
+  { verb: "estudar", meaning: "to study", examplePt: "Estudo todos os dias.", exampleEn: "I study every day." },
+  { verb: "ler", meaning: "to read", examplePt: "Leio o jornal de manhã.", exampleEn: "I read the newspaper in the morning." },
+  { verb: "escrever", meaning: "to write", examplePt: "Escrevo uma carta.", exampleEn: "I'm writing a letter." },
+  { verb: "ouvir", meaning: "to hear/listen", examplePt: "Ouço música.", exampleEn: "I listen to music." },
+  { verb: "lembrar", meaning: "to remember", examplePt: "Lembro-me disso.", exampleEn: "I remember that." },
+  { verb: "esquecer", meaning: "to forget", examplePt: "Esqueci o nome dele.", exampleEn: "I forgot his name." },
+  { verb: "perceber", meaning: "to understand", examplePt: "Não percebo nada.", exampleEn: "I don't understand anything." },
+  { verb: "explicar", meaning: "to explain", examplePt: "Explica-me isto.", exampleEn: "Explain this to me." },
+  { verb: "perguntar", meaning: "to ask (a question)", examplePt: "Pergunto-lhe o nome.", exampleEn: "I ask him his name." },
+  { verb: "responder", meaning: "to answer", examplePt: "Respondo logo.", exampleEn: "I'll answer right away." },
+  { verb: "contar", meaning: "to count/tell", examplePt: "Conto uma história.", exampleEn: "I tell a story." },
+  { verb: "conversar", meaning: "to talk/chat", examplePt: "Conversamos muito.", exampleEn: "We talked a lot." },
+  { verb: "chegar", meaning: "to arrive", examplePt: "Chego às dez horas.", exampleEn: "I arrive at ten o'clock." },
+  { verb: "sair", meaning: "to leave/go out", examplePt: "Saio à noite.", exampleEn: "I go out at night." },
+  { verb: "entrar", meaning: "to enter", examplePt: "Entro na sala.", exampleEn: "I enter the room." },
+  { verb: "voltar", meaning: "to return", examplePt: "Volto amanhã.", exampleEn: "I come back tomorrow." },
+  { verb: "passar", meaning: "to pass/spend", examplePt: "Passo o dia a estudar.", exampleEn: "I spend the day studying." },
+  { verb: "caminhar", meaning: "to walk", examplePt: "Caminho até ao trabalho.", exampleEn: "I walk to work." },
+  { verb: "correr", meaning: "to run", examplePt: "Corro no parque.", exampleEn: "I run in the park." },
+  { verb: "parar", meaning: "to stop", examplePt: "O autocarro parou.", exampleEn: "The bus stopped." },
+  { verb: "conduzir", meaning: "to drive", examplePt: "Conduzo devagar.", exampleEn: "I drive slowly." },
+  { verb: "viajar", meaning: "to travel", examplePt: "Viajo muito.", exampleEn: "I travel a lot." },
+  { verb: "morar", meaning: "to live/reside", examplePt: "Moro em Lisboa.", exampleEn: "I live in Lisbon." },
+  { verb: "mudar", meaning: "to change/move", examplePt: "Mudo de casa.", exampleEn: "I'm moving house." },
+  { verb: "acontecer", meaning: "to happen", examplePt: "Aconteceu algo estranho.", exampleEn: "Something strange happened." },
+  { verb: "existir", meaning: "to exist", examplePt: "Existe um problema.", exampleEn: "There is a problem." },
+  { verb: "parecer", meaning: "to seem", examplePt: "Parece difícil.", exampleEn: "It seems difficult." },
+  { verb: "significar", meaning: "to mean", examplePt: "O que significa isto?", exampleEn: "What does this mean?" },
+  { verb: "decidir", meaning: "to decide", examplePt: "Decido depois.", exampleEn: "I'll decide later." },
+  { verb: "escolher", meaning: "to choose", examplePt: "Escolho o azul.", exampleEn: "I choose the blue one." },
+  { verb: "cortar", meaning: "to cut", examplePt: "Corto o pão.", exampleEn: "I cut the bread." },
+  { verb: "cozinhar", meaning: "to cook", examplePt: "Cozinho bem.", exampleEn: "I cook well." },
+  { verb: "lavar", meaning: "to wash", examplePt: "Lavo a roupa.", exampleEn: "I wash the clothes." },
+  { verb: "limpar", meaning: "to clean", examplePt: "Limpo a casa.", exampleEn: "I clean the house." },
+  { verb: "arranjar", meaning: "to fix/arrange", examplePt: "Arrango o carro.", exampleEn: "I fix the car." },
+  { verb: "amar", meaning: "to love", examplePt: "Amo-te muito.", exampleEn: "I love you a lot." },
+  { verb: "odiar", meaning: "to hate", examplePt: "Odeio esperar.", exampleEn: "I hate waiting." },
+  { verb: "rir", meaning: "to laugh", examplePt: "Rio muito com ele.", exampleEn: "I laugh a lot with him." },
+  { verb: "chorar", meaning: "to cry", examplePt: "Choro em filmes.", exampleEn: "I cry at movies." },
+  { verb: "partir", meaning: "to leave/break", examplePt: "Eu parto às oito.", exampleEn: "I leave at eight." },
+  { verb: "seguir", meaning: "to follow/continue", examplePt: "Sigo em frente.", exampleEn: "I go straight ahead." },
+  { verb: "servir", meaning: "to serve", examplePt: "Sirvo o jantar.", exampleEn: "I serve dinner." },
+  { verb: "permitir", meaning: "to allow", examplePt: "Posso permitir isso?", exampleEn: "Can I allow that?" },
+  { verb: "evitar", meaning: "to avoid", examplePt: "Evito o trânsito.", exampleEn: "I avoid the traffic." },
+  { verb: "oferecer", meaning: "to offer", examplePt: "Ofereço-te um café.", exampleEn: "I'll offer you a coffee." },
+  { verb: "mostrar", meaning: "to show", examplePt: "Mostro-te o caminho.", exampleEn: "I'll show you the way." },
+  { verb: "casar", meaning: "to marry", examplePt: "Vou casar em junho.", exampleEn: "I'm getting married in June." },
+  { verb: "morrer", meaning: "to die", examplePt: "O avô morreu no ano passado.", exampleEn: "Grandfather died last year." },
+  { verb: "nascer", meaning: "to be born", examplePt: "Nasci em Lisboa.", exampleEn: "I was born in Lisbon." },
+  { verb: "crescer", meaning: "to grow up", examplePt: "As crianças crescem depressa.", exampleEn: "Children grow up quickly." },
+  { verb: "tocar", meaning: "to touch/play", examplePt: "Toco guitarra.", exampleEn: "I play guitar." },
+  { verb: "dançar", meaning: "to dance", examplePt: "Danço bem.", exampleEn: "I dance well." },
+  { verb: "nadar", meaning: "to swim", examplePt: "Nado no mar.", exampleEn: "I swim in the sea." },
+  { verb: "pintar", meaning: "to paint", examplePt: "Pinto a casa.", exampleEn: "I'm painting the house." },
+  { verb: "desenhar", meaning: "to draw", examplePt: "Desenho retratos.", exampleEn: "I draw portraits." },
+];
+
 const PRONOUNS = ["eu","tu","ele/ela","nós","vós","eles/elas"];
 
 const CONJUGATION_PATTERNS = {
@@ -431,6 +540,7 @@ function speakPortuguese(text) {
 
 const SECTIONS_MAP = {
   'verbs25': { label: '25 Verbos', labelEn: '25 Most Used Verbs', icon: '⚡', desc: 'Essential verbs for everyday conversation', keywords: ['beginner', 'essential', 'basic', 'common', 'most used', 'core', 'fundamental', 'starter'] },
+  'verbs100': { label: '106 Verbos', labelEn: '106 Most Used Verbs', icon: '🔥', desc: '106 most frequently used verbs with example sentences in context', keywords: ['intermediate', '100', '106', 'most used', 'frequent', 'examples', 'sentences', 'context', 'flashcards', 'expanded'] },
   'conjugation': { label: 'Conjugação', labelEn: 'Conjugation', icon: '📐', desc: 'Learn how verbs change form', keywords: ['grammar', 'verbs', 'endings', 'patterns', 'tenses', 'present', 'past', 'future'] },
   'pronouns': { label: 'Pronomes', labelEn: 'Pronouns', icon: '👤', desc: 'I, you, he, she - who is doing it', keywords: ['pronouns', 'subject', 'object', 'possessive', 'demonstrative', 'personal'] },
   'adjectives': { label: 'Adjetivos', labelEn: 'Adjectives', icon: '🎨', desc: 'Words to describe people and things', keywords: ['describing', 'descriptions', 'appearance', 'personality', 'character'] },
@@ -474,6 +584,7 @@ function generateLessonPlan(answers) {
     addRec('articles', 'Learn the gender system (o, a, os, as) - Portuguese nouns have gender');
   } else if (intermediate) {
     addRec('verbs25', 'Refresh and expand your verb knowledge with essential verbs');
+    addRec('verbs100', 'Push beyond the 25 with the 106 most used verbs - each with an example sentence in context');
     addRec('conjugation', 'Master verb conjugations across multiple tenses');
     addRec('vocabulary', 'Expand vocabulary in specific areas relevant to your goals');
     addRec('prepositions', 'Prepositions (em, de, para, com) are crucial for natural speech');
@@ -1931,6 +2042,59 @@ function Verbs25Section({ showEnglish }) {
   );
 }
 
+function VerbExampleCard({ verb, meaning, examplePt, exampleEn }) {
+  const [show, setShow] = useState(false);
+  return (
+    <div className="card verb-card" onClick={() => setShow(!show)}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span className="verb-text">{verb}</span>
+          <button
+            onClick={(e) => { e.stopPropagation(); speakPortuguese(verb); }}
+            style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '16px', padding: '2px 6px', borderRadius: '4px' }}
+            title="Listen to pronunciation"
+          >🔊</button>
+        </div>
+        <span className="verb-meaning">{meaning}</span>
+      </div>
+      {show && (
+        <div style={{ marginTop: '12px', paddingTop: '12px', borderTop: '1px solid var(--border)', fontSize: '13px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+          <div style={{ fontStyle: 'italic', color: 'var(--text-primary)' }}>{examplePt}</div>
+          <div style={{ color: 'var(--text-secondary)', fontSize: '12px' }}>{exampleEn}</div>
+        </div>
+      )}
+      <div style={{ fontSize: '10px', color: 'var(--text-tertiary)', marginTop: '8px', textAlign: 'center' }}>{show ? '▲ hide example' : '▼ show example'}</div>
+    </div>
+  );
+}
+
+function Verbs100Section({ showEnglish }) {
+  const [mode, setMode] = useState('flash');
+  const backKey = (item) => (
+    <>
+      <div style={{ fontSize: '20px', color: '#00a870', fontWeight: 500 }}>{item.meaning}</div>
+      <div style={{ marginTop: '14px', fontSize: '10px', color: '#7a8a80', textTransform: 'uppercase', letterSpacing: '1px' }}>Exemplo</div>
+      <div style={{ fontStyle: 'italic', fontSize: '15px', marginTop: '4px' }}>{item.examplePt}</div>
+      <div style={{ fontSize: '12px', color: '#444', marginTop: '4px' }}>{item.exampleEn}</div>
+    </>
+  );
+  return (
+    <div>
+      <h2 className="sec-title">{showEnglish ? '106 Most Used Verbs' : '106 Verbos Mais Usados'}</h2>
+      <p className="sec-desc">{showEnglish ? 'The 106 most frequently used European Portuguese verbs, each with an example sentence in context. Drill with flashcards or browse the reference grid.' : 'Os 106 verbos mais usados em português europeu, cada um com um exemplo em contexto. Pratica com flashcards ou consulta a grelha.'}</p>
+      <div className="toggle-row">
+        <button className={mode === 'flash' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('flash')}>{showEnglish ? 'Flashcards' : 'Flashcards'}</button>
+        <button className={mode === 'grid' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('grid')}>{showEnglish ? 'Reference' : 'Reference'}</button>
+      </div>
+      {mode === 'flash' ? (
+        <FlashcardDrill items={TOP_100_VERBS} frontKey="verb" backKey={backKey} title="Verbo" sectionId="verbs100" />
+      ) : (
+        <div className="grid-2">{TOP_100_VERBS.map(v => <VerbExampleCard key={v.verb} {...v} />)}</div>
+      )}
+    </div>
+  );
+}
+
 function ConjugationSection({ showEnglish }) {
   const [tense, setTense] = useState('Presente');
   const data = CONJUGATION_PATTERNS[tense];
@@ -2447,7 +2611,7 @@ function Verbos999Section({ showEnglish }) {
 const SECTION_MAP = {
   myplan: MyPlanSection,
   phrases: MyPhrasesSection,
-  verbs25: Verbs25Section, conjugation: ConjugationSection, pronouns: PronounsSection,
+  verbs25: Verbs25Section, verbs100: Verbs100Section, conjugation: ConjugationSection, pronouns: PronounsSection,
   adjectives: AdjectivesSection, prepositions: PrepositionsSection, articles: ArticlesSection,
   vocabulary: VocabularySection, modals: ModalsSection, idioms: IdiomsSection,
   falsefriends: FalseFriendsSection, structure: StructureSection, preterito: PreteritoSection,
@@ -2475,6 +2639,7 @@ const SECTION_GROUPS = [
     labelPt: 'Referência',
     sections: [
       { id: 'verbs25', label: '25 Verbos', labelEn: '25 Verbs', icon: '⚡', desc: 'Essential verbs for A2' },
+      { id: 'verbs100', label: '106 Verbos', labelEn: '106 Verbs', icon: '🔥', desc: '106 most used verbs with examples' },
       { id: 'conjugation', label: 'Conjugação', labelEn: 'Conjugation', icon: '📐', desc: 'Verb conjugation patterns' },
       { id: 'pronouns', label: 'Pronomes', labelEn: 'Pronouns', icon: '👤', desc: 'All Portuguese pronouns' },
       { id: 'adjectives', label: 'Adjetivos', labelEn: 'Adjectives', icon: '🎨', desc: 'Common adjectives' },
