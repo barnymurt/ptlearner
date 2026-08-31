@@ -53,7 +53,7 @@
 /* Reset */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; overflow-x: hidden; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 
 body {
   background: var(--bg);
@@ -68,7 +68,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   padding-bottom: env(safe-area-inset-bottom, 20px);
   /* Prevent pull-to-refresh on mobile */
-  overscroll-behavior: none;
+  overscroll-behavior-y: none;
 }
 
 /* Scrollbar */
@@ -1286,12 +1286,14 @@ a:hover { text-decoration: underline; }
   .main-content {
     flex: 1 1 auto;
     min-width: 0;
+    min-height: 0;
     display: flex;
     flex-direction: column;
     overflow: hidden;
   }
   .content {
     flex: 1 1 auto;
+    min-height: 0;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
   }
