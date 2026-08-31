@@ -28,114 +28,114 @@ const TOP_25_VERBS = [
   { verb: "conhecer", meaning: "to know (people)", conj: ["conheço","conheces","conhece","conhecemos","conheceis","conhecem"], conjEn: ["know","know","knows","know","know","know"] },
 ];
 
-const TOP_100_VERBS = [
-  { verb: "ser", meaning: "to be (permanent)", examplePt: "Sou estudante.", exampleEn: "I am a student." },
-  { verb: "estar", meaning: "to be (temporary)", examplePt: "Estou em casa.", exampleEn: "I am at home." },
-  { verb: "ter", meaning: "to have", examplePt: "Tenho dois irmãos.", exampleEn: "I have two siblings." },
-  { verb: "fazer", meaning: "to do/make", examplePt: "Faço o jantar hoje.", exampleEn: "I'm making dinner today." },
-  { verb: "ir", meaning: "to go", examplePt: "Vou ao cinema.", exampleEn: "I'm going to the cinema." },
-  { verb: "poder", meaning: "to be able to", examplePt: "Posso entrar?", exampleEn: "Can I come in?" },
-  { verb: "dizer", meaning: "to say", examplePt: "Ele diz a verdade.", exampleEn: "He tells the truth." },
-  { verb: "dar", meaning: "to give", examplePt: "Dou-te o livro.", exampleEn: "I'll give you the book." },
-  { verb: "saber", meaning: "to know (facts)", examplePt: "Sei o caminho.", exampleEn: "I know the way." },
-  { verb: "querer", meaning: "to want", examplePt: "Quero um café.", exampleEn: "I want a coffee." },
-  { verb: "ver", meaning: "to see", examplePt: "Vejo a televisão.", exampleEn: "I watch television." },
-  { verb: "vir", meaning: "to come", examplePt: "Venho de Lisboa.", exampleEn: "I come from Lisbon." },
-  { verb: "falar", meaning: "to speak", examplePt: "Falo português.", exampleEn: "I speak Portuguese." },
-  { verb: "comer", meaning: "to eat", examplePt: "Como às oito.", exampleEn: "I eat at eight." },
-  { verb: "viver", meaning: "to live", examplePt: "Vivo em Portugal.", exampleEn: "I live in Portugal." },
-  { verb: "trabalhar", meaning: "to work", examplePt: "Trabalho em Lisboa.", exampleEn: "I work in Lisbon." },
-  { verb: "precisar", meaning: "to need", examplePt: "Preciso de ajuda.", exampleEn: "I need help." },
-  { verb: "encontrar", meaning: "to find/meet", examplePt: "Encontro-te às cinco.", exampleEn: "I'll meet you at five." },
-  { verb: "pôr", meaning: "to put", examplePt: "Ponho a mesa.", exampleEn: "I set the table." },
-  { verb: "ficar", meaning: "to stay/become", examplePt: "Fico em casa hoje.", exampleEn: "I'm staying home today." },
-  { verb: "dever", meaning: "to owe/should", examplePt: "Devo estudar mais.", exampleEn: "I should study more." },
-  { verb: "trazer", meaning: "to bring", examplePt: "Trago o jantar.", exampleEn: "I'm bringing dinner." },
-  { verb: "esperar", meaning: "to wait/hope", examplePt: "Espero o autocarro.", exampleEn: "I wait for the bus." },
-  { verb: "beber", meaning: "to drink", examplePt: "Bebo café de manhã.", exampleEn: "I drink coffee in the morning." },
-  { verb: "conhecer", meaning: "to know (people)", examplePt: "Conheço Lisboa bem.", exampleEn: "I know Lisbon well." },
-  { verb: "haver", meaning: "to have/there is", examplePt: "Há um livro na mesa.", exampleEn: "There is a book on the table." },
-  { verb: "dormir", meaning: "to sleep", examplePt: "Eu durmo cedo.", exampleEn: "I sleep early." },
-  { verb: "sentir", meaning: "to feel", examplePt: "Sinto-me bem hoje.", exampleEn: "I feel good today." },
-  { verb: "levantar", meaning: "to get up/raise", examplePt: "Levanto-me às sete.", exampleEn: "I get up at seven." },
-  { verb: "sentar", meaning: "to sit", examplePt: "Senta-te aqui.", exampleEn: "Sit here." },
-  { verb: "chamar", meaning: "to call", examplePt: "Como te chamas?", exampleEn: "What's your name?" },
-  { verb: "pensar", meaning: "to think", examplePt: "Penso que sim.", exampleEn: "I think so." },
-  { verb: "perder", meaning: "to lose", examplePt: "Perdi as chaves.", exampleEn: "I lost my keys." },
-  { verb: "ganhar", meaning: "to win/earn", examplePt: "Ganho pouco dinheiro.", exampleEn: "I earn little money." },
-  { verb: "abrir", meaning: "to open", examplePt: "Abre a porta, por favor.", exampleEn: "Open the door, please." },
-  { verb: "fechar", meaning: "to close", examplePt: "Fecha a janela.", exampleEn: "Close the window." },
-  { verb: "pedir", meaning: "to ask for", examplePt: "Posso pedir ajuda?", exampleEn: "Can I ask for help?" },
-  { verb: "receber", meaning: "to receive", examplePt: "Recebi uma carta.", exampleEn: "I received a letter." },
-  { verb: "vender", meaning: "to sell", examplePt: "Vendo livros usados.", exampleEn: "I sell used books." },
-  { verb: "comprar", meaning: "to buy", examplePt: "Compro pão todos os dias.", exampleEn: "I buy bread every day." },
-  { verb: "pagar", meaning: "to pay", examplePt: "Pago em dinheiro.", exampleEn: "I pay in cash." },
-  { verb: "ajudar", meaning: "to help", examplePt: "Ajuda-me, por favor.", exampleEn: "Help me, please." },
-  { verb: "usar", meaning: "to use", examplePt: "Uso óculos para ler.", exampleEn: "I use glasses to read." },
-  { verb: "gostar", meaning: "to like", examplePt: "Gosto de café.", exampleEn: "I like coffee." },
-  { verb: "preferir", meaning: "to prefer", examplePt: "Prefiro chá.", exampleEn: "I prefer tea." },
-  { verb: "acabar", meaning: "to finish", examplePt: "Acabei o trabalho.", exampleEn: "I finished the work." },
-  { verb: "começar", meaning: "to begin", examplePt: "Começo amanhã.", exampleEn: "I start tomorrow." },
-  { verb: "continuar", meaning: "to continue", examplePt: "Continua a ler.", exampleEn: "Keep reading." },
-  { verb: "tentar", meaning: "to try", examplePt: "Tento de novo.", exampleEn: "I'll try again." },
-  { verb: "aprender", meaning: "to learn", examplePt: "Aprendo português.", exampleEn: "I'm learning Portuguese." },
-  { verb: "ensinar", meaning: "to teach", examplePt: "Ensino inglês.", exampleEn: "I teach English." },
-  { verb: "estudar", meaning: "to study", examplePt: "Estudo todos os dias.", exampleEn: "I study every day." },
-  { verb: "ler", meaning: "to read", examplePt: "Leio o jornal de manhã.", exampleEn: "I read the newspaper in the morning." },
-  { verb: "escrever", meaning: "to write", examplePt: "Escrevo uma carta.", exampleEn: "I'm writing a letter." },
-  { verb: "ouvir", meaning: "to hear/listen", examplePt: "Ouço música.", exampleEn: "I listen to music." },
-  { verb: "lembrar", meaning: "to remember", examplePt: "Lembro-me disso.", exampleEn: "I remember that." },
-  { verb: "esquecer", meaning: "to forget", examplePt: "Esqueci o nome dele.", exampleEn: "I forgot his name." },
-  { verb: "perceber", meaning: "to understand", examplePt: "Não percebo nada.", exampleEn: "I don't understand anything." },
-  { verb: "explicar", meaning: "to explain", examplePt: "Explica-me isto.", exampleEn: "Explain this to me." },
-  { verb: "perguntar", meaning: "to ask (a question)", examplePt: "Pergunto-lhe o nome.", exampleEn: "I ask him his name." },
-  { verb: "responder", meaning: "to answer", examplePt: "Respondo logo.", exampleEn: "I'll answer right away." },
-  { verb: "contar", meaning: "to count/tell", examplePt: "Conto uma história.", exampleEn: "I tell a story." },
-  { verb: "conversar", meaning: "to talk/chat", examplePt: "Conversamos muito.", exampleEn: "We talked a lot." },
-  { verb: "chegar", meaning: "to arrive", examplePt: "Chego às dez horas.", exampleEn: "I arrive at ten o'clock." },
-  { verb: "sair", meaning: "to leave/go out", examplePt: "Saio à noite.", exampleEn: "I go out at night." },
-  { verb: "entrar", meaning: "to enter", examplePt: "Entro na sala.", exampleEn: "I enter the room." },
-  { verb: "voltar", meaning: "to return", examplePt: "Volto amanhã.", exampleEn: "I come back tomorrow." },
-  { verb: "passar", meaning: "to pass/spend", examplePt: "Passo o dia a estudar.", exampleEn: "I spend the day studying." },
-  { verb: "caminhar", meaning: "to walk", examplePt: "Caminho até ao trabalho.", exampleEn: "I walk to work." },
-  { verb: "correr", meaning: "to run", examplePt: "Corro no parque.", exampleEn: "I run in the park." },
-  { verb: "parar", meaning: "to stop", examplePt: "O autocarro parou.", exampleEn: "The bus stopped." },
-  { verb: "conduzir", meaning: "to drive", examplePt: "Conduzo devagar.", exampleEn: "I drive slowly." },
-  { verb: "viajar", meaning: "to travel", examplePt: "Viajo muito.", exampleEn: "I travel a lot." },
-  { verb: "morar", meaning: "to live/reside", examplePt: "Moro em Lisboa.", exampleEn: "I live in Lisbon." },
-  { verb: "mudar", meaning: "to change/move", examplePt: "Mudo de casa.", exampleEn: "I'm moving house." },
-  { verb: "acontecer", meaning: "to happen", examplePt: "Aconteceu algo estranho.", exampleEn: "Something strange happened." },
-  { verb: "existir", meaning: "to exist", examplePt: "Existe um problema.", exampleEn: "There is a problem." },
-  { verb: "parecer", meaning: "to seem", examplePt: "Parece difícil.", exampleEn: "It seems difficult." },
-  { verb: "significar", meaning: "to mean", examplePt: "O que significa isto?", exampleEn: "What does this mean?" },
-  { verb: "decidir", meaning: "to decide", examplePt: "Decido depois.", exampleEn: "I'll decide later." },
-  { verb: "escolher", meaning: "to choose", examplePt: "Escolho o azul.", exampleEn: "I choose the blue one." },
-  { verb: "cortar", meaning: "to cut", examplePt: "Corto o pão.", exampleEn: "I cut the bread." },
-  { verb: "cozinhar", meaning: "to cook", examplePt: "Cozinho bem.", exampleEn: "I cook well." },
-  { verb: "lavar", meaning: "to wash", examplePt: "Lavo a roupa.", exampleEn: "I wash the clothes." },
-  { verb: "limpar", meaning: "to clean", examplePt: "Limpo a casa.", exampleEn: "I clean the house." },
-  { verb: "arranjar", meaning: "to fix/arrange", examplePt: "Arrango o carro.", exampleEn: "I fix the car." },
-  { verb: "amar", meaning: "to love", examplePt: "Amo-te muito.", exampleEn: "I love you a lot." },
-  { verb: "odiar", meaning: "to hate", examplePt: "Odeio esperar.", exampleEn: "I hate waiting." },
-  { verb: "rir", meaning: "to laugh", examplePt: "Rio muito com ele.", exampleEn: "I laugh a lot with him." },
-  { verb: "chorar", meaning: "to cry", examplePt: "Choro em filmes.", exampleEn: "I cry at movies." },
-  { verb: "partir", meaning: "to leave/break", examplePt: "Eu parto às oito.", exampleEn: "I leave at eight." },
-  { verb: "seguir", meaning: "to follow/continue", examplePt: "Sigo em frente.", exampleEn: "I go straight ahead." },
-  { verb: "servir", meaning: "to serve", examplePt: "Sirvo o jantar.", exampleEn: "I serve dinner." },
-  { verb: "permitir", meaning: "to allow", examplePt: "Posso permitir isso?", exampleEn: "Can I allow that?" },
-  { verb: "evitar", meaning: "to avoid", examplePt: "Evito o trânsito.", exampleEn: "I avoid the traffic." },
-  { verb: "oferecer", meaning: "to offer", examplePt: "Ofereço-te um café.", exampleEn: "I'll offer you a coffee." },
-  { verb: "mostrar", meaning: "to show", examplePt: "Mostro-te o caminho.", exampleEn: "I'll show you the way." },
-  { verb: "casar", meaning: "to marry", examplePt: "Vou casar em junho.", exampleEn: "I'm getting married in June." },
-  { verb: "morrer", meaning: "to die", examplePt: "O avô morreu no ano passado.", exampleEn: "Grandfather died last year." },
-  { verb: "nascer", meaning: "to be born", examplePt: "Nasci em Lisboa.", exampleEn: "I was born in Lisbon." },
-  { verb: "crescer", meaning: "to grow up", examplePt: "As crianças crescem depressa.", exampleEn: "Children grow up quickly." },
-  { verb: "tocar", meaning: "to touch/play", examplePt: "Toco guitarra.", exampleEn: "I play guitar." },
-  { verb: "dançar", meaning: "to dance", examplePt: "Danço bem.", exampleEn: "I dance well." },
-  { verb: "nadar", meaning: "to swim", examplePt: "Nado no mar.", exampleEn: "I swim in the sea." },
-  { verb: "pintar", meaning: "to paint", examplePt: "Pinto a casa.", exampleEn: "I'm painting the house." },
-  { verb: "desenhar", meaning: "to draw", examplePt: "Desenho retratos.", exampleEn: "I draw portraits." },
-];
+const VERB_EXAMPLES = {
+  "ser": { pt: "Sou estudante.", en: "I am a student." },
+  "estar": { pt: "Estou em casa.", en: "I am at home." },
+  "ter": { pt: "Tenho dois irmãos.", en: "I have two siblings." },
+  "fazer": { pt: "Faço o jantar hoje.", en: "I'm making dinner today." },
+  "ir": { pt: "Vou ao cinema.", en: "I'm going to the cinema." },
+  "poder": { pt: "Posso entrar?", en: "Can I come in?" },
+  "dizer": { pt: "Ele diz a verdade.", en: "He tells the truth." },
+  "dar": { pt: "Dou-te o livro.", en: "I'll give you the book." },
+  "saber": { pt: "Sei o caminho.", en: "I know the way." },
+  "querer": { pt: "Quero um café.", en: "I want a coffee." },
+  "ver": { pt: "Vejo a televisão.", en: "I watch television." },
+  "vir": { pt: "Venho de Lisboa.", en: "I come from Lisbon." },
+  "falar": { pt: "Falo português.", en: "I speak Portuguese." },
+  "comer": { pt: "Como às oito.", en: "I eat at eight." },
+  "viver": { pt: "Vivo em Portugal.", en: "I live in Portugal." },
+  "trabalhar": { pt: "Trabalho em Lisboa.", en: "I work in Lisbon." },
+  "precisar": { pt: "Preciso de ajuda.", en: "I need help." },
+  "encontrar": { pt: "Encontro-te às cinco.", en: "I'll meet you at five." },
+  "pôr": { pt: "Ponho a mesa.", en: "I set the table." },
+  "ficar": { pt: "Fico em casa hoje.", en: "I'm staying home today." },
+  "dever": { pt: "Devo estudar mais.", en: "I should study more." },
+  "trazer": { pt: "Trago o jantar.", en: "I'm bringing dinner." },
+  "esperar": { pt: "Espero o autocarro.", en: "I wait for the bus." },
+  "beber": { pt: "Bebo café de manhã.", en: "I drink coffee in the morning." },
+  "conhecer": { pt: "Conheço Lisboa bem.", en: "I know Lisbon well." },
+  "haver": { pt: "Há um livro na mesa.", en: "There is a book on the table." },
+  "dormir": { pt: "Eu durmo cedo.", en: "I sleep early." },
+  "sentir": { pt: "Sinto-me bem hoje.", en: "I feel good today." },
+  "levantar": { pt: "Levanto-me às sete.", en: "I get up at seven." },
+  "sentar": { pt: "Senta-te aqui.", en: "Sit here." },
+  "chamar": { pt: "Como te chamas?", en: "What's your name?" },
+  "pensar": { pt: "Penso que sim.", en: "I think so." },
+  "perder": { pt: "Perdi as chaves.", en: "I lost my keys." },
+  "ganhar": { pt: "Ganho pouco dinheiro.", en: "I earn little money." },
+  "abrir": { pt: "Abre a porta, por favor.", en: "Open the door, please." },
+  "fechar": { pt: "Fecha a janela.", en: "Close the window." },
+  "pedir": { pt: "Posso pedir ajuda?", en: "Can I ask for help?" },
+  "receber": { pt: "Recebi uma carta.", en: "I received a letter." },
+  "vender": { pt: "Vendo livros usados.", en: "I sell used books." },
+  "comprar": { pt: "Compro pão todos os dias.", en: "I buy bread every day." },
+  "pagar": { pt: "Pago em dinheiro.", en: "I pay in cash." },
+  "ajudar": { pt: "Ajuda-me, por favor.", en: "Help me, please." },
+  "usar": { pt: "Uso óculos para ler.", en: "I use glasses to read." },
+  "gostar": { pt: "Gosto de café.", en: "I like coffee." },
+  "preferir": { pt: "Prefiro chá.", en: "I prefer tea." },
+  "acabar": { pt: "Acabei o trabalho.", en: "I finished the work." },
+  "começar": { pt: "Começo amanhã.", en: "I start tomorrow." },
+  "continuar": { pt: "Continua a ler.", en: "Keep reading." },
+  "tentar": { pt: "Tento de novo.", en: "I'll try again." },
+  "aprender": { pt: "Aprendo português.", en: "I'm learning Portuguese." },
+  "ensinar": { pt: "Ensino inglês.", en: "I teach English." },
+  "estudar": { pt: "Estudo todos os dias.", en: "I study every day." },
+  "ler": { pt: "Leio o jornal de manhã.", en: "I read the newspaper in the morning." },
+  "escrever": { pt: "Escrevo uma carta.", en: "I'm writing a letter." },
+  "ouvir": { pt: "Ouço música.", en: "I listen to music." },
+  "lembrar": { pt: "Lembro-me disso.", en: "I remember that." },
+  "esquecer": { pt: "Esqueci o nome dele.", en: "I forgot his name." },
+  "perceber": { pt: "Não percebo nada.", en: "I don't understand anything." },
+  "explicar": { pt: "Explica-me isto.", en: "Explain this to me." },
+  "perguntar": { pt: "Pergunto-lhe o nome.", en: "I ask him his name." },
+  "responder": { pt: "Respondo logo.", en: "I'll answer right away." },
+  "contar": { pt: "Conto uma história.", en: "I tell a story." },
+  "conversar": { pt: "Conversamos muito.", en: "We talked a lot." },
+  "chegar": { pt: "Chego às dez horas.", en: "I arrive at ten o'clock." },
+  "sair": { pt: "Saio à noite.", en: "I go out at night." },
+  "entrar": { pt: "Entro na sala.", en: "I enter the room." },
+  "voltar": { pt: "Volto amanhã.", en: "I come back tomorrow." },
+  "passar": { pt: "Passo o dia a estudar.", en: "I spend the day studying." },
+  "caminhar": { pt: "Caminho até ao trabalho.", en: "I walk to work." },
+  "correr": { pt: "Corro no parque.", en: "I run in the park." },
+  "parar": { pt: "O autocarro parou.", en: "The bus stopped." },
+  "conduzir": { pt: "Conduzo devagar.", en: "I drive slowly." },
+  "viajar": { pt: "Viajo muito.", en: "I travel a lot." },
+  "morar": { pt: "Moro em Lisboa.", en: "I live in Lisbon." },
+  "mudar": { pt: "Mudo de casa.", en: "I'm moving house." },
+  "acontecer": { pt: "Aconteceu algo estranho.", en: "Something strange happened." },
+  "existir": { pt: "Existe um problema.", en: "There is a problem." },
+  "parecer": { pt: "Parece difícil.", en: "It seems difficult." },
+  "significar": { pt: "O que significa isto?", en: "What does this mean?" },
+  "decidir": { pt: "Decido depois.", en: "I'll decide later." },
+  "escolher": { pt: "Escolho o azul.", en: "I choose the blue one." },
+  "cortar": { pt: "Corto o pão.", en: "I cut the bread." },
+  "cozinhar": { pt: "Cozinho bem.", en: "I cook well." },
+  "lavar": { pt: "Lavo a roupa.", en: "I wash the clothes." },
+  "limpar": { pt: "Limpo a casa.", en: "I clean the house." },
+  "arranjar": { pt: "Arrango o carro.", en: "I fix the car." },
+  "amar": { pt: "Amo-te muito.", en: "I love you a lot." },
+  "odiar": { pt: "Odeio esperar.", en: "I hate waiting." },
+  "rir": { pt: "Rio muito com ele.", en: "I laugh a lot with him." },
+  "chorar": { pt: "Choro em filmes.", en: "I cry at movies." },
+  "partir": { pt: "Eu parto às oito.", en: "I leave at eight." },
+  "seguir": { pt: "Sigo em frente.", en: "I go straight ahead." },
+  "servir": { pt: "Sirvo o jantar.", en: "I serve dinner." },
+  "permitir": { pt: "Posso permitir isso?", en: "Can I allow that?" },
+  "evitar": { pt: "Evito o trânsito.", en: "I avoid the traffic." },
+  "oferecer": { pt: "Ofereço-te um café.", en: "I'll offer you a coffee." },
+  "mostrar": { pt: "Mostro-te o caminho.", en: "I'll show you the way." },
+  "casar": { pt: "Vou casar em junho.", en: "I'm getting married in June." },
+  "morrer": { pt: "O avô morreu no ano passado.", en: "Grandfather died last year." },
+  "nascer": { pt: "Nasci em Lisboa.", en: "I was born in Lisbon." },
+  "crescer": { pt: "As crianças crescem depressa.", en: "Children grow up quickly." },
+  "tocar": { pt: "Toco guitarra.", en: "I play guitar." },
+  "dançar": { pt: "Danço bem.", en: "I dance well." },
+  "nadar": { pt: "Nado no mar.", en: "I swim in the sea." },
+  "pintar": { pt: "Pinto a casa.", en: "I'm painting the house." },
+  "desenhar": { pt: "Desenho retratos.", en: "I draw portraits." },
+};
 
 const PRONOUNS = ["eu","tu","ele/ela","nós","vós","eles/elas"];
 
@@ -150,6 +150,49 @@ const CONJUGATION_PATTERNS = {
 const ADJECTIVES = [
   ["grande","big"],["pequeno","small"],["bom","good"],["mau","bad"],["feliz","happy"],["triste","sad"],["velho","old"],["novo","new"],["bonito","beautiful"],["feio","ugly"],["forte","strong"],["fraco","weak"],["alto","tall"],["baixo","short"],["largo","wide"],["estreito","narrow"],["limpo","clean"],["sujo","dirty"],["doce","sweet"],["amargo","bitter"],["claro","clear/light"],["escuro","dark"],["devagar","slow"],["rápido","fast"],["cheio","full"],["vazio","empty"],["rico","rich"],["pobre","poor"],["quente","hot"],["frio","cold"],["caro","expensive"],["barato","cheap"],["pesado","heavy"],["leve","light"],["seguro","safe"],["perigoso","dangerous"],["fácil","easy"],["difícil","difficult"],["aberto","open"],["fechado","closed"],
 ];
+
+const ADJECTIVE_EXAMPLES = {
+  "grande": { pt: "A casa é grande.", en: "The house is big." },
+  "pequeno": { pt: "O apartamento é pequeno.", en: "The apartment is small." },
+  "bom": { pt: "Este café é muito bom.", en: "This coffee is very good." },
+  "mau": { pt: "O tempo está mau hoje.", en: "The weather is bad today." },
+  "feliz": { pt: "Estou muito feliz.", en: "I am very happy." },
+  "triste": { pt: "Ela está triste.", en: "She is sad." },
+  "velho": { pt: "O carro é velho.", en: "The car is old." },
+  "novo": { pt: "Tenho um emprego novo.", en: "I have a new job." },
+  "bonito": { pt: "Que vestido bonito!", en: "What a beautiful dress!" },
+  "feio": { pt: "O prédio é feio.", en: "The building is ugly." },
+  "forte": { pt: "Ele é muito forte.", en: "He is very strong." },
+  "fraco": { pt: "Estou fraco hoje.", en: "I am weak today." },
+  "alto": { pt: "O João é alto.", en: "João is tall." },
+  "baixo": { pt: "A mesa é baixa.", en: "The table is short." },
+  "largo": { pt: "O corredor é largo.", en: "The hallway is wide." },
+  "estreito": { pt: "A rua é estreita.", en: "The street is narrow." },
+  "limpo": { pt: "O quarto está limpo.", en: "The room is clean." },
+  "sujo": { pt: "O chão está sujo.", en: "The floor is dirty." },
+  "doce": { pt: "Este bolo é doce.", en: "This cake is sweet." },
+  "amargo": { pt: "O café está amargo.", en: "The coffee is bitter." },
+  "claro": { pt: "O céu está claro.", en: "The sky is clear." },
+  "escuro": { pt: "Está escuro aqui.", en: "It is dark here." },
+  "devagar": { pt: "Fala devagar, por favor.", en: "Speak slowly, please." },
+  "rápido": { pt: "O carro é rápido.", en: "The car is fast." },
+  "cheio": { pt: "O copo está cheio.", en: "The glass is full." },
+  "vazio": { pt: "O balde está vazio.", en: "The bucket is empty." },
+  "rico": { pt: "Ele é um homem rico.", en: "He is a rich man." },
+  "pobre": { pt: "A família é pobre.", en: "The family is poor." },
+  "quente": { pt: "A sopa está quente.", en: "The soup is hot." },
+  "frio": { pt: "O leite está frio.", en: "The milk is cold." },
+  "caro": { pt: "Este restaurante é caro.", en: "This restaurant is expensive." },
+  "barato": { pt: "Encontrei um hotel barato.", en: "I found a cheap hotel." },
+  "pesado": { pt: "A mala está pesada.", en: "The suitcase is heavy." },
+  "leve": { pt: "O jantar foi leve.", en: "Dinner was light." },
+  "seguro": { pt: "Este lugar é seguro.", en: "This place is safe." },
+  "perigoso": { pt: "É muito perigoso.", en: "It is very dangerous." },
+  "fácil": { pt: "O teste é fácil.", en: "The test is easy." },
+  "difícil": { pt: "Esta lição é difícil.", en: "This lesson is difficult." },
+  "aberto": { pt: "A loja está aberta.", en: "The shop is open." },
+  "fechado": { pt: "O museu está fechado.", en: "The museum is closed." },
+};
 
 const PREPOSITION_EXERCISES = [
   { sentence: "O gato está ___ a cama.", sentenceEn: "The cat is ___ the bed.", answer: "em", hint: "location: on/in" },
@@ -202,6 +245,378 @@ const VOCABULARY = {
   "Natureza": [["a árvore","tree"],["a flor","flower"],["a relva","grass"],["o mar","sea"],["a montanha","mountain"],["o rio","river"],["o lago","lake"],["a floresta","forest"],["o campo","countryside/field"],["o jardim","garden"],["a planta","plant"],["a pedra","stone"],["o céu","sky"],["a terra","earth/soil"],["o sol","sun"],["a lua","moon"],["a estrela","star"],["a nuvem","cloud"],["a neve","snow"],["a praia","beach"],["a ilha","island"]],
   "Compras": [["a loja","shop"],["o preço","price"],["euro","euro"],["a carta","letter"],["os selos","stamps"],["o troco","change (money)"],["barato","cheap"],["caro","expensive"],["o desconto","discount"],["a oferta","offer/special"],["as compras","shopping/groceries"],["o supermercado","supermarket"],["o mercado","market"],["pagar","to pay"],["vender","to sell"],["comprar","to buy"],["gastar","to spend"]],
   "Descrição": [["perto","near"],["longe","far"],["dentro","inside"],["fora","outside"],["em cima","on top"],["em baixo","below"],["ao lado","beside"],["entre","between"],["certo","right/correct"],["errado","wrong"],["importante","important"],["interessante","interesting"],["necessário","necessary"],["possível","possible"],["provável","probable"],["feliz","happy"],["triste","sad"],["contente","content"],["nervoso","nervous"],["cansado","tired"],["doente","ill/sick"]],
+};
+
+const VOCAB_EXAMPLES = {
+  "Família": {
+    "a mãe": { pt: "A minha mãe cozinha muito bem.", en: "My mother cooks very well." },
+    "o pai": { pt: "O meu pai trabalha em Lisboa.", en: "My father works in Lisbon." },
+    "o filho": { pt: "O filho mais velho tem vinte anos.", en: "The oldest son is twenty years old." },
+    "a filha": { pt: "A filha da Ana estuda medicina.", en: "Ana's daughter studies medicine." },
+    "o irmão": { pt: "O meu irmão joga futebol.", en: "My brother plays football." },
+    "a irmã": { pt: "A minha irmã é mais nova.", en: "My sister is younger." },
+    "o avô": { pt: "O meu avô conta histórias.", en: "My grandfather tells stories." },
+    "a avó": { pt: "A avó faz bolos deliciosos.", en: "Grandmother makes delicious cakes." },
+    "o tio": { pt: "O meu tio vive no Porto.", en: "My uncle lives in Porto." },
+    "a tia": { pt: "A tia Maria é professora.", en: "Aunt Maria is a teacher." },
+    "o primo": { pt: "O meu primo vem amanhã.", en: "My cousin comes tomorrow." },
+    "a prima": { pt: "A minha prima tem um gato.", en: "My cousin has a cat." },
+    "o marido": { pt: "O marido dela é médico.", en: "Her husband is a doctor." },
+    "a mulher": { pt: "A mulher dele é advogada.", en: "His wife is a lawyer." },
+    "o sobrinho": { pt: "O sobrinho tem cinco anos.", en: "The nephew is five years old." },
+    "a sobrinha": { pt: "A sobrinha dança ballet.", en: "The niece dances ballet." },
+  },
+  "Comida e Bebida": {
+    "o pão": { pt: "Compro pão todos os dias.", en: "I buy bread every day." },
+    "o queijo": { pt: "Este queijo é do Alentejo.", en: "This cheese is from the Alentejo." },
+    "a carne": { pt: "A carne está no frigorífico.", en: "The meat is in the fridge." },
+    "o peixe": { pt: "O peixe está fresco.", en: "The fish is fresh." },
+    "o arroz": { pt: "O arroz é um acompanhamento.", en: "Rice is a side dish." },
+    "a sopa": { pt: "A sopa de hoje é de legumes.", en: "Today's soup is vegetable." },
+    "a salada": { pt: "Quero uma salada verde.", en: "I want a green salad." },
+    "a fruta": { pt: "A fruta está madura.", en: "The fruit is ripe." },
+    "o café": { pt: "Bebo um café de manhã.", en: "I drink a coffee in the morning." },
+    "o chá": { pt: "Prefiro chá verde.", en: "I prefer green tea." },
+    "a água": { pt: "Quero um copo de água.", en: "I want a glass of water." },
+    "o sumo": { pt: "O sumo de laranja é natural.", en: "The orange juice is natural." },
+    "o vinho": { pt: "Este vinho é do Douro.", en: "This wine is from the Douro." },
+    "a cerveja": { pt: "Vamos beber uma cerveja.", en: "Let's have a beer." },
+    "o leite": { pt: "O leite está no frigorífico.", en: "The milk is in the fridge." },
+    "o azeite": { pt: "O azeite português é excelente.", en: "Portuguese olive oil is excellent." },
+  },
+  "Casa": {
+    "a cozinha": { pt: "A cozinha é grande.", en: "The kitchen is big." },
+    "a sala": { pt: "A sala tem uma televisão.", en: "The living room has a television." },
+    "o quarto": { pt: "O meu quarto é pequeno.", en: "My bedroom is small." },
+    "a casa de banho": { pt: "A casa de banho é no fundo.", en: "The bathroom is at the end." },
+    "o jardim": { pt: "O jardim tem flores bonitas.", en: "The garden has beautiful flowers." },
+    "a janela": { pt: "A janela está aberta.", en: "The window is open." },
+    "a porta": { pt: "A porta da frente é azul.", en: "The front door is blue." },
+    "a mesa": { pt: "A mesa está posta.", en: "The table is set." },
+    "a cadeira": { pt: "A cadeira é confortável.", en: "The chair is comfortable." },
+    "o sofá": { pt: "O sofá é novo.", en: "The sofa is new." },
+    "a cama": { pt: "A cama é muito grande.", en: "The bed is very big." },
+    "o espelho": { pt: "O espelho está partido.", en: "The mirror is broken." },
+    "a escada": { pt: "A escada é de madeira.", en: "The stairs are made of wood." },
+    "o telhado": { pt: "O telhado é vermelho.", en: "The roof is red." },
+    "a parede": { pt: "A parede é branca.", en: "The wall is white." },
+    "o chão": { pt: "O chão está sujo.", en: "The floor is dirty." },
+  },
+  "Corpo": {
+    "a cabeça": { pt: "Tenho dores de cabeça.", en: "I have a headache." },
+    "o olho": { pt: "O olho esquerdo dói-me.", en: "My left eye hurts." },
+    "o nariz": { pt: "O nariz está frio.", en: "The nose is cold." },
+    "a boca": { pt: "Abre a boca, por favor.", en: "Open your mouth, please." },
+    "a orelha": { pt: "A orelha direita dói-me.", en: "My right ear hurts." },
+    "o braço": { pt: "Parti o braço esquerdo.", en: "I broke my left arm." },
+    "a mão": { pt: "Lava as mãos antes de comer.", en: "Wash your hands before eating." },
+    "o dedo": { pt: "Cortei o dedo.", en: "I cut my finger." },
+    "a perna": { pt: "A perna direita dói-me.", en: "My right leg hurts." },
+    "o pé": { pt: "O pé está inchado.", en: "The foot is swollen." },
+    "o peito": { pt: "Sinto dor no peito.", en: "I feel pain in my chest." },
+    "as costas": { pt: "Tenho dores nas costas.", en: "I have back pain." },
+    "o ombro": { pt: "Parti o ombro.", en: "I broke my shoulder." },
+    "o joelho": { pt: "O joelho está magoado.", en: "The knee is hurt." },
+    "o pescoço": { pt: "Tenho o pescoço dorido.", en: "I have a sore neck." },
+    "o cabelo": { pt: "O cabelo dela é comprido.", en: "Her hair is long." },
+  },
+  "Cidade": {
+    "a rua": { pt: "Esta rua é muito estreita.", en: "This street is very narrow." },
+    "a praça": { pt: "A praça central é bonita.", en: "The central square is beautiful." },
+    "o supermercado": { pt: "O supermercado fecha às dez.", en: "The supermarket closes at ten." },
+    "a farmácia": { pt: "A farmácia está aberta.", en: "The pharmacy is open." },
+    "o hospital": { pt: "O hospital fica longe.", en: "The hospital is far." },
+    "a estação": { pt: "A estação de comboios é aqui.", en: "The train station is here." },
+    "o restaurante": { pt: "O restaurante serve peixe.", en: "The restaurant serves fish." },
+    "o café": { pt: "Encontro-te no café.", en: "I'll meet you at the café." },
+    "a loja": { pt: "A loja abre às nove.", en: "The shop opens at nine." },
+    "o banco": { pt: "O banco está fechado hoje.", en: "The bank is closed today." },
+    "os correios": { pt: "Os correios ficam perto.", en: "The post office is nearby." },
+    "a igreja": { pt: "A igreja é muito antiga.", en: "The church is very old." },
+    "o parque": { pt: "O parque é grande.", en: "The park is big." },
+    "a biblioteca": { pt: "A biblioteca abre cedo.", en: "The library opens early." },
+    "o museu": { pt: "O museu é gratuito ao domingo.", en: "The museum is free on Sunday." },
+    "a escola": { pt: "A escola fica perto de casa.", en: "The school is near home." },
+  },
+  "Tempo e Clima": {
+    "hoje": { pt: "Hoje é terça-feira.", en: "Today is Tuesday." },
+    "amanhã": { pt: "Amanhã vou ao médico.", en: "Tomorrow I'm going to the doctor." },
+    "ontem": { pt: "Ontem choveu muito.", en: "Yesterday it rained a lot." },
+    "agora": { pt: "Agora estou em casa.", en: "Now I am at home." },
+    "sempre": { pt: "Sempre acordo cedo.", en: "I always wake up early." },
+    "nunca": { pt: "Nunca bebo café.", en: "I never drink coffee." },
+    "às vezes": { pt: "Às vezes vou ao cinema.", en: "Sometimes I go to the cinema." },
+    "cedo": { pt: "Chego cedo ao trabalho.", en: "I arrive at work early." },
+    "tarde": { pt: "Cheguei tarde à reunião.", en: "I arrived late to the meeting." },
+    "o sol": { pt: "O sol brilha hoje.", en: "The sun is shining today." },
+    "a chuva": { pt: "A chuva parou.", en: "The rain stopped." },
+    "o vento": { pt: "O vento está forte.", en: "The wind is strong." },
+    "quente": { pt: "Está muito quente hoje.", en: "It is very hot today." },
+    "frio": { pt: "Está frio lá fora.", en: "It is cold outside." },
+    "nublado": { pt: "O céu está nublado.", en: "The sky is cloudy." },
+    "o tempo": { pt: "O tempo está bom.", en: "The weather is nice." },
+    "ainda": { pt: "Ainda estou a trabalhar.", en: "I am still working." },
+    "já": { pt: "Já comi.", en: "I already ate." },
+    "depressa": { pt: "Corre depressa!", en: "Run quickly!" },
+    "devagar": { pt: "Fala devagar.", en: "Speak slowly." },
+    "antes": { pt: "Antes morava no Porto.", en: "Before I lived in Porto." },
+    "depois": { pt: "Depois vamos ao cinema.", en: "Afterward we'll go to the cinema." },
+    "quase": { pt: "Quase acabei o trabalho.", en: "I almost finished the work." },
+    "muito": { pt: "Trabalho muito.", en: "I work a lot." },
+  },
+  "Transportes": {
+    "o carro": { pt: "O carro está na garagem.", en: "The car is in the garage." },
+    "o autobus": { pt: "O autocarro passa às oito.", en: "The bus passes at eight." },
+    "o comboio": { pt: "O comboio parte às dez.", en: "The train leaves at ten." },
+    "o avião": { pt: "O avião chega atrasado.", en: "The plane is arriving late." },
+    "o metro": { pt: "O metro é rápido.", en: "The metro is fast." },
+    "o elétrico": { pt: "O eléctrico passa pela avenida.", en: "The tram passes through the avenue." },
+    "a bicicleta": { pt: "A bicicleta é verde.", en: "The bicycle is green." },
+    "o táxi": { pt: "Chamei um táxi.", en: "I called a taxi." },
+    "a paragem": { pt: "A paragem é ali.", en: "The stop is there." },
+    "a estação": { pt: "A estação fica no centro.", en: "The station is downtown." },
+    "o aeroporto": { pt: "O aeroporto é longe.", en: "The airport is far." },
+    "o bilhete": { pt: "Comprei o bilhete online.", en: "I bought the ticket online." },
+    "a viagem": { pt: "A viagem foi longa.", en: "The trip was long." },
+    "o condutor": { pt: "O condutor é simpático.", en: "The driver is friendly." },
+    "o passageiro": { pt: "O passageiro está sentado.", en: "The passenger is seated." },
+    "a mala": { pt: "A mala é pesada.", en: "The suitcase is heavy." },
+  },
+  "Trabalho": {
+    "o escritório": { pt: "O escritório é no centro.", en: "The office is downtown." },
+    "o computador": { pt: "O computador é novo.", en: "The computer is new." },
+    "a reunião": { pt: "A reunião começa às dez.", en: "The meeting starts at ten." },
+    "o colega": { pt: "O meu colega é brasileiro.", en: "My colleague is Brazilian." },
+    "o chefe": { pt: "O chefe está de férias.", en: "The boss is on holiday." },
+    "o emprego": { pt: "Gosto do meu emprego.", en: "I like my job." },
+    "o salário": { pt: "O salário é bom.", en: "The salary is good." },
+    "as férias": { pt: "As férias foram óptimas.", en: "The holidays were great." },
+    "o horário": { pt: "O horário é das nove às seis.", en: "The schedule is from nine to six." },
+    "a empresa": { pt: "A empresa é internacional.", en: "The company is international." },
+    "o cliente": { pt: "O cliente tem uma dúvida.", en: "The client has a question." },
+    "o projeto": { pt: "O projeto é ambicioso.", en: "The project is ambitious." },
+    "o contrato": { pt: "O contrato é por dois anos.", en: "The contract is for two years." },
+    "a entrevista": { pt: "A entrevista foi difícil.", en: "The interview was difficult." },
+    "o currículo": { pt: "Mandei o currículo hoje.", en: "I sent the CV today." },
+    "a experiência": { pt: "Tenho muita experiência.", en: "I have a lot of experience." },
+  },
+  "Vestuário": {
+    "as calças": { pt: "As calças são pretas.", en: "The trousers are black." },
+    "a saia": { pt: "A saia é azul.", en: "The skirt is blue." },
+    "a camisa": { pt: "A camisa é branca.", en: "The shirt is white." },
+    "o vestido": { pt: "O vestido é bonito.", en: "The dress is beautiful." },
+    "o sapato": { pt: "O sapato é novo.", en: "The shoe is new." },
+    "o casaco": { pt: "O casaco é quente.", en: "The jacket is warm." },
+    "a blusa": { pt: "A blusa é de seda.", en: "The blouse is silk." },
+    "as meias": { pt: "As meias são vermelhas.", en: "The socks are red." },
+    "a gravata": { pt: "A gravata é de seda.", en: "The tie is silk." },
+    "o cachecol": { pt: "O cachecol é de lã.", en: "The scarf is wool." },
+    "as luvas": { pt: "As luvas são de couro.", en: "The gloves are leather." },
+    "o chapéu": { pt: "O chapéu é preto.", en: "The hat is black." },
+    "o guarda-chuva": { pt: "Esqueci o guarda-chuva.", en: "I forgot the umbrella." },
+    "a carteira": { pt: "A carteira está na mesa.", en: "The wallet is on the table." },
+    "a mala": { pt: "A mala é grande.", en: "The bag is big." },
+    "os óculos": { pt: "Os óculos são novos.", en: "The glasses are new." },
+  },
+  "Animais": {
+    "o cão": { pt: "O cão é grande.", en: "The dog is big." },
+    "o gato": { pt: "O gato está a dormir.", en: "The cat is sleeping." },
+    "o cavalo": { pt: "O cavalo corre depressa.", en: "The horse runs fast." },
+    "o pássaro": { pt: "O pássaro canta de manhã.", en: "The bird sings in the morning." },
+    "o peixe": { pt: "O peixe nada no aquário.", en: "The fish swims in the aquarium." },
+    "o frango": { pt: "O frango está no forno.", en: "The chicken is in the oven." },
+    "o porco": { pt: "O porco é rosa.", en: "The pig is pink." },
+    "a vaca": { pt: "A vaca dá leite.", en: "The cow gives milk." },
+    "a ovelha": { pt: "A ovelha tem lã branca.", en: "The sheep has white wool." },
+    "o coelho": { pt: "O coelho salta muito.", en: "The rabbit jumps a lot." },
+    "a tartaruga": { pt: "A tartaruga é lenta.", en: "The turtle is slow." },
+    "a borboleta": { pt: "A borboleta é colorida.", en: "The butterfly is colorful." },
+    "a abelha": { pt: "A abelha faz mel.", en: "The bee makes honey." },
+    "a formiga": { pt: "A formiga é pequena.", en: "The ant is small." },
+    "o mosquito": { pt: "O mosquito pica-me.", en: "The mosquito is biting me." },
+    "o ratinho": { pt: "O ratinho tem medo do gato.", en: "The mouse is afraid of the cat." },
+  },
+  "Cores": {
+    "azul": { pt: "O céu é azul.", en: "The sky is blue." },
+    "verde": { pt: "A relva é verde.", en: "The grass is green." },
+    "amarelo": { pt: "O sol é amarelo.", en: "The sun is yellow." },
+    "branco": { pt: "A neve é branca.", en: "The snow is white." },
+    "preto": { pt: "O gato é preto.", en: "The cat is black." },
+    "vermelho": { pt: "O carro é vermelho.", en: "The car is red." },
+    "castanho": { pt: "O cabelo dela é castanho.", en: "Her hair is brown." },
+    "cor-de-rosa": { pt: "A flor é cor-de-rosa.", en: "The flower is pink." },
+    "cor-de-laranja": { pt: "A camisa é cor-de-laranja.", en: "The shirt is orange." },
+    "cinzento": { pt: "O céu está cinzento.", en: "The sky is grey." },
+    "dourado": { pt: "O anel é dourado.", en: "The ring is golden." },
+    "prateado": { pt: "A colher é prateada.", en: "The spoon is silver." },
+    "roxo": { pt: "O casaco é roxo.", en: "The jacket is purple." },
+    "bege": { pt: "A mala é bege.", en: "The bag is beige." },
+    "lilás": { pt: "A blusa é lilás.", en: "The blouse is lilac." },
+  },
+  "Números": {
+    "um/uma": { pt: "Tenho um irmão.", en: "I have one brother." },
+    "dois/duas": { pt: "Comprei duas maçãs.", en: "I bought two apples." },
+    "três": { pt: "São três horas.", en: "It is three o'clock." },
+    "quatro": { pt: "O bebé tem quatro meses.", en: "The baby is four months old." },
+    "cinco": { pt: "Trabalho cinco dias por semana.", en: "I work five days a week." },
+    "seis": { pt: "São seis pessoas.", en: "There are six people." },
+    "sete": { pt: "O encontro é às sete.", en: "The meeting is at seven." },
+    "oito": { pt: "O João tem oito anos.", en: "João is eight years old." },
+    "nove": { pt: "A loja abre às nove.", en: "The shop opens at nine." },
+    "dez": { pt: "São dez euros.", en: "It is ten euros." },
+    "onze": { pt: "São onze da manhã.", en: "It is eleven in the morning." },
+    "doze": { pt: "O almoço é ao meio-dia (doze).", en: "Lunch is at noon (twelve)." },
+    "treze": { pt: "Dia treze é sexta-feira.", en: "The thirteenth is Friday." },
+    "catorze": { pt: "Tem catorze anos.", en: "She is fourteen years old." },
+    "quinze": { pt: "Faltam quinze dias.", en: "Fifteen days are missing." },
+    "dezasseis": { pt: "Tenho dezasseis anos.", en: "I am sixteen years old." },
+    "dezassete": { pt: "Faz dezassete graus hoje.", en: "It is seventeen degrees today." },
+    "dezoito": { pt: "O exame é dia dezoito.", en: "The exam is on the eighteenth." },
+    "dezanove": { pt: "Faltam dezanove dias.", en: "Nineteen days are missing." },
+    "vinte": { pt: "O livro tem vinte páginas.", en: "The book has twenty pages." },
+    "trinta": { pt: "Tenho trinta anos.", en: "I am thirty years old." },
+    "quarenta": { pt: "O empregado tem quarenta anos.", en: "The employee is forty years old." },
+    "cinquenta": { pt: "A distância é cinquenta quilómetros.", en: "The distance is fifty kilometres." },
+    "cem": { pt: "O livro custa cem euros.", en: "The book costs a hundred euros." },
+    "mil": { pt: "Vivem aqui mil pessoas.", en: "A thousand people live here." },
+    "um milhão": { pt: "Lisboa tem um milhão de habitantes.", en: "Lisbon has a million inhabitants." },
+  },
+  "Dias e Meses": {
+    "segunda-feira": { pt: "Segunda-feira vou ao médico.", en: "On Monday I'm going to the doctor." },
+    "terça-feira": { pt: "Terça-feira é dia de reunião.", en: "Tuesday is meeting day." },
+    "quarta-feira": { pt: "Quarta-feira é o meu dia livre.", en: "Wednesday is my day off." },
+    "quinta-feira": { pt: "Quinta-feira janto fora.", en: "On Thursday I dine out." },
+    "sexta-feira": { pt: "Sexta-feira é o último dia.", en: "Friday is the last day." },
+    "sábado": { pt: "Sábado vamos à praia.", en: "On Saturday we go to the beach." },
+    "domingo": { pt: "Domingo descanço.", en: "On Sunday I rest." },
+    "janeiro": { pt: "Janeiro é frio.", en: "January is cold." },
+    "fevereiro": { pt: "Fevereiro tem vinte e oito dias.", en: "February has twenty-eight days." },
+    "março": { pt: "Março traz a primavera.", en: "March brings spring." },
+    "abril": { pt: "Em abril chove muito.", en: "In April it rains a lot." },
+    "maio": { pt: "Maio é o mês das flores.", en: "May is the month of flowers." },
+    "junho": { pt: "Junho começa o verão.", en: "June starts the summer." },
+    "julho": { pt: "Julho é muito quente.", en: "July is very hot." },
+    "agosto": { pt: "Em agosto vou de férias.", en: "In August I go on holiday." },
+    "setembro": { pt: "Setembro é a开学.", en: "September is back to school." },
+    "outubro": { pt: "Outubro tem folhas castanhas.", en: "October has brown leaves." },
+    "novembro": { pt: "Novembro é chuvoso.", en: "November is rainy." },
+    "dezembro": { pt: "Dezembro tem o Natal.", en: "December has Christmas." },
+  },
+  "Nacionalidades": {
+    "português/portuguesa": { pt: "Sou português.", en: "I am Portuguese." },
+    "brasileiro/brasileira": { pt: "Ela é brasileira.", en: "She is Brazilian." },
+    "inglês/inglesa": { pt: "O John é inglês.", en: "John is English." },
+    "espanhol/espanhola": { pt: "O Pablo é espanhol.", en: "Pablo is Spanish." },
+    "francês/francesa": { pt: "A Marie é francesa.", en: "Marie is French." },
+    "alemão/alemã": { pt: "O Hans é alemão.", en: "Hans is German." },
+    "italiano/italiana": { pt: "Sou italiano.", en: "I am Italian." },
+    "chinês/chinesa": { pt: "O Wang é chinês.", en: "Wang is Chinese." },
+    "japonês/japonesa": { pt: "A Yuki é japonesa.", en: "Yuki is Japanese." },
+    "americano/americana": { pt: "Sou americano.", en: "I am American." },
+    "africano/africana": { pt: "Ele é africano.", en: "He is African." },
+    "mexicano/mexicana": { pt: "Ela é mexicana.", en: "She is Mexican." },
+    "canadiano/canadiana": { pt: "O Tim é canadiano.", en: "Tim is Canadian." },
+  },
+  "Profissões": {
+    "médico/médica": { pt: "A médica trabalha no hospital.", en: "The doctor works at the hospital." },
+    "professor/professora": { pt: "O professor explica bem.", en: "The teacher explains well." },
+    "engenheiro/engenheira": { pt: "O engenheiro desenha pontes.", en: "The engineer designs bridges." },
+    "advogado/advogada": { pt: "A advogada defende o cliente.", en: "The lawyer defends the client." },
+    "arquiteto/arquiteta": { pt: "O arquiteto projeta casas.", en: "The architect designs houses." },
+    "cozinheiro/cozinheira": { pt: "O cozinheiro faz sopa.", en: "The cook makes soup." },
+    "motorista": { pt: "O motorista conduz o autocarro.", en: "The driver drives the bus." },
+    "secretário/secretária": { pt: "A secretária atende o telefone.", en: "The secretary answers the phone." },
+    "bombeiro/bombeira": { pt: "O bombeiro apaga o fogo.", en: "The firefighter puts out the fire." },
+    "polícia": { pt: "O polícia prende o ladrão.", en: "The police officer arrests the thief." },
+    "enfermeiro/enfermeira": { pt: "A enfermeira cuida dos doentes.", en: "The nurse takes care of the sick." },
+    "jornalista": { pt: "O jornalista escreve artigos.", en: "The journalist writes articles." },
+    "escritor/escritora": { pt: "O escritor publicou um livro.", en: "The writer published a book." },
+    "artista": { pt: "O artista pinta quadros.", en: "The artist paints pictures." },
+    "músico/música": { pt: "O músico toca guitarra.", en: "The musician plays guitar." },
+  },
+  "Escola": {
+    "a escola": { pt: "A escola abre às oito.", en: "The school opens at eight." },
+    "o professor": { pt: "O professor dá aulas.", en: "The teacher gives classes." },
+    "o aluno": { pt: "O aluno estuda muito.", en: "The student studies a lot." },
+    "a aluna": { pt: "A aluna é muito inteligente.", en: "The student is very intelligent." },
+    "o livro": { pt: "O livro é interessante.", en: "The book is interesting." },
+    "o caderno": { pt: "O caderno é novo.", en: "The notebook is new." },
+    "a caneta": { pt: "A caneta escreve bem.", en: "The pen writes well." },
+    "o lápis": { pt: "O lápis está afiado.", en: "The pencil is sharpened." },
+    "a mochila": { pt: "A mochila é pesada.", en: "The backpack is heavy." },
+    "a cadeira": { pt: "A cadeira é de madeira.", en: "The chair is wooden." },
+    "a mesa": { pt: "A mesa é grande.", en: "The desk is big." },
+    "o quadro": { pt: "O quadro é preto.", en: "The blackboard is black." },
+    "o exame": { pt: "O exame é difícil.", en: "The exam is difficult." },
+    "a aula": { pt: "A aula começa às nove.", en: "The class starts at nine." },
+    "a biblioteca": { pt: "A biblioteca é silenciosa.", en: "The library is silent." },
+    "o intervalo": { pt: "O intervalo é às dez.", en: "The break is at ten." },
+  },
+  "Natureza": {
+    "a árvore": { pt: "A árvore é grande.", en: "The tree is big." },
+    "a flor": { pt: "A flor é bonita.", en: "The flower is beautiful." },
+    "a relva": { pt: "A relva está verde.", en: "The grass is green." },
+    "o mar": { pt: "O mar está calmo.", en: "The sea is calm." },
+    "a montanha": { pt: "A montanha é alta.", en: "The mountain is tall." },
+    "o rio": { pt: "O rio é largo.", en: "The river is wide." },
+    "o lago": { pt: "O lago é profundo.", en: "The lake is deep." },
+    "a floresta": { pt: "A floresta é densa.", en: "The forest is dense." },
+    "o campo": { pt: "O campo é tranquilo.", en: "The countryside is quiet." },
+    "o jardim": { pt: "O jardim tem rosas.", en: "The garden has roses." },
+    "a planta": { pt: "A planta é verde.", en: "The plant is green." },
+    "a pedra": { pt: "A pedra é pesada.", en: "The stone is heavy." },
+    "o céu": { pt: "O céu está azul.", en: "The sky is blue." },
+    "a terra": { pt: "A terra é fértil.", en: "The earth is fertile." },
+    "o sol": { pt: "O sol brilha.", en: "The sun shines." },
+    "a lua": { pt: "A lua está cheia.", en: "The moon is full." },
+    "a estrela": { pt: "A estrela brilha à noite.", en: "The star shines at night." },
+    "a nuvem": { pt: "A nuvem é branca.", en: "The cloud is white." },
+    "a neve": { pt: "A neve cobre a montanha.", en: "The snow covers the mountain." },
+    "a praia": { pt: "A praia é bonita.", en: "The beach is beautiful." },
+    "a ilha": { pt: "A ilha é pequena.", en: "The island is small." },
+  },
+  "Compras": {
+    "a loja": { pt: "A loja fecha às oito.", en: "The shop closes at eight." },
+    "o preço": { pt: "O preço é alto.", en: "The price is high." },
+    "euro": { pt: "Custa dez euros.", en: "It costs ten euros." },
+    "a carta": { pt: "Mandei uma carta.", en: "I sent a letter." },
+    "os selos": { pt: "Comprei os selos.", en: "I bought the stamps." },
+    "o troco": { pt: "O troco é cinco euros.", en: "The change is five euros." },
+    "barato": { pt: "Esta loja é barata.", en: "This shop is cheap." },
+    "caro": { pt: "O restaurante é caro.", en: "The restaurant is expensive." },
+    "o desconto": { pt: "O desconto é de dez por cento.", en: "The discount is ten percent." },
+    "a oferta": { pt: "É uma boa oferta.", en: "It is a good offer." },
+    "as compras": { pt: "Vou fazer as compras.", en: "I'm going shopping." },
+    "o supermercado": { pt: "O supermercado é grande.", en: "The supermarket is big." },
+    "o mercado": { pt: "O mercado é ao sábado.", en: "The market is on Saturday." },
+    "pagar": { pt: "Vou pagar agora.", en: "I'll pay now." },
+    "vender": { pt: "Vendo a casa.", en: "I'm selling the house." },
+    "comprar": { pt: "Quero comprar um carro.", en: "I want to buy a car." },
+    "gastar": { pt: "Gasto muito em livros.", en: "I spend a lot on books." },
+  },
+  "Descrição": {
+    "perto": { pt: "A escola fica perto.", en: "The school is nearby." },
+    "longe": { pt: "O hospital é longe.", en: "The hospital is far." },
+    "dentro": { pt: "Estou dentro de casa.", en: "I am inside the house." },
+    "fora": { pt: "Está frio lá fora.", en: "It is cold outside." },
+    "em cima": { pt: "O livro está em cima da mesa.", en: "The book is on top of the table." },
+    "em baixo": { pt: "O gato está em baixo da mesa.", en: "The cat is under the table." },
+    "ao lado": { pt: "O café é ao lado do banco.", en: "The café is next to the bank." },
+    "entre": { pt: "Entre o Porto e Lisboa.", en: "Between Porto and Lisbon." },
+    "certo": { pt: "A resposta está certa.", en: "The answer is right." },
+    "errado": { pt: "A resposta está errada.", en: "The answer is wrong." },
+    "importante": { pt: "Isto é muito importante.", en: "This is very important." },
+    "interessante": { pt: "O livro é interessante.", en: "The book is interesting." },
+    "necessário": { pt: "É necessário estudar.", en: "It is necessary to study." },
+    "possível": { pt: "É possível ir amanhã.", en: "It is possible to go tomorrow." },
+    "provável": { pt: "É provável que chova.", en: "It is likely to rain." },
+    "feliz": { pt: "Ela está feliz hoje.", en: "She is happy today." },
+    "triste": { pt: "Estou triste.", en: "I am sad." },
+    "contente": { pt: "Estou contente com o resultado.", en: "I am happy with the result." },
+    "nervoso": { pt: "Ele fica nervoso antes do exame.", en: "He gets nervous before the exam." },
+    "cansado": { pt: "Estou muito cansado.", en: "I am very tired." },
+    "doente": { pt: "A criança está doente.", en: "The child is sick." },
+  },
 };
 
 const ALL_VERBS = [
@@ -540,7 +955,6 @@ function speakPortuguese(text) {
 
 const SECTIONS_MAP = {
   'verbs25': { label: '25 Verbos', labelEn: '25 Most Used Verbs', icon: '⚡', desc: 'Essential verbs for everyday conversation', keywords: ['beginner', 'essential', 'basic', 'common', 'most used', 'core', 'fundamental', 'starter'] },
-  'verbs100': { label: '106 Verbos', labelEn: '106 Most Used Verbs', icon: '🔥', desc: '106 most frequently used verbs with example sentences in context', keywords: ['intermediate', '100', '106', 'most used', 'frequent', 'examples', 'sentences', 'context', 'flashcards', 'expanded'] },
   'conjugation': { label: 'Conjugação', labelEn: 'Conjugation', icon: '📐', desc: 'Learn how verbs change form', keywords: ['grammar', 'verbs', 'endings', 'patterns', 'tenses', 'present', 'past', 'future'] },
   'pronouns': { label: 'Pronomes', labelEn: 'Pronouns', icon: '👤', desc: 'I, you, he, she - who is doing it', keywords: ['pronouns', 'subject', 'object', 'possessive', 'demonstrative', 'personal'] },
   'adjectives': { label: 'Adjetivos', labelEn: 'Adjectives', icon: '🎨', desc: 'Words to describe people and things', keywords: ['describing', 'descriptions', 'appearance', 'personality', 'character'] },
@@ -584,7 +998,7 @@ function generateLessonPlan(answers) {
     addRec('articles', 'Learn the gender system (o, a, os, as) - Portuguese nouns have gender');
   } else if (intermediate) {
     addRec('verbs25', 'Refresh and expand your verb knowledge with essential verbs');
-    addRec('verbs100', 'Push beyond the 25 with the 106 most used verbs - each with an example sentence in context');
+    addRec('verbs999', 'Drill the full verb list with example sentences and audio pronunciation');
     addRec('conjugation', 'Master verb conjugations across multiple tenses');
     addRec('vocabulary', 'Expand vocabulary in specific areas relevant to your goals');
     addRec('prepositions', 'Prepositions (em, de, para, com) are crucial for natural speech');
@@ -1668,16 +2082,19 @@ const PRONOUNS_EN = {
   'Elas': 'they (f)',
 };
 
-function VerbCard({ verb, meaning, conj, conjEn, showEnglish }) {
+function VerbCard({ verb, meaning, conj, conjEn, showEnglish, example }) {
   const [show, setShow] = useState(false);
   const displayPronouns = showEnglish ? PRONOUNS.map(p => PRONOUNS_EN[p] || p) : PRONOUNS;
   const displayConj = showEnglish && conjEn ? conjEn : conj;
+  const ex = example || VERB_EXAMPLES[verb];
+  const hasConj = conj && displayConj;
+  const hasEx = ex && ex.pt;
   return (
     <div className="card verb-card" onClick={() => setShow(!show)}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <span className="verb-text">{verb}</span>
-          <button 
+          <button
             onClick={(e) => { e.stopPropagation(); speakPortuguese(verb); }}
             style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '16px', padding: '2px 6px', borderRadius: '4px' }}
             title="Listen to pronunciation"
@@ -1686,23 +2103,82 @@ function VerbCard({ verb, meaning, conj, conjEn, showEnglish }) {
         <span className="verb-meaning">{meaning}</span>
       </div>
       {show && (
-        <div className="conj-grid">
-          {displayPronouns.map((p, i) => <React.Fragment key={p}><span className="conj-pronoun">{p}</span><span className="conj-form">{displayConj[i]}</span></React.Fragment>)}
+        <div style={{ marginTop: '12px', paddingTop: '12px', borderTop: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          {hasEx && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '13px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <span style={{ fontStyle: 'italic', color: 'var(--text-primary)' }}>{ex.pt}</span>
+                <button onClick={(e) => { e.stopPropagation(); speakPortuguese(ex.pt); }} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '14px', padding: '0 4px' }} title="Listen to example">🔊</button>
+              </div>
+              <div style={{ color: 'var(--text-secondary)', fontSize: '12px' }}>{ex.en}</div>
+            </div>
+          )}
+          {hasConj && (
+            <div className="conj-grid">
+              {displayPronouns.map((p, i) => (
+                <React.Fragment key={p}>
+                  <span className="conj-pronoun">{p}</span>
+                  <span className="conj-form" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    {displayConj[i]}
+                    <button
+                      onClick={(e) => { e.stopPropagation(); speakPortuguese(displayConj[i]); }}
+                      style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '12px', padding: '0 2px' }}
+                      title={`Listen to "${displayConj[i]}"`}
+                    >🔊</button>
+                  </span>
+                </React.Fragment>
+              ))}
+            </div>
+          )}
         </div>
       )}
-      <div style={{ fontSize: '10px', color: 'var(--text-tertiary)', marginTop: '8px', textAlign: 'center' }}>{show ? '▲ hide' : '▼ reveal'}</div>
+      <div style={{ fontSize: '10px', color: 'var(--text-tertiary)', marginTop: '8px', textAlign: 'center' }}>{show ? '▲ hide' : (hasConj ? '▼ conjugation & example' : hasEx ? '▼ example' : '▼ reveal')}</div>
     </div>
   );
 }
 
-function VocabCard({ pt, en }) {
+function VerbListCard({ verb, meaning, type, example }) {
+  const [showEx, setShowEx] = useState(false);
+  const hasEx = example && example.pt;
+  return (
+    <div className="card" style={{ padding: '10px 14px' }} onClick={() => hasEx && setShowEx(!showEx)}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          {A2_PRIORITY_VERBS.has(verb.replace(/-se$/, "")) && <span style={{ color: '#c9963c', fontSize: '10px' }}>★</span>}
+          <span className="verb-text">{verb}</span>
+          <button onClick={(e) => { e.stopPropagation(); speakPortuguese(verb); }} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '14px', padding: '2px 4px' }}>🔊</button>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <span className="verb-meaning">{meaning}</span>
+          <span className={`verb-type-badge verb-type-${type.replace('-','')}`}>{type}</span>
+        </div>
+      </div>
+      {showEx && hasEx && (
+        <div style={{ marginTop: '10px', paddingTop: '10px', borderTop: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <span style={{ fontStyle: 'italic', fontSize: '13px', color: 'var(--text-primary)' }}>{example.pt}</span>
+            <button onClick={(e) => { e.stopPropagation(); speakPortuguese(example.pt); }} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '14px', padding: '0 4px' }}>🔊</button>
+          </div>
+          <div style={{ color: 'var(--text-secondary)', fontSize: '12px' }}>{example.en}</div>
+        </div>
+      )}
+      {hasEx && (
+        <div style={{ fontSize: '10px', color: 'var(--text-tertiary)', marginTop: '6px', textAlign: 'center' }}>{showEx ? '▲ hide' : '▼ example'}</div>
+      )}
+    </div>
+  );
+}
+
+function VocabCard({ pt, en, example }) {
   const [show, setShow] = useState(false);
+  const ex = example || (typeof pt === 'string' ? null : null);
+  const hasEx = ex && ex.pt;
   return (
     <div className="card verb-card" onClick={() => setShow(!show)}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <span className="verb-text">{pt}</span>
-          <button 
+          <button
             onClick={(e) => { e.stopPropagation(); speakPortuguese(pt); }}
             style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '16px', padding: '2px 6px', borderRadius: '4px' }}
             title="Listen to pronunciation"
@@ -1710,21 +2186,27 @@ function VocabCard({ pt, en }) {
         </div>
         <span className="verb-meaning">{en}</span>
       </div>
-      {show && (
-        <div style={{ marginTop: '12px', paddingTop: '12px', borderTop: '1px solid var(--border)', fontSize: '12px', color: 'var(--text-secondary)' }}>
-          <div style={{ fontStyle: 'italic' }}>{pt}</div>
+      {show && hasEx && (
+        <div style={{ marginTop: '12px', paddingTop: '12px', borderTop: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <span style={{ fontStyle: 'italic', fontSize: '13px', color: 'var(--text-primary)' }}>{ex.pt}</span>
+            <button onClick={(e) => { e.stopPropagation(); speakPortuguese(ex.pt); }} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '14px', padding: '0 4px' }} title="Listen to example">🔊</button>
+          </div>
+          <div style={{ color: 'var(--text-secondary)', fontSize: '12px' }}>{ex.en}</div>
         </div>
       )}
-      <div style={{ fontSize: '10px', color: 'var(--text-tertiary)', marginTop: '8px', textAlign: 'center' }}>{show ? '▲ hide' : '▼ reveal'}</div>
+      <div style={{ fontSize: '10px', color: 'var(--text-tertiary)', marginTop: '8px', textAlign: 'center' }}>{show ? '▲ hide' : (hasEx ? '▼ example' : '▼ reveal')}</div>
     </div>
   );
 }
 
-function AdjectiveCard({ pt, en }) {
+function AdjectiveCard({ pt, en, example }) {
   const [show, setShow] = useState(false);
   const masculine = pt;
   const feminine = pt.replace(/o$/, 'a') || pt.replace(/r$/, 'ra') || pt;
   const plural = pt + 's';
+  const ex = example || ADJECTIVE_EXAMPLES[pt];
+  const hasEx = ex && ex.pt;
   return (
     <div className="card verb-card" onClick={() => setShow(!show)}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px' }}>
@@ -1735,7 +2217,16 @@ function AdjectiveCard({ pt, en }) {
         <span className="verb-meaning">{en}</span>
       </div>
       {show && (
-        <div style={{ marginTop: '12px', paddingTop: '12px', borderTop: '1px solid var(--border)' }}>
+        <div style={{ marginTop: '12px', paddingTop: '12px', borderTop: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          {hasEx && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <span style={{ fontStyle: 'italic', fontSize: '13px', color: 'var(--text-primary)' }}>{ex.pt}</span>
+                <button onClick={(e) => { e.stopPropagation(); speakPortuguese(ex.pt); }} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '14px', padding: '0 4px' }} title="Listen to example">🔊</button>
+              </div>
+              <div style={{ color: 'var(--text-secondary)', fontSize: '12px' }}>{ex.en}</div>
+            </div>
+          )}
           <div style={{ fontSize: '12px', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
             <div style={{ marginBottom: '6px' }}><strong style={{ color: 'var(--accent)' }}>Masculine:</strong> {masculine}</div>
             <div style={{ marginBottom: '6px' }}><strong style={{ color: '#008a8a' }}>Feminine:</strong> {feminine}</div>
@@ -1743,7 +2234,7 @@ function AdjectiveCard({ pt, en }) {
           </div>
         </div>
       )}
-      <div style={{ fontSize: '10px', color: 'var(--text-tertiary)', marginTop: '8px', textAlign: 'center' }}>{show ? '▲ hide' : '▼ reveal'}</div>
+      <div style={{ fontSize: '10px', color: 'var(--text-tertiary)', marginTop: '8px', textAlign: 'center' }}>{show ? '▲ hide' : (hasEx ? '▼ forms & example' : '▼ reveal')}</div>
     </div>
   );
 }
@@ -2037,60 +2528,18 @@ function Verbs25Section({ showEnglish }) {
         <button className={mode === 'grid' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('grid')}>{showEnglish ? 'Reference' : 'Reference'}</button>
         <button className={mode === 'flash' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('flash')}>{showEnglish ? 'Flashcards' : 'Flashcards'}</button>
       </div>
-      {mode === 'grid' ? <div className="grid-2">{TOP_25_VERBS.map(v => <VerbCard key={v.verb} {...v} showEnglish={showEnglish} />)}</div> : <FlashcardDrill items={TOP_25_VERBS} frontKey="verb" backKey="meaning" title="Verbo" sectionId="verbs25" />}
-    </div>
-  );
-}
-
-function VerbExampleCard({ verb, meaning, examplePt, exampleEn }) {
-  const [show, setShow] = useState(false);
-  return (
-    <div className="card verb-card" onClick={() => setShow(!show)}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span className="verb-text">{verb}</span>
-          <button
-            onClick={(e) => { e.stopPropagation(); speakPortuguese(verb); }}
-            style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '16px', padding: '2px 6px', borderRadius: '4px' }}
-            title="Listen to pronunciation"
-          >🔊</button>
-        </div>
-        <span className="verb-meaning">{meaning}</span>
-      </div>
-      {show && (
-        <div style={{ marginTop: '12px', paddingTop: '12px', borderTop: '1px solid var(--border)', fontSize: '13px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-          <div style={{ fontStyle: 'italic', color: 'var(--text-primary)' }}>{examplePt}</div>
-          <div style={{ color: 'var(--text-secondary)', fontSize: '12px' }}>{exampleEn}</div>
-        </div>
-      )}
-      <div style={{ fontSize: '10px', color: 'var(--text-tertiary)', marginTop: '8px', textAlign: 'center' }}>{show ? '▲ hide example' : '▼ show example'}</div>
-    </div>
-  );
-}
-
-function Verbs100Section({ showEnglish }) {
-  const [mode, setMode] = useState('flash');
-  const backKey = (item) => (
-    <>
-      <div style={{ fontSize: '20px', color: '#00a870', fontWeight: 500 }}>{item.meaning}</div>
-      <div style={{ marginTop: '14px', fontSize: '10px', color: '#7a8a80', textTransform: 'uppercase', letterSpacing: '1px' }}>Exemplo</div>
-      <div style={{ fontStyle: 'italic', fontSize: '15px', marginTop: '4px' }}>{item.examplePt}</div>
-      <div style={{ fontSize: '12px', color: '#444', marginTop: '4px' }}>{item.exampleEn}</div>
-    </>
-  );
-  return (
-    <div>
-      <h2 className="sec-title">{showEnglish ? '106 Most Used Verbs' : '106 Verbos Mais Usados'}</h2>
-      <p className="sec-desc">{showEnglish ? 'The 106 most frequently used European Portuguese verbs, each with an example sentence in context. Drill with flashcards or browse the reference grid.' : 'Os 106 verbos mais usados em português europeu, cada um com um exemplo em contexto. Pratica com flashcards ou consulta a grelha.'}</p>
-      <div className="toggle-row">
-        <button className={mode === 'flash' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('flash')}>{showEnglish ? 'Flashcards' : 'Flashcards'}</button>
-        <button className={mode === 'grid' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('grid')}>{showEnglish ? 'Reference' : 'Reference'}</button>
-      </div>
-      {mode === 'flash' ? (
-        <FlashcardDrill items={TOP_100_VERBS} frontKey="verb" backKey={backKey} title="Verbo" sectionId="verbs100" />
-      ) : (
-        <div className="grid-2">{TOP_100_VERBS.map(v => <VerbExampleCard key={v.verb} {...v} />)}</div>
-      )}
+      {mode === 'grid' ? <div className="grid-2">{TOP_25_VERBS.map(v => <VerbCard key={v.verb} {...v} showEnglish={showEnglish} />)}</div> : <FlashcardDrill items={TOP_25_VERBS} frontKey="verb" backKey={(item) => (
+        <>
+          <div style={{ fontSize: '20px', color: '#00a870', fontWeight: 500 }}>{item.meaning}</div>
+          {VERB_EXAMPLES[item.verb] && (
+            <>
+              <div style={{ marginTop: '14px', fontSize: '10px', color: '#7a8a80', textTransform: 'uppercase', letterSpacing: '1px' }}>Exemplo</div>
+              <div style={{ fontStyle: 'italic', fontSize: '15px', marginTop: '4px' }}>{VERB_EXAMPLES[item.verb].pt}</div>
+              <div style={{ fontSize: '12px', color: '#444', marginTop: '4px' }}>{VERB_EXAMPLES[item.verb].en}</div>
+            </>
+          )}
+        </>
+      )} title="Verbo" sectionId="verbs25" />}
     </div>
   );
 }
@@ -2150,7 +2599,18 @@ function AdjectivesSection({ showEnglish }) {
       <h2 className="sec-title">{showEnglish ? '40 Essential Adjectives' : '40 Adjetivos Essenciais'}</h2>
       <p className="sec-desc">{showEnglish ? 'Core adjectives for A2. Remember: most adjectives agree in gender and number. Tap any adjective to see masculine, feminine, and plural forms.' : 'Core adjectives for A2. Remember: most adjectives agree in gender and number. Tap any adjective to see masculine, feminine, and plural forms.'}</p>
       <div className="toggle-row"><button className={mode === 'grid' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('grid')}>{showEnglish ? 'Reference' : 'Reference'}</button><button className={mode === 'flash' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('flash')}>{showEnglish ? 'Flashcards' : 'Flashcards'}</button></div>
-      {mode === 'grid' ? <div className="grid-2">{ADJECTIVES.map(([pt,en], i) => <AdjectiveCard key={i} pt={pt} en={en} />)}</div> : <FlashcardDrill items={ADJECTIVES.map(([pt,en]) => ({ pt, en }))} frontKey="pt" backKey="en" title="Adjetivo" sectionId="adjectives" />}
+      {mode === 'grid' ? <div className="grid-2">{ADJECTIVES.map(([pt,en], i) => <AdjectiveCard key={i} pt={pt} en={en} />)}</div> : <FlashcardDrill items={ADJECTIVES.map(([pt,en]) => ({ pt, en, example: ADJECTIVE_EXAMPLES[pt] }))} frontKey="pt" backKey={(item) => (
+        <>
+          <div style={{ fontSize: '20px', color: '#00a870', fontWeight: 500 }}>{item.en}</div>
+          {item.example && (
+            <>
+              <div style={{ marginTop: '14px', fontSize: '10px', color: '#7a8a80', textTransform: 'uppercase', letterSpacing: '1px' }}>Exemplo</div>
+              <div style={{ fontStyle: 'italic', fontSize: '15px', marginTop: '4px' }}>{item.example.pt}</div>
+              <div style={{ fontSize: '12px', color: '#444', marginTop: '4px' }}>{item.example.en}</div>
+            </>
+          )}
+        </>
+      )} title="Adjetivo" sectionId="adjectives" />}
     </div>
   );
 }
@@ -2203,7 +2663,18 @@ function VocabularySection({ showEnglish }) {
       <p className="sec-desc">{showEnglish ? 'A2+ vocabulary organized by CIPLE exam topics. Learn with the articles!' : 'A2+ vocabulary organized by CIPLE exam topics. Learn with the articles!'}</p>
       <div className="toggle-row">{Object.keys(VOCABULARY).map(t => <button key={t} className={topic === t ? 'toggle-btn active' : 'toggle-btn'} onClick={() => { setTopic(t); setMode('grid'); }}>{showEnglish ? t : t}</button>)}</div>
       <div style={{ marginBottom: '10px' }}><button className={mode === 'grid' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('grid')}>{showEnglish ? 'Reference' : 'Reference'}</button><button style={{ ...S.navBtn(mode === 'flash'), marginLeft: '5px' }} onClick={() => setMode('flash')}>{showEnglish ? 'Flashcards' : 'Flashcards'}</button></div>
-      {mode === 'grid' ? <div className="grid-2">{VOCABULARY[topic].map(([pt,en], i) => <VocabCard key={i} pt={pt} en={en} />)}</div> : <FlashcardDrill items={VOCABULARY[topic].map(([pt,en]) => ({ pt, en }))} frontKey="pt" backKey="en" title={topic} sectionId={'vocab_'+topic} />}
+      {mode === 'grid' ? <div className="grid-2">{VOCABULARY[topic].map(([pt,en], i) => <VocabCard key={i} pt={pt} en={en} example={VOCAB_EXAMPLES[topic]?.[pt]} />)}</div> : <FlashcardDrill items={VOCABULARY[topic].map(([pt,en]) => ({ pt, en, example: VOCAB_EXAMPLES[topic]?.[pt] }))} frontKey="pt" backKey={(item) => (
+        <>
+          <div style={{ fontSize: '20px', color: '#00a870', fontWeight: 500 }}>{item.en}</div>
+          {item.example && (
+            <>
+              <div style={{ marginTop: '14px', fontSize: '10px', color: '#7a8a80', textTransform: 'uppercase', letterSpacing: '1px' }}>Exemplo</div>
+              <div style={{ fontStyle: 'italic', fontSize: '15px', marginTop: '4px' }}>{item.example.pt}</div>
+              <div style={{ fontSize: '12px', color: '#444', marginTop: '4px' }}>{item.example.en}</div>
+            </>
+          )}
+        </>
+      )} title={topic} sectionId={'vocab_'+topic} />}
     </div>
   );
 }
@@ -2586,19 +3057,7 @@ function Verbos999Section({ showEnglish }) {
         <div>
           <div className="grid-2">
             {filtered.slice(0, visibleCount).map(([verb, meaning, type], i) => (
-              <div key={i} className="card" style={{ padding: '10px 14px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    {A2_PRIORITY_VERBS.has(verb.replace(/-se$/, "")) && <span style={{ color: '#c9963c', fontSize: '10px' }}>★</span>}
-                    <span className="verb-text">{verb}</span>
-                    <button onClick={() => speakPortuguese(verb)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '14px', padding: '2px 4px' }}>🔊</button>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <span className="verb-meaning">{meaning}</span>
-                    <span className={`verb-type-badge verb-type-${type.replace('-','')}`}>{type}</span>
-                  </div>
-                </div>
-              </div>
+              <VerbListCard key={i} verb={verb} meaning={meaning} type={type} example={VERB_EXAMPLES[verb]} />
             ))}
           </div>
           {visibleCount < filtered.length && (
@@ -2653,6 +3112,16 @@ function Verbos999Section({ showEnglish }) {
                   <>
                     <div className="flashcard-label">English</div>
                     <div className="flashcard-meaning">{currentFlash[1]}</div>
+                    {VERB_EXAMPLES[currentFlash[0]] && (
+                      <>
+                        <div style={{ marginTop: '12px', fontSize: '10px', color: '#7a8a80', textTransform: 'uppercase', letterSpacing: '1px' }}>Exemplo</div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '4px' }}>
+                          <span style={{ fontStyle: 'italic', fontSize: '14px' }}>{VERB_EXAMPLES[currentFlash[0]].pt}</span>
+                          <button onClick={(e) => { e.stopPropagation(); speakPortuguese(VERB_EXAMPLES[currentFlash[0]].pt); }} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '13px', padding: '0 4px', color: '#7a8a80' }} title={showEnglish ? 'Listen' : 'Ouvir'}>🔊</button>
+                        </div>
+                        <div style={{ fontSize: '12px', color: '#444', marginTop: '4px' }}>{VERB_EXAMPLES[currentFlash[0]].en}</div>
+                      </>
+                    )}
                     <button
                       onClick={(e) => { e.stopPropagation(); speakPortuguese(currentFlash[0]); }}
                       style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '14px', padding: '2px 8px', marginBottom: '10px', color: '#7a8a80' }}
@@ -2680,7 +3149,7 @@ function Verbos999Section({ showEnglish }) {
 const SECTION_MAP = {
   myplan: MyPlanSection,
   phrases: MyPhrasesSection,
-  verbs25: Verbs25Section, verbs100: Verbs100Section, conjugation: ConjugationSection, pronouns: PronounsSection,
+  verbs25: Verbs25Section, conjugation: ConjugationSection, pronouns: PronounsSection,
   adjectives: AdjectivesSection, prepositions: PrepositionsSection, articles: ArticlesSection,
   vocabulary: VocabularySection, modals: ModalsSection, idioms: IdiomsSection,
   falsefriends: FalseFriendsSection, structure: StructureSection, preterito: PreteritoSection,
@@ -2708,7 +3177,6 @@ const SECTION_GROUPS = [
     labelPt: 'Referência',
     sections: [
       { id: 'verbs25', label: '25 Verbos', labelEn: '25 Verbs', icon: '⚡', desc: 'Essential verbs for A2' },
-      { id: 'verbs100', label: '106 Verbos', labelEn: '106 Verbs', icon: '🔥', desc: '106 most used verbs with examples' },
       { id: 'conjugation', label: 'Conjugação', labelEn: 'Conjugation', icon: '📐', desc: 'Verb conjugation patterns' },
       { id: 'pronouns', label: 'Pronomes', labelEn: 'Pronouns', icon: '👤', desc: 'All Portuguese pronouns' },
       { id: 'adjectives', label: 'Adjetivos', labelEn: 'Adjectives', icon: '🎨', desc: 'Common adjectives' },
