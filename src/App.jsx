@@ -2446,15 +2446,23 @@ function GlossarySection({ showEnglish }) {
 }
 
 function Verbos999Section({ showEnglish }) {
+  const SESSION_SIZE = 20;
+  const HISTORY_MAX = 1000;
+  const RECENT_WINDOW = 500;
+
   const [search, setSearch] = useState("");
   const [letter, setLetter] = useState(null);
   const [typeFilter, setTypeFilter] = useState(null);
   const [a2Only, setA2Only] = useState(false);
   const [mode, setMode] = useState("list");
-  const [flashIdx, setFlashIdx] = useState(0);
-  const [flipped, setFlipped] = useState(false);
-  const [score, setScore] = useState({ correct: 0, total: 0 });
   const [visibleCount, setVisibleCount] = useState(100);
+
+  const [history, setHistory] = useLocal('verbs999_history', []);
+  const [sessionCards, setSessionCards] = useState([]);
+  const [sessionIdx, setSessionIdx] = useState(0);
+  const [sessionScore, setSessionScore] = useState({ correct: 0, total: 0 });
+  const [sessionComplete, setSessionComplete] = useState(false);
+  const [flipped, setFlipped] = useState(false);
 
   const filtered = useMemo(() => {
     return ALL_VERBS.filter(([verb, meaning, type]) => {
@@ -2469,10 +2477,6 @@ function Verbos999Section({ showEnglish }) {
     });
   }, [search, letter, typeFilter, a2Only]);
 
-  const shuffled = useMemo(() => {
-    return [...filtered].sort(() => Math.random() - 0.5);
-  }, [filtered, mode]);
-
   const clearFilters = () => {
     setSearch(""); setLetter(null); setTypeFilter(null); setA2Only(false); setVisibleCount(100);
   };
@@ -2483,15 +2487,46 @@ function Verbos999Section({ showEnglish }) {
     return c;
   }, [filtered]);
 
-  const nextFlash = (correct) => {
-    setScore(s => ({ correct: s.correct + (correct ? 1 : 0), total: s.total + 1 }));
+  const startSession = () => {
+    const recent = new Set(history.slice(-RECENT_WINDOW));
+    const pool = ALL_VERBS.filter(([verb]) => !recent.has(verb));
+    const shuffled = [...pool].sort(() => Math.random() - 0.5);
+    const picked = shuffled.slice(0, SESSION_SIZE);
+    const cards = picked.length === SESSION_SIZE
+      ? picked
+      : picked.concat(ALL_VERBS.slice(0, SESSION_SIZE - picked.length));
+    setSessionCards(cards);
+    setSessionIdx(0);
+    setSessionScore({ correct: 0, total: 0 });
+    setSessionComplete(false);
     setFlipped(false);
-    setFlashIdx(i => (i + 1) % Math.max(shuffled.length, 1));
   };
 
-  const currentFlash = shuffled[flashIdx % Math.max(shuffled.length, 1)];
+  const enterFlashMode = () => {
+    setMode('flash');
+    startSession();
+  };
+
+  const nextFlash = (correct) => {
+    setSessionScore(s => ({ correct: s.correct + (correct ? 1 : 0), total: s.total + 1 }));
+    const current = sessionCards[sessionIdx];
+    if (current) {
+      setHistory(prev => {
+        const next = prev.concat([current[0]]);
+        return next.length > HISTORY_MAX ? next.slice(-HISTORY_MAX) : next;
+      });
+    }
+    const nextIdx = sessionIdx + 1;
+    if (nextIdx >= SESSION_SIZE) {
+      setSessionComplete(true);
+    } else {
+      setSessionIdx(nextIdx);
+      setFlipped(false);
+    }
+  };
 
   const tc = typeCounts;
+  const currentFlash = !sessionComplete && sessionCards.length > 0 ? sessionCards[sessionIdx] : null;
 
   return (
     <div>
@@ -2513,9 +2548,8 @@ function Verbos999Section({ showEnglish }) {
       </div>
 
       <div className="toggle-row">
-        {[['list', showEnglish ? 'Reference' : 'Reference'],['flash', showEnglish ? 'Flashcards' : 'Flashcards']].map(([m, label]) => (
-          <button key={m} className={mode === m ? 'toggle-btn active' : 'toggle-btn'} onClick={() => { setMode(m); setFlashIdx(0); setFlipped(false); setScore({correct:0,total:0}); }}>{label}</button>
-        ))}
+        <button className={mode === 'list' ? 'toggle-btn active' : 'toggle-btn'} onClick={() => setMode('list')}>{showEnglish ? 'Reference' : 'Reference'}</button>
+        <button className={mode === 'flash' ? 'toggle-btn active' : 'toggle-btn'} onClick={enterFlashMode}>{showEnglish ? 'Flashcards' : 'Flashcards'}</button>
         <button className={a2Only ? 'toggle-btn active' : 'toggle-btn'} onClick={() => { setA2Only(!a2Only); setVisibleCount(100); }}>
           {a2Only ? (showEnglish ? '★ A2 Active' : '★ A2 Ativo') : (showEnglish ? '☆ A2 Filter' : '☆ A2 Filtro')}
         </button>
@@ -2523,6 +2557,12 @@ function Verbos999Section({ showEnglish }) {
           <button className="toggle-btn" onClick={clearFilters}>{showEnglish ? 'Clear' : 'Limpar'}</button>
         )}
       </div>
+
+      {mode === 'flash' && (
+        <div style={{ fontSize: '12px', color: '#7a8a80', marginBottom: '10px' }}>
+          {showEnglish ? 'Flashcards draw from all ~1000 verbs regardless of filters. No card repeats within a 500-card window.' : 'Os flashcards usam todos os ~1000 verbos independentemente dos filtros. Não há repetições dentro de uma janela de 500 cartões.'}
+        </div>
+      )}
 
       <div className="type-pills">
         {VERB_TYPES.map(t => (
@@ -2571,26 +2611,53 @@ function Verbos999Section({ showEnglish }) {
         </div>
       ) : (
         <div>
-          {filtered.length === 0 ? (
-            <div className="empty-state">{showEnglish ? 'No verbs match your filters' : 'Nenhum verbo corresponde aos filtros'}</div>
-          ) : (
+          {sessionComplete ? (
+            <div className="card" style={{ textAlign: 'center', padding: '24px' }}>
+              <div style={{ fontSize: '22px', fontFamily: "'DM Serif Display', serif", color: '#00a870', marginBottom: '8px' }}>
+                {showEnglish ? 'Session complete!' : 'Sessão completa!'}
+              </div>
+              <div style={{ fontSize: '15px', color: '#1a1a1a', marginBottom: '6px' }}>
+                {showEnglish ? `You got ${sessionScore.correct} out of ${sessionScore.total} correct.` : `Acertaste ${sessionScore.correct} de ${sessionScore.total}.`}
+              </div>
+              <div style={{ fontSize: '13px', color: '#7a8a80', marginBottom: '16px' }}>
+                {sessionScore.correct >= Math.ceil(SESSION_SIZE * 0.8)
+                  ? (showEnglish ? 'Strong session.' : 'Boa sessão.')
+                  : sessionScore.correct >= Math.ceil(SESSION_SIZE * 0.5)
+                    ? (showEnglish ? 'Keep going.' : 'Continua.')
+                    : (showEnglish ? 'Tough one. Try again.' : 'Difícil. Tenta outra vez.')}
+              </div>
+              <button className="btn btn-primary" onClick={startSession}>
+                {showEnglish ? 'Start new session' : 'Nova sessão'}
+              </button>
+            </div>
+          ) : currentFlash ? (
             <>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                <span className="badge">{(flashIdx % shuffled.length) + 1} / {shuffled.length}</span>
-                {score.total > 0 && <span style={{ fontSize: '12px', color: '#767676' }}>{score.correct}/{score.total} correct</span>}
+                <span className="badge">{sessionIdx + 1} / {SESSION_SIZE}</span>
+                {sessionScore.total > 0 && <span style={{ fontSize: '12px', color: '#767676' }}>{sessionScore.correct}/{sessionScore.total} correct</span>}
               </div>
-              <div className="progress-bar"><div className="progress-fill" style={{width: (flashIdx % shuffled.length) / Math.max(shuffled.length, 1) * 100 + '%'}} /></div>
+              <div className="progress-bar"><div className="progress-fill" style={{width: (sessionIdx / SESSION_SIZE) * 100 + '%'}} /></div>
               <div className="flashcard" onClick={() => setFlipped(!flipped)}>
                 {!flipped ? (
                   <>
                     <div className="flashcard-label">{showEnglish ? 'Verb' : 'Verbo'} <span className={`verb-type-badge verb-type-${currentFlash[2].replace('-','')}`}>{currentFlash[2]}</span></div>
                     <div className="flashcard-verb">{currentFlash[0]}</div>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); speakPortuguese(currentFlash[0]); }}
+                      style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '22px', padding: '4px 10px', marginTop: '6px', borderRadius: '6px' }}
+                      title={showEnglish ? 'Listen' : 'Ouvir'}
+                    >🔊</button>
                     <div className="flashcard-hint">{showEnglish ? 'tap to flip' : 'tocar para virar'}</div>
                   </>
                 ) : (
                   <>
                     <div className="flashcard-label">English</div>
                     <div className="flashcard-meaning">{currentFlash[1]}</div>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); speakPortuguese(currentFlash[0]); }}
+                      style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '14px', padding: '2px 8px', marginBottom: '10px', color: '#7a8a80' }}
+                      title={showEnglish ? 'Listen again' : 'Ouvir novamente'}
+                    >🔊 {showEnglish ? 'hear again' : 'ouvir'}</button>
                     <div className="flashcard-actions">
                       <button className="btn btn-danger" onClick={e => { e.stopPropagation(); nextFlash(false); }}>{showEnglish ? 'Again' : 'Errei'}</button>
                       <button className="btn btn-primary" onClick={e => { e.stopPropagation(); nextFlash(true); }}>{showEnglish ? 'Got it' : 'Consegui'}</button>
@@ -2599,6 +2666,8 @@ function Verbos999Section({ showEnglish }) {
                 )}
               </div>
             </>
+          ) : (
+            <div className="empty-state">{showEnglish ? 'No verbs available' : 'Nenhum verbo disponível'}</div>
           )}
         </div>
       )}
