@@ -1223,6 +1223,120 @@ a:hover { text-decoration: underline; }
   font-size: 13px;
 }
 
+/* ─── Voice setup notice ─── */
+.voice-notice {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+  background: linear-gradient(135deg, rgba(0,168,112,0.08), rgba(0,138,138,0.08));
+  border: 1px solid rgba(0,168,112,0.25);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  margin: 0 var(--space-4) var(--space-4) var(--space-4);
+  position: relative;
+}
+.voice-notice-icon {
+  font-size: 24px;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.voice-notice-content {
+  flex: 1;
+  min-width: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-primary);
+}
+.voice-notice-title {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 4px;
+  color: var(--accent);
+}
+.voice-notice-content p {
+  margin: 0 0 6px 0;
+  color: var(--text-secondary);
+}
+.voice-notice-instructions {
+  list-style: none;
+  padding: 0;
+  margin: 6px 0 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.voice-notice-instructions li {
+  font-size: 12px;
+  color: var(--text-secondary);
+  padding-left: 14px;
+  position: relative;
+}
+.voice-notice-instructions li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: 600;
+}
+.voice-notice-instructions strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+.voice-notice-close {
+  background: transparent;
+  border: none;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  font-size: 18px;
+  padding: 0 4px;
+  line-height: 1;
+  flex-shrink: 0;
+  border-radius: 4px;
+  transition: background 0.15s, color 0.15s;
+}
+.voice-notice-close:hover {
+  background: rgba(0,0,0,0.05);
+  color: var(--text-primary);
+}
+.voice-notice-reopen {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.voice-notice-reopen:hover {
+  background: rgba(0,168,112,0.06);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.voice-notice-checking {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  font-style: italic;
+}
+@media (max-width: 540px) {
+  .voice-notice {
+    margin: 0 var(--space-2) var(--space-3) var(--space-2);
+    padding: var(--space-2) var(--space-3);
+  }
+  .voice-notice-icon {
+    font-size: 20px;
+  }
+  .voice-notice-title {
+    font-size: 13px;
+  }
+  .voice-notice-instructions li {
+    font-size: 11px;
+  }
+}
+
 /* ─── Section nav grid (filter chips) ─── */
 .nav-chips {
   display: flex;

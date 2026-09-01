@@ -1890,6 +1890,75 @@ if (typeof window !== 'undefined' && window.speechSynthesis) {
   };
 }
 
+function VoiceSetupNotice() {
+  const [dismissed, setDismissed] = useLocal('ep_voice_notice_dismissed', false);
+  const [status, setStatus] = useState('checking');
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.speechSynthesis) {
+      setStatus('unavailable');
+      return;
+    }
+    let attempts = 0;
+    let interval;
+    const check = () => {
+      const voices = window.speechSynthesis.getVoices();
+      if (voices.length === 0 && attempts < 10) {
+        attempts++;
+        return false;
+      }
+      const ep = getEuropeanPortugueseVoice();
+      setStatus(ep ? 'available' : 'unavailable');
+      return true;
+    };
+    if (!check() && !interval) {
+      interval = setInterval(() => {
+        if (check() && interval) {
+          clearInterval(interval);
+          interval = null;
+        }
+      }, 250);
+    }
+    const onVoices = () => check();
+    window.speechSynthesis.addEventListener('voiceschanged', onVoices);
+    return () => {
+      if (interval) clearInterval(interval);
+      window.speechSynthesis.removeEventListener('voiceschanged', onVoices);
+    };
+  }, []);
+
+  if (dismissed) return null;
+  if (status === 'available') return null;
+
+  return (
+    <div className="voice-notice" role="status">
+      <div className="voice-notice-icon">🔊</div>
+      <div className="voice-notice-content">
+        <div className="voice-notice-title">
+          {status === 'checking' ? 'Checking voice availability…' : 'Improve your pronunciation'}
+        </div>
+        {status === 'checking' ? (
+          <p className="voice-notice-checking">Detecting a European Portuguese voice on your device.</p>
+        ) : (
+          <>
+            <p>
+              For authentic <strong>European Portuguese</strong> pronunciation, install the Portuguese (Portugal)
+              text-to-speech voice on your device. Currently the app is falling back to a Brazilian voice.
+            </p>
+            <ul className="voice-notice-instructions">
+              <li><strong>Windows:</strong> Settings → Time & Language → Language & region → Add Portuguese (Portugal) → Speech → Install "Microsoft Helena"</li>
+              <li><strong>Mac:</strong> System Settings → Accessibility → Spoken Content → System voice → Manage Voices → Portuguese → Portugal</li>
+              <li><strong>iPhone / iPad:</strong> Settings → Accessibility → Spoken Content → Voices → Portuguese → Portugal</li>
+              <li><strong>Android:</strong> Settings → System → Languages → Text-to-speech → Install Portuguese (Portugal) voice data</li>
+            </ul>
+          </>
+        )}
+      </div>
+      <button className="voice-notice-close" onClick={() => setDismissed(true)} aria-label="Dismiss voice notice" title="Dismiss">✕</button>
+    </div>
+  );
+}
+
 const SECTIONS_MAP = {
   'verbs25': { label: '25 Verbos', labelEn: '25 Most Used Verbs', icon: '⚡', desc: 'Essential verbs for everyday conversation', keywords: ['beginner', 'essential', 'basic', 'common', 'most used', 'core', 'fundamental', 'starter'] },
   'conjugation': { label: 'Conjugação', labelEn: 'Conjugation', icon: '📐', desc: 'Learn how verbs change form', keywords: ['grammar', 'verbs', 'endings', 'patterns', 'tenses', 'present', 'past', 'future'] },
@@ -4487,6 +4556,7 @@ export default function App() {
     }
     return (
       <div className="welcome-screen">
+        <VoiceSetupNotice />
         <LandingPage onComplete={(recommendedSections) => { if (recommendedSections.length > 0) setSection(recommendedSections[0]); }} onSavePlan={handleSavePlan} savedPlan={savedPlan} />
       </div>
     );
