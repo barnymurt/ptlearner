@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useMemo } from 'react';
+﻿import React, { useState, useCallback, useEffect, useMemo } from 'react';
 
 const TOP_25_VERBS = [
   { verb: "ser", meaning: "to be (permanent)", conj: ["sou","és","é","somos","sois","são"], conjEn: ["am","are","is","are","are","are"] },
@@ -197,7 +197,7 @@ const VERB_EXAMPLES = {
   "aguentar": { pt: "Não aguento mais.", en: "I can't take it anymore." },
   "ajustar": { pt: "Ajusta o cinto, por favor.", en: "Adjust the belt, please." },
   "alargar": { pt: "Vamos alargar a estrada.", en: "We're going to widen the road." },
-  "alcançar": { pt: "Alcancei o meu objetivo.", en: "I reached my goal." },
+  "alcançar": { pt: "Alcancei o meu objectivo.", en: "I reached my goal." },
   "alegrar": { pt: "A música alegra-me.", en: "Music makes me happy." },
   "alertar": { pt: "Alertámos a polícia.", en: "We alerted the police." },
   "alimentar": { pt: "Alimento o bebé de quatro em quatro horas.", en: "I feed the baby every four hours." },
@@ -757,7 +757,7 @@ const VERB_EXAMPLES = {
   "numerar": { pt: "Numerei as páginas.", en: "I numbered the pages." },
   "nutrir": { pt: "A mãe nutre o bebé.", en: "The mother nourishes the baby." },
   "obedecer": { pt: "Obedeci às ordens.", en: "I obeyed the orders." },
-  "objetivar": { pt: "Objetivámos o sucesso.", en: "We aimed for success." },
+  "objetivar": { pt: "Objectivámos o sucesso.", en: "We aimed for success." },
   "obrigar": { pt: "Obrigaram-me a sair.", en: "They forced me to leave." },
   "observar": { pt: "Observei o comportamento dele.", en: "I observed his behaviour." },
   "obter": { pt: "Obtive o diploma.", en: "I obtained the diploma." },
@@ -1110,7 +1110,7 @@ const PREPOSITION_EXERCISES = [
   { sentence: "Eles estão ___ o parque.", sentenceEn: "They are ___ the park.", answer: "no", hint: "at a place (em + o)" },
   { sentence: "Ele saiu ___ casa muito cedo.", sentenceEn: "He left ___ home very early.", answer: "de", hint: "from a place" },
   { sentence: "Chegámos ___ aeroporto atrasados.", sentenceEn: "We arrived ___ the airport late.", answer: "ao", hint: "to a place (a + o)" },
-  { sentence: "Posso contar ___ você?", sentenceEn: "Can I count ___ you?", answer: "com", hint: "rely on someone" },
+  { sentence: "Posso contar ___ ti?", sentenceEn: "Can I count ___ you?", answer: "com", hint: "rely on someone" },
   { sentence: "Este café é feito ___ leite.", sentenceEn: "This coffee is made ___ milk.", answer: "com", hint: "made with" },
   { sentence: "Vou mandar este e-mail ___ meu chefe.", sentenceEn: "I'm going to send this email ___ my boss.", answer: "para", hint: "to someone (destination)" },
   { sentence: "Ele passou ___ o túnel rapidamente.", sentenceEn: "He passed ___ the tunnel quickly.", answer: "por", hint: "through a place" },
@@ -1127,8 +1127,8 @@ const PREPOSITION_EXERCISES = [
 
 const PRONOUNS_DATA = {
   "Sujeito": [["eu","I"],["tu","you (informal)"],["ele/ela","he/she"],["você","you (formal)"],["nós","we"],["vós","you (pl.)"],["eles/elas","they"]],
-  "Obj. Direto": [["me","me"],["te","you"],["o/a","him/her"],["nos","us"],["vos","you (pl.)"],["os/as","them"]],
-  "Obj. Indireto": [["me","to me"],["te","to you"],["lhe","to him/her"],["nos","to us"],["vos","to you (pl.)"],["lhes","to them"]],
+  "Obj. Directo": [["me","me"],["te","you"],["o/a","him/her"],["nos","us"],["vos","you (pl.)"],["os/as","them"]],
+  "Obj. Indirecto": [["me","to me"],["te","to you"],["lhe","to him/her"],["nos","to us"],["vos","to you (pl.)"],["lhes","to them"]],
   "Reflexivo": [["me","myself"],["te","yourself"],["se","himself/herself"],["nos","ourselves"],["vos","yourselves"],["se","themselves"]],
   "Possessivo": [["meu/minha","my"],["teu/tua","your"],["seu/sua","his/her"],["nosso/nossa","our"],["vosso/vossa","your (pl.)"],["seu/sua","their"]],
 };
@@ -1140,7 +1140,7 @@ const VOCABULARY = {
   "Corpo": [["a cabeça","head"],["o olho","eye"],["o nariz","nose"],["a boca","mouth"],["a orelha","ear"],["o braço","arm"],["a mão","hand"],["o dedo","finger"],["a perna","leg"],["o pé","foot"],["o peito","chest"],["as costas","back"],["o ombro","shoulder"],["o joelho","knee"],["o pescoço","neck"],["o cabelo","hair"]],
   "Cidade": [["a rua","street"],["a praça","square"],["o supermercado","supermarket"],["a farmácia","pharmacy"],["o hospital","hospital"],["a estação","station"],["o restaurante","restaurant"],["o café","café"],["a loja","shop"],["o banco","bank"],["os correios","post office"],["a igreja","church"],["o parque","park"],["a biblioteca","library"],["o museu","museum"],["a escola","school"]],
   "Tempo e Clima": [["hoje","today"],["amanhã","tomorrow"],["ontem","yesterday"],["agora","now"],["sempre","always"],["nunca","never"],["às vezes","sometimes"],["cedo","early"],["tarde","late"],["o sol","sun"],["a chuva","rain"],["o vento","wind"],["quente","hot"],["frio","cold"],["nublado","cloudy"],["o tempo","weather/time"],["ainda","still/yet"],["já","already/yet"],["depressa","quickly"],["devagar","slowly"],["antes","before"],["depois","after"],["quase","almost"],["muito","very"]],
-  "Transportes": [["o carro","car"],["o autobus","bus"],["o comboio","train"],["o avião","plane"],["o metro","metro"],["o elétrico","tram"],["a bicicleta","bicycle"],["o táxi","taxi"],["a paragem","stop"],["a estação","station"],["o aeroporto","airport"],["o bilhete","ticket"],["a viagem","trip"],["o condutor","driver"],["o passageiro","passenger"],["a mala","suitcase"]],
+  "Transportes": [["o carro","car"],["o autocarro","bus"],["o comboio","train"],["o avião","plane"],["o metro","metro"],["o elétrico","tram"],["a bicicleta","bicycle"],["o táxi","taxi"],["a paragem","stop"],["a estação","station"],["o aeroporto","airport"],["o bilhete","ticket"],["a viagem","trip"],["o condutor","driver"],["o passageiro","passenger"],["a mala","suitcase"]],
   "Trabalho": [["o escritório","office"],["o computador","computer"],["a reunião","meeting"],["o colega","colleague"],["o chefe","boss"],["o emprego","job"],["o salário","salary"],["as férias","holidays"],["o horário","schedule"],["a empresa","company"],["o cliente","client"],["o projeto","project"],["o contrato","contract"],["a entrevista","interview"],["o currículo","CV"],["a experiência","experience"]],
   "Vestuário": [["as calças","trousers"],["a saia","skirt"],["a camisa","shirt"],["o vestido","dress"],["o sapato","shoe"],["o casaco","jacket"],["a blusa","blouse"],["as meias","socks"],["a gravata","tie"],["o cachecol","scarf"],["as luvas","gloves"],["o chapéu","hat"],["o guarda-chuva","umbrella"],["a carteira","wallet"],["a mala","bag"],["os óculos","glasses"]],
   "Animais": [["o cão","dog"],["o gato","cat"],["o cavalo","horse"],["o pássaro","bird"],["o peixe","fish"],["o frango","chicken"],["o porco","pig"],["a vaca","cow"],["a ovelha","sheep"],["o coelho","rabbit"],["a tartaruga","turtle"],["a borboleta","butterfly"],["a abelha","bee"],["a formiga","ant"],["o mosquito","mosquito"],["o ratinho","mouse"]],
@@ -1274,7 +1274,7 @@ const VOCAB_EXAMPLES = {
   },
   "Transportes": {
     "o carro": { pt: "O carro está na garagem.", en: "The car is in the garage." },
-    "o autobus": { pt: "O autocarro passa às oito.", en: "The bus passes at eight." },
+    "o autocarro": { pt: "O autocarro passa às oito.", en: "The bus passes at eight." },
     "o comboio": { pt: "O comboio parte às dez.", en: "The train leaves at ten." },
     "o avião": { pt: "O avião chega atrasado.", en: "The plane is arriving late." },
     "o metro": { pt: "O metro é rápido.", en: "The metro is fast." },
@@ -1655,9 +1655,9 @@ const FALSE_FRIENDS = [
 ];
 
 const SENTENCE_STRUCTURE = [
-  { pattern: "Sujeito + Verbo + Objeto", example: "Eu como pão.", translation: "I eat bread." },
+  { pattern: "Sujeito + Verbo + Objecto", example: "Eu como pão.", translation: "I eat bread." },
   { pattern: "Sujeito + Verbo + Adjetivo", example: "A casa é bonita.", translation: "The house is beautiful." },
-  { pattern: "Sujeito + Verbo + Preposição + Objeto", example: "Eu vou ao mercado.", translation: "I go to the market." },
+  { pattern: "Sujeito + Verbo + Preposição + Objecto", example: "Eu vou ao mercado.", translation: "I go to the market." },
   { pattern: "Advérbio + Sujeito + Verbo", example: "Hoje eu trabalho.", translation: "Today I work." },
   { pattern: "Sujeito + Não + Verbo", example: "Eu não sei.", translation: "I don't know." },
   { pattern: "Verbo + Sujeito + ? (question)", example: "Falas português?", translation: "Do you speak Portuguese?" },
@@ -1705,7 +1705,7 @@ const WRITING_TASKS = [
   { id: 5, type: "Diálogo", title: "No Café", description: "Escreve um diálogo entre duas pessoas num café.", topic: "No café", targetWords: 40, modelAnswer: "Empregada: Olá! O que deseja?\nCliente: Olá! Queria um café com leite, por favor.\nEmpregada: Com açúcar ou sem açúcar?\nCliente: Sem açúcar, obrigado. E também quero um bolo de chocolate.\nEmpregada: São três euros no total.\nCliente: Aqui tem. Pode dar-me o troco?\nEmpregada: Claro! Aqui tem. Bom proveito!", englishAnswer: "Waitress: Hello! What would you like?\nCustomer: Hello! I would like a coffee with milk, please.\nWaitress: With sugar or without sugar?\nCustomer: Without sugar, thank you. And I also want a chocolate cake.\nWaitress: That's three euros in total.\nCustomer: Here you go. Can you give me the change?\nWaitress: Of course! Here you go. Enjoy your meal!", keyVocab: ["deseja","queria","por favor","obrigado","quanto custa","o troco"] },
   { id: 6, type: "Descrição", title: "Um Dia Típico", description: "Descreve um dia típico na tua vida.", topic: "Rotina diária", targetWords: 90, modelAnswer: "O meu dia típico começa às sete da manhã. Levanto-me, tomo um duche e pequeno-almoço.\n\nDe manhã, vou para o trabalho. Chego às nove e trabalho até à hora de almoço.\n\nÀ uma hora, almoço. Geralmente como uma sandes e uma peça de fruta.\n\nDepois do trabalho, vou às vezes ao ginásio ou encontro amigos.\n\nÀ noite, janto por volta das sete e meia. Depois, vejo televisão ou estudo português. Deito-me às onze.\n\nAos fins de semana, a minha rotina muda. Durmo mais e passo tempo com a família.", englishAnswer: "My typical day starts at seven in the morning. I get up, take a shower, and have breakfast.\n\nIn the morning, I go to work. I arrive at nine and work until lunchtime.\n\nAt one o'clock, I have lunch. I usually eat a sandwich and a piece of fruit.\n\nAfter work, I sometimes go to the gym or meet friends.\n\nIn the evening, I have dinner around half past seven. Then I watch television or study Portuguese. I go to bed at eleven.\n\nOn weekends, my routine changes. I sleep more and spend time with family.", keyVocab: ["levantar-se","pequeno-almoço","geralmente","por volta das","às vezes","aos fins de semana"] },
   { id: 7, type: "Narração", title: "Uma Viagem", description: "Descreve uma viagem que fizeste.", topic: "Viagem", targetWords: 80, modelAnswer: "No verão passado, fui a Portugal com a minha família. Viajámos de carro e demorámos cerca de seis horas.\n\nFicámos numa pequena pensão perto da praia. O quarto era simples mas limpo.\n\nNo primeiro dia, fomos à praia. O mar estava quente e havia poucos banhistas. Foi muito relaxante!\n\nNo segundo dia, visitámos uma cidade histórica com castelo medieval. A vista era incrível.\n\nNo último dia, comprámos lembranças para a família.\n\nFoi uma viagem muito agradável. Quero voltar!", englishAnswer: "Last summer, I went to Portugal with my family. We drove and it took about six hours.\n\nWe stayed in a small guesthouse near the beach. The room was simple but clean.\n\nOn the first day, we went to the beach. The sea was warm and there were few swimmers. It was very relaxing!\n\nOn the second day, we visited a historic town with a medieval castle. The view was incredible.\n\nOn the last day, we bought souvenirs for the family.\n\nIt was a very pleasant trip. I want to go back!", keyVocab: ["no verão passado","ficámos","relaxante","incrível","lembranças"] },
-  { id: 8, type: "Opinião", title: "Planos para o Futuro", description: "Descreve os teus planos para os próximos cinco anos.", topic: "Planos futuros", targetWords: 60, modelAnswer: "Nos próximos cinco anos, tenho vários planos.\n\nPrimeiro, quero terminar os meus estudos. Se tudo correr bem, vou acabar o curso e receber o diploma.\n\nDepois, quero encontrar um bom emprego na minha área. Gostaria de trabalhar numa empresa grande onde possa aprender muito.\n\nTambém quero poupar dinheiro para fazer uma viagem longa. Sempre quis visitar o Brasil e Portugal.\n\nPara alcançar estes objetivos, sei que tenho de trabalhar muito. Mas estou motivado.", englishAnswer: "In the next five years, I have several plans.\n\nFirst, I want to finish my studies. If all goes well, I will complete the course and receive my diploma.\n\nThen, I want to find a good job in my field. I would like to work in a large company where I can learn a lot.\n\nI also want to save money to take a long trip. I have always wanted to visit Brazil and Portugal.\n\nTo achieve these goals, I know I have to work hard. But I am motivated.", keyVocab: ["se tudo correr bem","progredir","poupar dinheiro","a longo prazo","alcançar","motivado"] },
+  { id: 8, type: "Opinião", title: "Planos para o Futuro", description: "Descreve os teus planos para os próximos cinco anos.", topic: "Planos futuros", targetWords: 60, modelAnswer: "Nos próximos cinco anos, tenho vários planos.\n\nPrimeiro, quero terminar os meus estudos. Se tudo correr bem, vou acabar o curso e receber o diploma.\n\nDepois, quero encontrar um bom emprego na minha área. Gostaria de trabalhar numa empresa grande onde possa aprender muito.\n\nTambém quero poupar dinheiro para fazer uma viagem longa. Sempre quis visitar o Brasil e Portugal.\n\nPara alcançar estes objectivos, sei que tenho de trabalhar muito. Mas estou motivado.", englishAnswer: "In the next five years, I have several plans.\n\nFirst, I want to finish my studies. If all goes well, I will complete the course and receive my diploma.\n\nThen, I want to find a good job in my field. I would like to work in a large company where I can learn a lot.\n\nI also want to save money to take a long trip. I have always wanted to visit Brazil and Portugal.\n\nTo achieve these goals, I know I have to work hard. But I am motivated.", keyVocab: ["se tudo correr bem","progredir","poupar dinheiro","a longo prazo","alcançar","motivado"] },
 ];
 
 const ORAL_DIALOGUES = [
@@ -1755,8 +1755,8 @@ const GLOSSARY_TERMS = [
   { term: "Verbo Regular", category: "Verb Type", explanation: "A verb following the standard pattern for its group (-AR, -ER, -IR).", example: "falar → falo, falaste, falou" },
   { term: "Verbo Irregular", category: "Verb Type", explanation: "A verb NOT following the standard pattern. Forms must be memorized.", example: "pôr → ponho, pões, põe / ser → sou, és, é" },
   { term: "Verbo Reflexivo", category: "Verb Type", explanation: "A verb where subject and object are the same. Uses reflexive pronouns.", example: "Levanto-me cedo. / Arrependo-me." },
-  { term: "Objeto Direto", category: "Grammar", explanation: "The thing that receives the verb's action directly, without a preposition.", example: "Vejo o gato. (I see the cat.)" },
-  { term: "Objeto Indireto", category: "Grammar", explanation: "The person/thing receiving the action indirectly — 'to' or 'for' someone.", example: "Dou o livro ao João. (to João)" },
+  { term: "Objecto Directo", category: "Grammar", explanation: "The thing that receives the verb's action directly, without a preposition.", example: "Vejo o gato. (I see the cat.)" },
+  { term: "Objecto Indirecto", category: "Grammar", explanation: "The person/thing receiving the action indirectly — 'to' or 'for' someone.", example: "Dou o livro ao João. (to João)" },
   { term: "Contrações", category: "Grammar", explanation: "When a preposition and article merge together. Essential in Portuguese.", example: "em+o=no / de+a=da / a+o=ao / por+o=pelo" },
   { term: "Mesoclise", category: "EP Feature", explanation: "A unique EP feature: pronoun inserted inside a verb (future/conditional).", example: "ver-me-ei / dir-lhe-ei / dar-te-ei" },
   { term: "Gerúndio", category: "Verb Form", explanation: "The -ING form. BP: falando. EP: a falar (estar + a + infinitive).", example: "BP: Estou falando. / EP: Estou a falar." },
@@ -1834,6 +1834,21 @@ function useLocal(key, def) {
 
 let currentUtterance = null;
 
+function getEuropeanPortugueseVoice() {
+  const voices = window.speechSynthesis.getVoices();
+  if (!voices || voices.length === 0) return null;
+  const ptPT = voices.find(v => v.lang === 'pt-PT' || v.lang === 'pt_PT');
+  if (ptPT) return ptPT;
+  const portugalByName = voices.find(v => {
+    const n = (v.name || '').toLowerCase();
+    const l = (v.lang || '').toLowerCase();
+    return l.startsWith('pt') && (n.includes('portugal') || n.includes('europeu') || n.includes('european') || n.includes('helena') || n.includes('joana'));
+  });
+  if (portugalByName) return portugalByName;
+  return null;
+}
+
+let epVoiceWarningShown = false;
 function speakPortuguese(text) {
   if (!window.speechSynthesis) return;
   if (window.speechSynthesis.speaking) {
@@ -1843,22 +1858,36 @@ function speakPortuguese(text) {
   }
   window.speechSynthesis.cancel();
   const utterance = new SpeechSynthesisUtterance(text);
-  const voices = window.speechSynthesis.getVoices();
-  const ptVoice = voices.find(v => 
-    v.lang === 'pt-PT' || 
-    (v.lang.startsWith('pt') && v.name.toLowerCase().includes('portugal'))
-  ) || voices.find(v => v.lang.startsWith('pt'));
-  if (ptVoice) {
-    utterance.voice = ptVoice;
+  const epVoice = getEuropeanPortugueseVoice();
+  if (epVoice) {
+    utterance.voice = epVoice;
     utterance.lang = 'pt-PT';
   } else {
-    utterance.lang = 'pt';
+    const voices = window.speechSynthesis.getVoices();
+    const anyPt = voices.find(v => (v.lang || '').toLowerCase().startsWith('pt'));
+    if (anyPt) {
+      utterance.voice = anyPt;
+      utterance.lang = anyPt.lang || 'pt';
+    } else {
+      utterance.lang = 'pt-PT';
+    }
+    if (!epVoiceWarningShown) {
+      epVoiceWarningShown = true;
+      console.warn('[Fluência] No European Portuguese (pt-PT) voice found. Install one in your OS settings for authentic EP pronunciation. Falling back to:', anyPt ? anyPt.name : 'browser default');
+    }
   }
-  utterance.rate = 0.85;
+  utterance.rate = 0.9;
   utterance.pitch = 1;
   currentUtterance = utterance;
   utterance.onend = () => { currentUtterance = null; };
   window.speechSynthesis.speak(utterance);
+}
+
+if (typeof window !== 'undefined' && window.speechSynthesis) {
+  window.speechSynthesis.onvoiceschanged = () => {
+    const v = getEuropeanPortugueseVoice();
+    if (v) epVoiceWarningShown = false;
+  };
 }
 
 const SECTIONS_MAP = {
