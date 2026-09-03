@@ -102,6 +102,37 @@ module.exports = async function handler(req, res) {
     }
   }
 
+  if (req.method === 'POST' && req.body && req.body.action === 'tts') {
+    const { text, speakingRate } = req.body;
+    if (!text || !text.trim()) return res.status(200).json({ error: 'No text provided' });
+    const apiKey = process.env.GOOGLE_TTS_API_KEY;
+    if (!apiKey) return res.status(200).json({ error: 'TTS not configured' });
+    try {
+      const rate = typeof speakingRate === 'number' && speakingRate >= 0.25 && speakingRate <= 4.0
+        ? speakingRate
+        : 0.92;
+      const response = await fetch(`https://texttospeech.googleapis.com/v1/text:synthesize?key=${encodeURIComponent(apiKey)}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          input: { text: String(text).slice(0, 1000) },
+          voice: { languageCode: 'pt-PT', name: 'pt-PT-Wavenet-A' },
+          audioConfig: { audioEncoding: 'MP3', speakingRate: rate, pitch: 0 }
+        })
+      });
+      if (!response.ok) {
+        const errText = await response.text();
+        throw new Error('Google TTS failed: ' + response.status + ' ' + errText.substring(0, 200));
+      }
+      const data = await response.json();
+      if (!data.audioContent) throw new Error('No audio content in response');
+      return res.status(200).json({ audio: data.audioContent, encoding: 'mp3' });
+    } catch (error) {
+      console.error('TTS error:', error.message);
+      return res.status(200).json({ error: error.message });
+    }
+  }
+
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }

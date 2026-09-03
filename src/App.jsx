@@ -1849,44 +1849,133 @@ function getEuropeanPortugueseVoice() {
 }
 
 let epVoiceWarningShown = false;
-function speakPortuguese(text) {
-  if (!window.speechSynthesis) return;
-  if (window.speechSynthesis.speaking) {
+let hostedTtsAvailable = null;
+let hostedTtsCheckPromise = null;
+let currentHostedAudio = null;
+const hostedAudioCache = new Map();
+
+async function checkHostedTtsAvailable() {
+  if (hostedTtsAvailable !== null) return hostedTtsAvailable;
+  if (hostedTtsCheckPromise) return hostedTtsCheckPromise;
+  hostedTtsCheckPromise = (async () => {
+    try {
+      const res = await fetch('/api/tts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'tts', text: 'teste' })
+      });
+      const data = await res.json();
+      hostedTtsAvailable = !!data.audio;
+      return hostedTtsAvailable;
+    } catch {
+      hostedTtsAvailable = false;
+      return false;
+    }
+  })();
+  return hostedTtsCheckPromise;
+}
+
+async function speakWithHostedTts(text) {
+  if (currentHostedAudio) {
+    currentHostedAudio.pause();
+    currentHostedAudio = null;
+    return;
+  }
+  const cached = hostedAudioCache.get(text);
+  let audio;
+  if (cached) {
+    audio = new Audio(cached);
+  } else {
+    const res = await fetch('/api/tts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'tts', text })
+    });
+    const data = await res.json();
+    if (!data.audio) {
+      throw new Error(data.error || 'TTS unavailable');
+    }
+    const blob = base64ToBlob(data.audio, 'audio/mpeg');
+    const url = URL.createObjectURL(blob);
+    hostedAudioCache.set(text, url);
+    audio = new Audio(url);
+  }
+  audio.playbackRate = 1;
+  currentHostedAudio = audio;
+  audio.onended = () => {
+    if (currentHostedAudio === audio) currentHostedAudio = null;
+  };
+  audio.onerror = () => {
+    if (currentHostedAudio === audio) currentHostedAudio = null;
+  };
+  await audio.play();
+}
+
+function base64ToBlob(base64, mime) {
+  const bin = atob(base64);
+  const arr = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+  return new Blob([arr], { type: mime });
+}
+
+async function speakPortuguese(text) {
+  if (!text) return;
+  if (currentHostedAudio) {
+    currentHostedAudio.pause();
+    currentHostedAudio = null;
+    return;
+  }
+  if (window.speechSynthesis && window.speechSynthesis.speaking) {
     window.speechSynthesis.cancel();
     currentUtterance = null;
     return;
   }
-  window.speechSynthesis.cancel();
-  const utterance = new SpeechSynthesisUtterance(text);
-  const epVoice = getEuropeanPortugueseVoice();
+  const epVoice = window.speechSynthesis ? getEuropeanPortugueseVoice() : null;
   if (epVoice) {
+    if (window.speechSynthesis.speaking) window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
     utterance.voice = epVoice;
     utterance.lang = 'pt-PT';
-  } else {
-    const voices = window.speechSynthesis.getVoices();
-    const anyPt = voices.find(v => (v.lang || '').toLowerCase().startsWith('pt'));
-    if (anyPt) {
-      utterance.voice = anyPt;
-      utterance.lang = anyPt.lang || 'pt';
-    } else {
-      utterance.lang = 'pt-PT';
-    }
-    if (!epVoiceWarningShown) {
-      epVoiceWarningShown = true;
-      console.warn('[Fluência] No European Portuguese (pt-PT) voice found. Install one in your OS settings for authentic EP pronunciation. Falling back to:', anyPt ? anyPt.name : 'browser default');
+    utterance.rate = 0.92;
+    utterance.pitch = 1;
+    currentUtterance = utterance;
+    utterance.onend = () => { if (currentUtterance === utterance) currentUtterance = null; };
+    window.speechSynthesis.speak(utterance);
+    return;
+  }
+  const available = await checkHostedTtsAvailable();
+  if (available) {
+    try {
+      await speakWithHostedTts(text);
+      return;
+    } catch (err) {
+      console.warn('[Fluência] Hosted TTS failed:', err.message);
     }
   }
+  if (!window.speechSynthesis) return;
+  if (!epVoiceWarningShown) {
+    epVoiceWarningShown = true;
+    console.warn('[Fluência] No European Portuguese voice available (local or hosted). Install a pt-PT voice on your device or configure GOOGLE_TTS_API_KEY.');
+  }
+  window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(text);
+  const anyPt = window.speechSynthesis.getVoices().find(v => (v.lang || '').toLowerCase().startsWith('pt'));
+  if (anyPt) utterance.voice = anyPt;
+  utterance.lang = (anyPt && anyPt.lang) || 'pt-PT';
   utterance.rate = 0.9;
   utterance.pitch = 1;
   currentUtterance = utterance;
-  utterance.onend = () => { currentUtterance = null; };
+  utterance.onend = () => { if (currentUtterance === utterance) currentUtterance = null; };
   window.speechSynthesis.speak(utterance);
 }
 
 if (typeof window !== 'undefined' && window.speechSynthesis) {
   window.speechSynthesis.onvoiceschanged = () => {
     const v = getEuropeanPortugueseVoice();
-    if (v) epVoiceWarningShown = false;
+    if (v) {
+      epVoiceWarningShown = false;
+      hostedTtsAvailable = null;
+    }
   };
 }
 
@@ -1895,36 +1984,49 @@ function VoiceSetupNotice() {
   const [status, setStatus] = useState('checking');
 
   useEffect(() => {
-    if (typeof window === 'undefined' || !window.speechSynthesis) {
-      setStatus('unavailable');
-      return;
-    }
-    let attempts = 0;
-    let interval;
-    const check = () => {
-      const voices = window.speechSynthesis.getVoices();
-      if (voices.length === 0 && attempts < 10) {
-        attempts++;
-        return false;
+    let cancelled = false;
+    const evaluate = async () => {
+      const localEp = (typeof window !== 'undefined' && window.speechSynthesis)
+        ? getEuropeanPortugueseVoice()
+        : null;
+      if (localEp) {
+        if (!cancelled) setStatus('available');
+        return;
       }
-      const ep = getEuropeanPortugueseVoice();
-      setStatus(ep ? 'available' : 'unavailable');
-      return true;
+      const hosted = await checkHostedTtsAvailable();
+      if (!cancelled) setStatus(hosted ? 'available' : 'unavailable');
     };
-    if (!check() && !interval) {
-      interval = setInterval(() => {
-        if (check() && interval) {
-          clearInterval(interval);
-          interval = null;
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+      let attempts = 0;
+      let interval;
+      const tick = () => {
+        const voices = window.speechSynthesis.getVoices();
+        if (voices.length === 0 && attempts < 10) {
+          attempts++;
+          return false;
         }
-      }, 250);
+        evaluate();
+        return true;
+      };
+      if (!tick() && !interval) {
+        interval = setInterval(() => {
+          if (tick() && interval) {
+            clearInterval(interval);
+            interval = null;
+          }
+        }, 250);
+      }
+      const onVoices = () => evaluate();
+      window.speechSynthesis.addEventListener('voiceschanged', onVoices);
+      return () => {
+        cancelled = true;
+        if (interval) clearInterval(interval);
+        window.speechSynthesis.removeEventListener('voiceschanged', onVoices);
+      };
+    } else {
+      evaluate();
+      return () => { cancelled = true; };
     }
-    const onVoices = () => check();
-    window.speechSynthesis.addEventListener('voiceschanged', onVoices);
-    return () => {
-      if (interval) clearInterval(interval);
-      window.speechSynthesis.removeEventListener('voiceschanged', onVoices);
-    };
   }, []);
 
   if (dismissed) return null;
